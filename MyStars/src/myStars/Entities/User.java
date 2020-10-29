@@ -1,7 +1,8 @@
-
+package myStars.Entities;
 
 public abstract class User{
-    private int username;
-    private int password;
-    private int access;
+    private String username;
+    private String password;
+    private String access;
+
 }
