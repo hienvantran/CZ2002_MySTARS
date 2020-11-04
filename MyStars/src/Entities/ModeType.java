@@ -1,5 +1,6 @@
 package Entities;
 
-public class ModeType {
-
+public enum ModeType{
+    ADMIN,
+    USER
 }

@@ -7,7 +7,7 @@ public class StudentUI {
 	}
 	
 	public void printUI() {
-		System.out.println("Hello Student how can I help you today?");
+		System.out.println("Hello how can I help you today?");
 		System.out.println("Please select an option below");
 		System.out.println("1: Add Course");
 		System.out.println("2: Drop Course");
