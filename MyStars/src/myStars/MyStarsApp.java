@@ -5,11 +5,13 @@ import java.util.Scanner;
 
 import Entities.ModeType;
 import Entities.User;
+import myStars.CalendarCtrl;
 
 public class MyStarsApp {
 	public static void main(String[] args) throws ParseException {
 		System.out.println("Welcome to MyStars App!");
 		System.out.println("Please enter account type: ");
+		CalendarCtrl.GetCurrentDatetime();
 		System.out.println("(1) for student, (2) for admin");
 		Scanner sc = new Scanner(System.in);
 		int input = sc.nextInt();
@@ -31,7 +33,11 @@ public class MyStarsApp {
 			}
 		}
 		LoginCtrl login = new LoginCtrl(mode);
-		login.login();
+		boolean loggedin = login.login();
+		while(loggedin!=true) {
+			System.out.println("Please try again.\n");
+			loggedin = login.login();
+		}
 		login.showUI();
 	}
 }

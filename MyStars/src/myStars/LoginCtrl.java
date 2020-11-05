@@ -4,6 +4,7 @@ import Entities.User;
 import Entities.AcademicStaff;
 import Entities.ModeType;
 import Entities.Student;
+import myStars.CalendarCtrl;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class LoginCtrl {
 		this.validated=true;
 	}
 	
-	public void login() throws ParseException {
+	public boolean login() throws ParseException {
 		this.setUsername();
 		this.setPassword();
 		if(this.mode == ModeType.USER) {
@@ -60,8 +61,12 @@ public class LoginCtrl {
 			for (Student student : studentdb) {
 				if(this.match(student)) {
 					System.out.println("Successfully logged in!");
-					this.makeValid();
-					break;
+					System.out.println("Checking access time...");
+					if(CalendarCtrl.CheckAccessTime(student.getAccessStart(), student.getAccessEnd())==true) {
+						this.makeValid();
+						return true;
+					}
+					return false;
 				}
 			}
 		} 
@@ -70,16 +75,14 @@ public class LoginCtrl {
 			for (User user : admindb) {
 				if(this.match(user)) {
 					System.out.println("Successfully logged in!");
-					System.out.println("Checking access time...");
 					this.makeValid();
-					break;
+					return true;
 				}
 			}
 		}
 		
-		if(this.validated!=true) {
-			System.out.println("Failed to log in!");
-		}
+		System.out.println("Failed to log in!");
+		return false;
 		
 	}
 	
@@ -156,18 +159,11 @@ public class LoginCtrl {
 	    		accessStart = line[3];
 	    		accessEnd = line[4];
 	    		nationality = line[5];
-	    		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-	    		Date startDate = dateFormat.parse(accessStart);
-	    		Calendar startCal = Calendar.getInstance();
-	    		startCal.setTime(startDate);
-	    		Date endDate = dateFormat.parse(accessEnd);
-	    		Calendar endCal = Calendar.getInstance();
-	    		endCal.setTime(endDate);
-
+	    		Calendar startCal = CalendarCtrl.stringToCalendar(accessStart);
+	    		Calendar endCal = CalendarCtrl.stringToCalendar(accessEnd);
 	    		student.add(new Student(username, pass, ModeType.USER, pass, Integer.parseInt(yos), startCal, endCal, nationality));
-//	    		System.out.println(sc.nextLine());      //returns the line that was skipped  
 	    	}  
-	    	sc.close();     //closes the scanner  
+	    	sc.close();   
 	    	}  
 	    	catch(IOException e)  {  e.printStackTrace();  }  
 		return student;
