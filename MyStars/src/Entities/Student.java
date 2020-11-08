@@ -10,7 +10,7 @@ public class Student extends User{
     private Calendar accessEnd;
     private String nationality;
 
-    public Student(String username, String password, ModeType modeType, String matricNum, int yearOfStudy, Calendar accessStart, Calendar accessEnd, String nationality){
+    public Student(String username, String password, ModeType modeType, String matricNum, String nationality, int yearOfStudy, Calendar accessStart, Calendar accessEnd){
         super(username, password, modeType);
         this.matricNum = matricNum;
         this.yearOfStudy = yearOfStudy;
