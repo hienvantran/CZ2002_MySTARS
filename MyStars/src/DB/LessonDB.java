@@ -10,7 +10,7 @@ public class LessonDB {
 	public static final String SEPARATOR = "|";
 	public static ArrayList<Lesson> lessonList = new ArrayList<Lesson>();
 	private static final String LessonFileName = "D:\\Programming\\Java\\MySTARS\\MySTARS\\src\\data\\Lesson.txt";
-	public ArrayList<Lesson> retrieveLesson() throws FileNotFoundException, ParseException{
+	public static ArrayList<Lesson> retrieveLesson() throws FileNotFoundException, ParseException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(LessonFileName);
 
