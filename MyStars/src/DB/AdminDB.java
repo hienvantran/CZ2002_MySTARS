@@ -12,7 +12,7 @@ public class AdminDB {
 	public static final String SEPARATOR = "|";
 	public static ArrayList<User> admin = new ArrayList<User>();
 	private static final String AdminAccFileName = "D:\\Programming\\Java\\MySTARS\\MySTARS\\src\\data\\AdminAcc.txt";
-	public ArrayList<User> retrieveAdmin() throws FileNotFoundException{
+	public static ArrayList<User> retrieveAdmin() throws FileNotFoundException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(AdminAccFileName);
 
