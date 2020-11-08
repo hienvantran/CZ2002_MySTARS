@@ -11,7 +11,7 @@ public class StudentDB {
 	public static final String SEPARATOR = "|";
 	public static ArrayList<Student> studentList = new ArrayList<Student>();
 	private static final String StudentFileName = "D:\\Programming\\Java\\MySTARS\\MySTARS\\src\\data\\Student.txt";
-	public ArrayList<Student> retrieveStudent() throws FileNotFoundException, ParseException{
+	public static ArrayList<Student> retrieveStudent() throws FileNotFoundException, ParseException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(StudentFileName);
 
