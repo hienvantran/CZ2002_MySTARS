@@ -1,12 +1,7 @@
 package Entities;
 
-enum ClassType{
-	lecture,
-	tutorial,
-	lab
-}
-
 public class Lesson {
+	private String crsCode;
 	private int indexNo; 
 	private String lessonType;
 	private String lessonDay;
@@ -15,14 +10,21 @@ public class Lesson {
 	
 
 	
-	public Lesson (int indexNo, String lessonType, String lessonDay, String lessonTime, String lessonVenue){
+	public Lesson (String crsCode,int indexNo, String lessonType, String lessonDay, String lessonTime, String lessonVenue){
+		this.crsCode = crsCode;
 		this.indexNo = indexNo;
 		this.lessonType = lessonType;
 		this.lessonDay = lessonDay;
 		this.lessonTime = lessonTime;
 		this.lessonVenue = lessonVenue;
 	}
+	public String getCrsCode() {
+		return crsCode;
+	}
 
+	public void setCrsCode(String crsCode) {
+		this.crsCode = crsCode;
+	}
 	public int getindexNo() {
 		return indexNo;
 	}
