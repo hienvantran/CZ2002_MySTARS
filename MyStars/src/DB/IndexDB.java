@@ -10,7 +10,7 @@ public class IndexDB {
 	public static final String SEPARATOR = "|";
 	public static ArrayList<Index> indexList = new ArrayList<Index>();
 	private static final String IndexFileName = "D:\\Programming\\Java\\MySTARS\\MySTARS\\src\\data\\Index.txt";
-	public ArrayList<Index> retrieveIndex() throws FileNotFoundException, ParseException{
+	public static ArrayList<Index> retrieveIndex() throws FileNotFoundException, ParseException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(IndexFileName);
     	
