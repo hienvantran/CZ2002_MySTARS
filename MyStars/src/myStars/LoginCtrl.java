@@ -4,16 +4,13 @@ import Entities.User;
 import Entities.AcademicStaff;
 import Entities.ModeType;
 import Entities.Student;
-import myStars.CalendarCtrl;
+import DB.AdminDB;
+import DB.StudentDB;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
 
 public class LoginCtrl {
 	private String username;
@@ -52,37 +49,35 @@ public class LoginCtrl {
 		this.validated=true;
 	}
 	
-	public boolean login() throws ParseException {
+	public void login() throws ParseException , FileNotFoundException{
 		this.setUsername();
 		this.setPassword();
 		if(this.mode == ModeType.USER) {
 			//insert check here
-			ArrayList<Student> studentdb = this.retrieveStudent();
+			ArrayList<Student> studentdb = StudentDB.retrieveStudent();
 			for (Student student : studentdb) {
 				if(this.match(student)) {
 					System.out.println("Successfully logged in!");
-					System.out.println("Checking access time...");
-					if(CalendarCtrl.CheckAccessTime(student.getAccessStart(), student.getAccessEnd())==true) {
-						this.makeValid();
-						return true;
-					}
-					return false;
+					this.makeValid();
+					break;
 				}
 			}
 		} 
 		else {
-			ArrayList<User> admindb = this.retrieveAdmin();
+			ArrayList<User> admindb = AdminDB.retrieveAdmin();
 			for (User user : admindb) {
 				if(this.match(user)) {
 					System.out.println("Successfully logged in!");
+					System.out.println("Checking access time...");
 					this.makeValid();
-					return true;
+					break;
 				}
 			}
 		}
 		
-		System.out.println("Failed to log in!");
-		return false;
+		if(this.validated!=true) {
+			System.out.println("Failed to log in!");
+		}
 		
 	}
 	
@@ -109,63 +104,5 @@ public class LoginCtrl {
     		return true;
     	}
     	else return false;
-    }
-	
-	
-	public ArrayList<User> retrieveAdmin(){
-    	ArrayList<User> admin = new ArrayList<User>();
-    	try  {  
-	    	//the file to be opened for reading  
-	    	FileInputStream fis=new FileInputStream("data/AdminAcc.txt");       
-	    	Scanner sc=new Scanner(fis);    //file to be scanned  
-	    	//returns true if there is another line to read
-	    	while(sc.hasNextLine())  
-	    	{	
-	    		String[] line;
-	    		String username;
-	    		String pass;
-	    		line = sc.nextLine().split("\\|");
-	    		username = line[0];
-	    		pass = line[1];
-	    		admin.add(new User(username, pass, ModeType.ADMIN));
-//	    		System.out.println(sc.nextLine());      //returns the line that was skipped  
-	    	}  
-	    	sc.close();     //closes the scanner  
-	    	}  
-	    	catch(IOException e)  {  e.printStackTrace();  }  
-		return admin;
-    }
-	
-	public ArrayList<Student> retrieveStudent() throws ParseException{
-    	ArrayList<Student> student = new ArrayList<Student>();
-    	try  {  
-	    	//the file to be opened for reading  
-	    	FileInputStream fis=new FileInputStream("data/StudentAcc.txt");       
-	    	Scanner sc=new Scanner(fis);    //file to be scanned  
-	    	//returns true if there is another line to read
-	    	while(sc.hasNextLine())  
-	    	{	
-	    		String[] line;
-	    		String username;
-	    		String pass;
-	    		String yos;
-	    		String accessStart;
-	    		String accessEnd;
-	    		String nationality;
-	    		line = sc.nextLine().split("\\|");
-	    		username = line[0];
-	    		pass = line[1];
-	    		yos = line[2];
-	    		accessStart = line[3];
-	    		accessEnd = line[4];
-	    		nationality = line[5];
-	    		Calendar startCal = CalendarCtrl.stringToCalendar(accessStart);
-	    		Calendar endCal = CalendarCtrl.stringToCalendar(accessEnd);
-	    		student.add(new Student(username, pass, ModeType.USER, pass, Integer.parseInt(yos), startCal, endCal, nationality));
-	    	}  
-	    	sc.close();   
-	    	}  
-	    	catch(IOException e)  {  e.printStackTrace();  }  
-		return student;
     }
 }
