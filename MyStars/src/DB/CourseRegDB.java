@@ -12,7 +12,7 @@ public class CourseRegDB {
 	public static final String SEPARATOR = "|";
 	public static ArrayList<CourseRegister> courseList = new ArrayList<CourseRegister>();
 	private static final String CourseRegisterFileName = "D:\\Programming\\Java\\MySTARS\\MySTARS\\src\\data\\StudentRegCrs.txt";
-	private boolean status= false;
+	private static boolean status= false;
 	public static ArrayList<CourseRegister> retrieveCourseRegister() throws FileNotFoundException, ParseException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(CourseRegisterFileName);
