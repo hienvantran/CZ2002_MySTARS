@@ -114,6 +114,38 @@ public class StudentCtrl {
 		}
 		
 	}
+	public void printRegCourse(String studentID) throws FileNotFoundException, ParseException, IOException{
+		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
+		ArrayList<CourseRegister> stCrsReg = new ArrayList<CourseRegister>();
+		for(CourseRegister course : courseRegistrations){
+			
+			if (course.getStudent().equals(studentID)){
+				stCrsReg.add(course);
+			}
+		}
+		System.out.println("The registered courses for this student " + studentID + " is \n");
+		for (CourseRegister regCrs : stCrsReg) {
+			System.out.println("Index " + regCrs.getIndex() + " (" + regCrs.getCourse() + ") ");
+		}
+	}
+	
+	public void checkVacancy(String courseID) throws FileNotFoundException, ParseException, IOException{
+		ArrayList<Index> indexList = IndexDB.retrieveIndex();
+		ArrayList<Index> crsindexList = new ArrayList<Index>();
+		HashMap<Integer, Integer> idxVacancy = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> idxWaitlist = new HashMap<Integer, Integer>();
+		for(Index idx:indexList) {
+			if (idx.getCourseCode().equals(courseID)) {
+				idxVacancy.put(idx.getIndex(), idx.getVacancy());
+				idxWaitlist.put(idx.getIndex(), idx.getWaitList());
+			}
+		}
+		System.out.println("The vacancy for this courses " + courseID + " is \n");
+		for (int i : idxVacancy.keySet()) {
+			System.out.println("Index " + i + " has " + idxVacancy.get(i) + " vacancies ");
+		}
+		
+	}
 	public boolean checkCourseRegistrationExists(String studentID, String courseID) throws FileNotFoundException, ParseException{
         ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
         for(CourseRegister course:courseRegistrations) {
