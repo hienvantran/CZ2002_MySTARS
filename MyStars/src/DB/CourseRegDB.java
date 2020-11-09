@@ -22,7 +22,7 @@ public class CourseRegDB {
 			// get individual 'fields' of the string separated by SEPARATOR
 			// pass in the string to the string tokenizer using delimiter "," 
 			StringTokenizer tokenizer = new StringTokenizer(field, SEPARATOR);	
-			//CourseCode/CourseName/AU/School/Type
+			//Student/CourseCode/index/status
 			String  stud = tokenizer.nextToken().trim();	
 			String  crs = tokenizer.nextToken().trim();
 			int idx = Integer.parseInt(tokenizer.nextToken().trim());
