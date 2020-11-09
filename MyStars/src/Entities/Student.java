@@ -5,18 +5,21 @@ import java.util.Date;
 
 public class Student extends User{
     private String matricNum;
+    private String nationality;
     private int yearOfStudy;
+    private String email;
     private Calendar accessStart;
     private Calendar accessEnd;
-    private String nationality;
 
-    public Student(String username, String password, ModeType modeType, String matricNum, String nationality, int yearOfStudy, Calendar accessStart, Calendar accessEnd){
+    public Student(String username, String password, ModeType modeType, String matricNum,String nationality,int yearOfStudy,String email, Calendar accessStart, Calendar accessEnd){
         super(username, password, modeType);
         this.matricNum = matricNum;
+        this.nationality = nationality;
         this.yearOfStudy = yearOfStudy;
+        this.email = email;
         this.accessStart = accessStart;
         this.accessEnd = accessEnd;
-        this.nationality = nationality;
+
     }
 
     public int getYearOfStudy() {
@@ -57,5 +60,12 @@ public class Student extends User{
 
     public void setMatricNum(String matricNum) {
         this.matricNum = matricNum;
+    }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
