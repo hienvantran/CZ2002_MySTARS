@@ -7,10 +7,10 @@ public class CourseRegister {
 	private int index;
 	private String student;
 	
-	public CourseRegister(String student, String course, int index,  Boolean status)
+	public CourseRegister(String stdUserName, String course, int index,  Boolean status)
 	{
 		this.status = status;
-		this.student = student;
+		this.student = stdUserName;
 		this.course = course;
 		this.index = index;
 	}
@@ -25,5 +25,5 @@ public class CourseRegister {
 	public void setIndex(int index) { this.index = index;}
 	
 	public String getStudent() { return student;}
-	public void setStudent(String student) { this.student = student;}
+	public void setStudent(String stdUserName) { this.student = stdUserName;}
 }
