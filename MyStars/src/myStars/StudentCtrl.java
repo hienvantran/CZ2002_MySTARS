@@ -146,6 +146,27 @@ public class StudentCtrl {
 		}
 		
 	}
+	public void changeIndex(String studentID, String courseCode,int curidxNo, int newidxNo) throws FileNotFoundException, ParseException, IOException{
+		System.out.println("Going to change index");
+		if (this.checkCourseRegistrationExists(studentID, courseCode, curidxNo) == false) {
+			System.out.println("Sorry. This student has not yet registers this course.");
+            return;
+        }	else {
+        	System.out.println("Do you want to change from index " + curidxNo + " to " + newidxNo + "? (Y|N) \n");
+        	Scanner sc= new Scanner(System.in);
+        	String sel= sc.nextLine();
+        	switch(sel) {
+        	  case "Y":
+        	    this.registerCourse(studentID, courseCode, newidxNo);
+        	    break;
+        	  case "N":
+        		  System.out.println("Come back to last page!");
+        	    break;
+        	  default:
+        		  System.out.println("Invalid input!");
+        	}
+        }
+	}
 	public boolean checkCourseRegistrationExists(String studentID, String courseID) throws FileNotFoundException, ParseException{
         ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
         for(CourseRegister course:courseRegistrations) {
