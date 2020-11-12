@@ -33,11 +33,11 @@ public class MyStarsApp {
 			}
 		}
 		LoginCtrl login = new LoginCtrl(mode);
-/*		boolean loggedin = login.login();
+		boolean loggedin = login.login();
 		while(loggedin!=true) {
 			System.out.println("Please try again.\n");
 			loggedin = login.login();
 		}
-		login.showUI();*/
+		login.showUI();
 	}
 }
