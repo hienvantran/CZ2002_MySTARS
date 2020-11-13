@@ -49,7 +49,7 @@ public class LoginCtrl {
 		this.validated=true;
 	}
 	
-	public void login() throws ParseException , FileNotFoundException{
+	public boolean login() throws ParseException , FileNotFoundException{
 		this.setUsername();
 		this.setPassword();
 		if(this.mode == ModeType.USER) {
@@ -58,26 +58,28 @@ public class LoginCtrl {
 			for (Student student : studentdb) {
 				if(this.match(student)) {
 					System.out.println("Successfully logged in!");
-					this.makeValid();
-					break;
+					System.out.println("Checking access time...");
+					if(CalendarCtrl.CheckAccessTime(student.getAccessEnd(), student.getAccessEnd())==true) {
+						this.makeValid();
+						return true;
+					}
 				}
+				else return false;
 			}
 		} 
 		else {
 			ArrayList<User> admindb = AdminDB.retrieveAdmin();
 			for (User user : admindb) {
 				if(this.match(user)) {
-					System.out.println("Successfully logged in!");
-					System.out.println("Checking access time...");
+					System.out.println("Successfully logged in!"); 	
 					this.makeValid();
-					break;
+					return true;
 				}
 			}
 		}
 		
-		if(this.validated!=true) {
-			System.out.println("Failed to log in!");
-		}
+		System.out.println("Failed to log in!");
+		return false;
 		
 	}
 	
