@@ -11,10 +11,15 @@ import Entities.CourseRegister;
 import Entities.Index;
 import Entities.Student;
 
+
 public class StudentUI {
 	
 	private Student student;
 	private Scanner sc = new Scanner(System.in);
+	
+	public StudentUI() {
+		
+	}
 	
 	public void printUI(Student student)
 	{

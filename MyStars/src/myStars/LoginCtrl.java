@@ -6,6 +6,7 @@ import Entities.ModeType;
 import Entities.Student;
 import DB.AdminDB;
 import DB.StudentDB;
+import myStars.StudentUI;
 
 import java.io.*;
 import java.text.ParseException;
@@ -61,6 +62,8 @@ public class LoginCtrl {
 					System.out.println("Checking access time...");
 					if(CalendarCtrl.CheckAccessTime(student.getAccessEnd(), student.getAccessEnd())==true) {
 						this.makeValid();
+						StudentUI studentui = new StudentUI();
+						studentui.printUI(student);
 						return true;
 					}
 				}
