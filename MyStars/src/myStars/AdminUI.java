@@ -247,22 +247,39 @@ public class AdminUI {
 		}
 	}
 	public void checkVacancyUI(){
-		int indexNo;
-		String courseCode;
-
-		Scanner sc = new Scanner(System.in);
+		int indexNo = 0;
+		boolean validInput;
+		String courseCode = null;
 
 		System.out.println("===========================");
 		System.out.println("Check vacancy UI");
 		System.out.println("===========================");
 
-		System.out.println("Enter the course code of the index you'd like to check for vacancy");
+		validInput = false;
+		while(!validInput){
+			courseCode = getStringInput("Enter Course Code: ");
 
-		courseCode = sc.next();
+			if(courseCode.equals("-1")) return;
 
-		System.out.println("Enter the index number you'd like to check for vacancy");
-		indexNo = sc.nextInt();
+			if(AdminCrsCtrl.checkExistCourse(courseCode)==false){
+				System.out.println("Course code does not exist!");
+				System.out.println("Please try again!");
+			} else validInput=true;
+		}
 
+		validInput = false;
+		while(!validInput){
+			indexNo = getIntInput("Enter the index number you'd like to check for vacancy",10000,99999);
+
+			if (indexNo==-1) return;
+
+			if(AdminCrsCtrl.checkExistIndex(courseCode, indexNo)==false){
+				System.out.println("Index does not exist!");
+				System.out.println("Please try again!");
+			} else validInput=true;
+		}
+
+		System.out.println("The vacancy left is: " +  AdminCrsCtrl.checkIndexVacancy(courseCode, indexNo));
 
 
 
@@ -322,6 +339,7 @@ public class AdminUI {
 
 		while(!valid){
 			temp = sc.nextInt();
+			if(temp==-1) return -1;
 			if (temp > rangeEnd || temp < rangeStart)
 				System.out.println("Invalid range. Please enter from " + rangeStart + " to " + rangeEnd);
 			else valid = true;
