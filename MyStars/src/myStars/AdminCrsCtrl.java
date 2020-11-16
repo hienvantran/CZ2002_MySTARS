@@ -19,5 +19,10 @@ public class AdminCrsCtrl {
         }
     }
 
+    public static boolean checkExistCourse(String courseCode){
+        // check database
+
+        return true;
+    }
 
 }

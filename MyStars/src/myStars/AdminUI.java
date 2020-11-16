@@ -1,11 +1,7 @@
 package myStars;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Scanner;
 
 import Entities.*;
@@ -59,107 +55,151 @@ public class AdminUI {
 	}
 
 	public void editStudentAccessTimeUI() {
-		String matric;
-		Calendar accessStart = null;
-		Calendar accessEnd = null;
+		String matric = null;
 
-		Scanner sc = new Scanner(System.in);
+		Calendar accessStart;
+		Calendar accessEnd;
+
+		boolean validInput;
 
 		System.out.println("===========================");
 		System.out.println("Edit student access time UI");
 		System.out.println("===========================");
+		System.out.println("Enter -1 to return to Admin UI");
 
-		System.out.println("Enter matriculation number of student: ");
-		matric = sc.next();
+		validInput = false;
 
-		if(AdminStudCtrl.checkStudentExists(matric)==false){
-			System.out.println("Student does not exist!");
-			System.out.println("Returning to Admin UI...");
-			return;
+		while(!validInput){
+			matric = getStringInput("Enter matriculation number of student: ");
+
+			if(matric.equals("-1")) return;
+
+			if(AdminStudCtrl.checkStudentExists(matric)==false){
+				System.out.println("Student does not exist!");
+				System.out.println("Please try again!");
+			} else validInput=true;
 		}
+		//to do check the two dates accessEnd and accessStart if they're lesser or more
+		accessStart = getDateInput("Enter access start for student: ");
+		if (accessStart == null) return;
 
-		System.out.println("Enter access start dd/MM/yyyy HH:mm");
-		int ok=0;
-		while(ok==0){
-			try {
-				accessStart = CalendarCtrl.stringToCalendar(sc.next());
-				ok=1;
-			} catch (ParseException e) {
-				System.out.println("You should input a good format dd/MM/yyyy HH:mm");
-			}
-		}
-
-
-		System.out.println("Enter access start dd/MM/yyyy HH:mm");
-		try {
-			accessEnd = CalendarCtrl.stringToCalendar(sc.next());
-		} catch (ParseException e) {
-			System.out.println("You should input a good format dd/MM/yyyy HH:mm");
-			return;
-		}
+		accessEnd = getDateInput("Enter access end for student: ");
+		if (accessEnd == null) return;
 
 		AdminStudCtrl.editStudentAccessTime(matric, accessStart, accessEnd);
 
 	}
 
 	public void addStudentUI(){
-		String matric, nationality, email;
+		boolean validInput;
+		String matric = null, nationality, email = null, username = null, pass;
 		int yearOfStudy;
 		Calendar accessStart, accessEnd;
-
-		Scanner sc = new Scanner(System.in);
 
 		System.out.println("===========================");
 		System.out.println("Add a student UI");
 		System.out.println("===========================");
 
-		System.out.println("Enter matriculation number of student: ");
-		matric = sc.next();
-		System.out.println("Enter nationality of student: ");
-		nationality = sc.next();
-		System.out.println("Enter year of study of student: ");
-		yearOfStudy = sc.nextInt();
-		System.out.println("Enter email of student: ");
-		email = sc.next();
-/*		System.out.println("Enter access start for student: ");
-		accessStart = sc.next();
-		System.out.println("Enter access end for student: ");
-		accessEnd = sc.next();
+		validInput=false;
+		while(!validInput){
+			matric = getStringInput("Enter matriculation number of student: ");
 
-		Student student = new Student(matric, nationality, yearOfStudy, email, accessStart, accessEnd);
-		AdminStudCtrl.addStudent(student);*/
+			if(matric.equals("-1")) return;
+
+			if(AdminStudCtrl.checkStudentExists(matric)==true)
+				System.out.println("Student already exists!");
+			else
+				validInput=true;
+		}
+
+		validInput=false;
+		while(!validInput){
+			username = getStringInput("Enter username of student: ");
+
+			if(username.equals("-1")) return;
+
+			if(AdminStudCtrl.checkUsernameExists(username)==true)
+				System.out.println("Username already exists!");
+			else
+				validInput=true;
+		}
+
+		pass = getStringInput("Enter password of student: ");
+		if (pass.equals("-1")) return;
+
+		validInput=false;
+		while(!validInput){
+			email = getStringInput("Enter username of student: ");
+
+			if(email.equals("-1")) return;
+
+			if(AdminStudCtrl.checkEmailExists(email)==true)
+				System.out.println("Username already exists!");
+			else
+				validInput=true;
+		}
+
+		nationality = getStringInput("Enter nationality number of student: ");
+		if (nationality.equals("-1")) return;
+
+		yearOfStudy = getIntInput("Enter year of study of student: ", 0,10);
+		if(yearOfStudy==-1) return;
+
+		accessStart = getDateInput("Enter access start for student: ");
+		if (accessStart == null) return;
+
+		accessEnd = getDateInput("Enter access end for student: ");
+		if (accessEnd == null) return;
+
+		// create Student object and add to student list
+		Student student = new Student(username, pass, ModeType.USER, matric, nationality, yearOfStudy, email, accessStart, accessEnd);
+		AdminStudCtrl.addStudent(student);
 
 	}
-	public void addCourseUI(){
-		String courseCode, courseName, school, courseType;
-		int courseAU;
 
-		Scanner sc = new Scanner(System.in);
+	public void addCourseUI(){
+		String courseCode = null, courseName, school, courseType;
+		int courseAU;
+		boolean validInput;
 
 		System.out.println("===========================");
 		System.out.println("Add a course UI");
 		System.out.println("===========================");
 
-		//todo check the exisiting course and return error
+		validInput = false;
 
-		System.out.println("Enter course code: ");
-		courseCode = sc.next();
-		System.out.println("Enter course name: ");
-		courseName = sc.next();
-		System.out.println("Enter school: ");
-		school = sc.next();
-		System.out.println("Enter course AU: ");
-		courseAU = sc.nextInt();
-		System.out.println("Enter course type: ");
-		courseType = sc.next();
+		while(!validInput){
+			courseCode = getStringInput("Enter Course Code: ");
+
+			if(courseCode.equals("-1")) return;
+
+			if(AdminCrsCtrl.checkExistCourse(courseCode)==true){
+				System.out.println("Course code already exists!");
+				System.out.println("Please try again!");
+			} else validInput=true;
+		}
+
+		courseName = getStringInput("Enter course name: ");
+		if (courseName.equals("-1")) return;
+
+		school = getStringInput("Enter school name: ");
+		if (school.equals("-1")) return;
+
+		courseAU = getIntInput("Enter course AU: ", 0, 20);
+		if (courseAU==-1) return;
+
+		courseType = getStringInput("Enter Course Type: ");
+		if (courseType.equals("-1")) return;
 
 		Course course = new Course(courseCode, courseName, courseAU, school, courseType);
 		AdminCrsCtrl.addCourse(course);
 
 	}
+
 	public void updateCourseUI(){
 		int choice;
 		String courseCode;
+		boolean validInput;
 
 		Scanner sc = new Scanner(System.in);
 
@@ -167,9 +207,18 @@ public class AdminUI {
 		System.out.println("Update a course UI");
 		System.out.println("===========================");
 
-		// todo check exists, if does not exists, return error
-		System.out.println("What is the course code you would like to update?");
-		courseCode = sc.next();
+		validInput = false;
+
+		while(!validInput){
+			courseCode = getStringInput("Enter Course Code: ");
+
+			if(courseCode.equals("-1")) return;
+
+			if(AdminCrsCtrl.checkExistCourse(courseCode)==false){
+				System.out.println("Course code does not exist!");
+				System.out.println("Please try again!");
+			} else validInput=true;
+		}
 
 		System.out.println("===========================");
 		System.out.println("1. Update the course's code");
@@ -190,10 +239,10 @@ public class AdminUI {
 			case (2):
 				System.out.println("Enter the course code you'd like to update");
 				break;
-			case(3):
+			case (3):
 				System.out.println("Enter the course code you'd like to update");
 				break;
-			case(4):
+			case (4):
 				break;
 		}
 	}
@@ -230,5 +279,55 @@ public class AdminUI {
 		System.out.println("Print student list by course UI");
 		System.out.println("===========================");
 	}
-	
+
+	private Calendar getDateInput(String prompt){
+		boolean validInput = false;
+		String temp;
+		Scanner sc = new Scanner(System.in);
+		Calendar result = null;
+
+		while(!validInput){
+			System.out.println(prompt);
+			temp = sc.nextLine();
+
+			if(temp.equals("-1")) return null;
+
+			try {
+				result = CalendarCtrl.stringToCalendar(temp);
+				validInput=true;
+			} catch (ParseException e) {
+				System.out.println("You should input a good format dd/MM/yyyy HH:mm");
+			}
+		}
+		return result;
+	}
+
+	private String getStringInput(String prompt){
+		String temp;
+		Scanner sc = new Scanner(System.in);
+
+		System.out.println(prompt);
+
+		temp = sc.nextLine();
+		if(temp.equals("-1")) return "-1";
+		else return temp;
+	}
+
+	private int getIntInput(String prompt, int rangeStart, int rangeEnd){
+		int temp = 0;
+		boolean valid = false;
+		Scanner sc = new Scanner(System.in);
+
+		System.out.println(prompt);
+
+		while(!valid){
+			temp = sc.nextInt();
+			if (temp > rangeEnd || temp < rangeStart)
+				System.out.println("Invalid range. Please enter from " + rangeStart + " to " + rangeEnd);
+			else valid = true;
+		}
+
+		return temp;
+	}
+
 }
