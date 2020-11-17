@@ -9,6 +9,13 @@ import DB.CourseDB;
 import DB.IndexDB;
 
 public class CourseCtrl {
+	public ArrayList<Course> getCourseList()throws IOException, ParseException {
+		ArrayList<Course> courseList = CourseDB.retrieveCourse();
+		return courseList;
+	}
+	public void setCourseList(ArrayList<Course> courseList)throws IOException, ParseException {
+		CourseDB.saveCourse(courseList);
+	}
 	public Course getCrsbyCode(String CourseCode)throws IOException, ParseException {
 		ArrayList<Course> courseList = CourseDB.retrieveCourse();
 		Course myCourse = new Course("Unknown", "Unknown", 0, "Unknown","Unknown");
@@ -22,11 +29,25 @@ public class CourseCtrl {
 
 		return myCourse;
 	}
-	public void addCrsByCode(Course course)throws IOException, ParseException {
+	public void addCrs(Course course)throws IOException, ParseException {
 		ArrayList<Course> courseList = CourseDB.retrieveCourse();
 		courseList.add(course);
 		CourseDB.saveCourse(courseList);
 	}
+	public void removeCrsByCode(Course course)throws IOException, ParseException {
+		ArrayList<Course> courseList = CourseDB.retrieveCourse();
+		courseList.remove(course);
+		CourseDB.saveCourse(courseList);
+	}
+
+	public ArrayList<Index> getIndexList()throws IOException, ParseException {
+		ArrayList<Index> indexList = IndexDB.retrieveIndex();
+		return indexList;
+	}
+	public void setIndexList(ArrayList<Index> indexList)throws IOException, ParseException {
+		IndexDB.saveIndex(indexList);
+	}
+
 	public Index getIndexbyCode(String CourseCode, int indexNo) throws IOException, ParseException{
 		ArrayList<Index> indexList = IndexDB.retrieveIndex();
 		Index myIndex = new Index("Unknown", 0, "Unknown", 0, 0);
