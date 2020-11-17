@@ -1,6 +1,7 @@
 package myStars;
 
 import java.io.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -45,19 +46,19 @@ public class StudentUI {
 				switch(choice)
 				{
 					case 1:
-						RegisterCourseUI();
+						registerCourseUI();
 						break;
 					case 2:
-						DropCourseUI();
+						dropCourseUI();
 						break;
 					case 3:
 						CourseRegisterUI();
 						break;
 					case 4:
-						CheckVacancyUI();
+						checkVacancyUI();
 						break;
 					case 5:
-						ChangeIndexUI();
+						changeIndexUI();
 						break;
 					case 6:
 						SwapIndexUI();
@@ -216,6 +217,8 @@ public class StudentUI {
 		 //Display Old and New Index Info
 		 //Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
 	 }
+	 
+}
 	 
 	 
 	 
