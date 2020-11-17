@@ -24,6 +24,7 @@ public class StudentCtrl {
 		}
         Index currentIndex = null;
         ArrayList<Index> indexList = IndexDB.retrieveIndex();
+        ArrayList<Index> idxList = IndexDB.retrieveIndex();
 		for (Index idx : indexList) {
 			if(idx.getIndex()==indexNo) {
 				currentIndex = idx;
@@ -34,26 +35,28 @@ public class StudentCtrl {
 				if (idx.getVacancy() <= 0) {
 					System.out.println("Sorry, the course has no vacancies any more.");
 					waitingList++;
-				    System.out.println("Student " + currentStudent.getUsername()+ " with ID: " + currentStudent.getId() +
-			                " wants to register " + currentIndex.getCourseCode());
+				    System.out.println("Student " + currentStudent.getUsername() + " wants to register " + currentIndex.getCourseCode());
+				    break;
 				    }
 				else if (idx.getVacancy() > 0){
 					vacancy--;
 					registerStatus = "Registered";
+					
 				}
 				// Adding
 				boolean crsStt = false;
 				if (registerStatus == "Registered") {crsStt = true;}
 				else if (registerStatus == "On Waiting List") {crsStt = false;}
 				CourseRegister newStudentCourse = new CourseRegister(studentID, courseCode, indexNo, crsStt);
-				CourseRegDB.courseList.add(newStudentCourse);
-				CourseRegDB.saveCourse(CourseRegDB.courseList);
+				ArrayList<CourseRegister> crsReg = CourseRegDB.retrieveCourseRegister();
+				crsReg.add(newStudentCourse);
+				CourseRegDB.saveCourse(crsReg);
 			    
 				// Update new vacancy & waiting list
-				IndexDB.indexList.remove(idx); 
+				idxList.remove(idx); 
 			    Index newIndex = new Index(idx.getCourseCode(), indexNo, idx.getGroup(), vacancy, waitingList);
-			    IndexDB.indexList.add(newIndex);
-			    IndexDB.saveIndex(IndexDB.indexList);
+			    idxList.add(newIndex);
+			    IndexDB.saveIndex(idxList);
 			
 				System.out.println();
 				if (registerStatus.equals("On Waiting List")){
@@ -62,11 +65,11 @@ public class StudentCtrl {
 				else if (registerStatus.equals("Registered")){
 					System.out.println("Index " + indexNo + " (" + courseCode + ") has been successfully added!");
 				}
-				return;
+				break;
 			}
 		}
 		
-		if (this.checkCourseRegistrationExists(studentID, courseCode) == true) {
+		if (this.checkCourseRegistrationExists(studentID, courseCode,indexNo) == true) {
 			System.out.println("This student already registers this course.");
             return;
         }	
@@ -74,26 +77,27 @@ public class StudentCtrl {
 	}
 	public void dropCourse(String studentID, String courseCode,int indexNo) throws FileNotFoundException, ParseException, IOException{
 		System.out.println("Going to Drop Registration");
-		if (this.checkCourseRegistrationExists(studentID, courseCode) == false) {
-			System.out.println("Sorry. This student has not yet registers this course.");
+		if (this.checkCourseRegistrationExists(studentID, courseCode,indexNo) == false) {
+			System.out.println("Sorry. This student has not yet registered this course.");
             return;
         }	
 		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
+		ArrayList<CourseRegister> courseReg = CourseRegDB.retrieveCourseRegister();
 		ArrayList<Index> indexList = IndexDB.retrieveIndex();
+		ArrayList<Index> idxList = IndexDB.retrieveIndex();
 		
 		for(CourseRegister course : courseRegistrations){
-			
+			System.out.println(course.getStudent() + "   " + course.getIndex());
 			if (course.getIndex() == indexNo && course.getStudent().equals(studentID)){
 				System.out.println("Index " + course.getIndex() + " (" + course.getCourse() + ") for student "+course.getStudent());
-				CourseRegDB.courseList.remove(course);
-				CourseRegDB.saveCourse(CourseRegDB.courseList);
-
-				System.out.println("Index " + course.getIndex() + " (" + course.getCourse() + ") has been removed!");
+				courseReg.remove(course);
+				System.out.println(courseReg.size());
+				CourseRegDB.saveCourse(courseReg);
+		        
 				
 				for (Index i : indexList){
 					int vacancy = i.getVacancy();
 					int waitingList = i.getWaitList();
-					
 					if (course.getStatus()==true){
 						vacancy++;
 					}
@@ -103,27 +107,30 @@ public class StudentCtrl {
 					
 					if (i.getIndex() == indexNo){
 						// Update new vacancy & waiting list
-						IndexDB.indexList.remove(i); 
+						idxList.remove(i); 
 					    Index newIndex = new Index(i.getCourseCode(), indexNo, i.getGroup(), vacancy, waitingList);
-					    IndexDB.indexList.add(newIndex);
-					    IndexDB.saveIndex(IndexDB.indexList);
-						return;
+					    idxList.add(newIndex);
+					    IndexDB.saveIndex(idxList);
+					    System.out.println("Done");
 					}
 				}
+				break;
 			}
+
 		}
+
 		
 	}
+	
 	public void printRegCourse(String studentID) throws FileNotFoundException, ParseException, IOException{
 		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
 		ArrayList<CourseRegister> stCrsReg = new ArrayList<CourseRegister>();
 		for(CourseRegister course : courseRegistrations){
-			
 			if (course.getStudent().equals(studentID)){
 				stCrsReg.add(course);
 			}
 		}
-		System.out.println("The registered courses for this student " + studentID + " is \n");
+		System.out.println("The registered courses for this student " + studentID + " is ");
 		for (CourseRegister regCrs : stCrsReg) {
 			System.out.println("Index " + regCrs.getIndex() + " (" + regCrs.getCourse() + ") ");
 		}
@@ -157,8 +164,9 @@ public class StudentCtrl {
         	String sel= sc.nextLine();
         	switch(sel) {
         	  case "Y":
-        	    this.registerCourse(studentID, courseCode, newidxNo);
-        	    break;
+        		  this.dropCourse(studentID, courseCode, curidxNo);
+        		  this.registerCourse(studentID, courseCode, newidxNo);
+        		  break;
         	  case "N":
         		  System.out.println("Come back to last page!");
         	    break;
@@ -167,10 +175,22 @@ public class StudentCtrl {
         	}
         }
 	}
-	public boolean checkCourseRegistrationExists(String studentID, String courseID) throws FileNotFoundException, ParseException{
+	public void swapIdx(String ownStudId, String peerStudId, String courseCode, int yourIdx, int peerIdx) throws FileNotFoundException, 
+	 ParseException, IOException {
+		System.out.println("Go to swap index");
+		System.out.println("Swap index with student " + peerStudId + "(his index " + peerIdx + ")");
+
+			this.dropCourse(ownStudId, courseCode, yourIdx);
+			this.dropCourse(peerStudId, courseCode, peerIdx);
+			this.registerCourse(ownStudId, courseCode, peerIdx);
+			this.registerCourse(peerStudId, courseCode, yourIdx);
+			System.out.println("Swap index successfully");
+	}
+	
+	public boolean checkCourseRegistrationExists(String studentID, String courseID, int indexNo) throws FileNotFoundException, ParseException{
         ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
         for(CourseRegister course:courseRegistrations) {
-        	if(course.getCourse().equals(courseID)&& course.getStudent().equals(studentID)) {
+        	if(course.getCourse().equals(courseID)&& course.getStudent().equals(studentID) &&course.getIndex()==indexNo) {
         		
         		return true;
 			}
