@@ -12,6 +12,8 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class LoginCtrl {
 	private String username;
@@ -27,15 +29,29 @@ public class LoginCtrl {
 	public void setUsername() {
 		System.out.println("Please enter your username: ");
 		Scanner sc = new Scanner(System.in);
-		String input = sc.next();
+		String input = sc.nextLine();
 		this.username = input;
 	}
 	
 	public void setPassword() {
+		String password;
 		System.out.println("Please enter your password: ");
-		Scanner sc = new Scanner(System.in);
-		String input = sc.next();
-		this.password=input;
+		password=pass();
+		this.password= this.hashPassword(password);
+	}
+	
+	public String pass() {
+		java.io.Console c = System.console();
+		if (c == null) {
+			Scanner sc = new Scanner(System.in);
+			String pass = sc.next();
+			return pass;
+        }
+		char[] passString;
+		//System.out.println("Please Enter Password");
+		passString = c.readPassword();
+		String pass = new String(passString);
+		return pass;
 	}
 	
 	public String getUsername() {
@@ -57,6 +73,8 @@ public class LoginCtrl {
 			//insert check here
 			ArrayList<Student> studentdb = StudentDB.retrieveStudent();
 			for (Student student : studentdb) {
+//				System.out.println(student.getUsername());
+//				System.out.println(student.getPassword());
 				if(this.match(student)) {
 					System.out.println("Successfully logged in!");
 					System.out.println("Checking access time...");
@@ -88,28 +106,42 @@ public class LoginCtrl {
 		
 	}
 	
-	public void showUI() {
-		if (validated== true && this.mode == ModeType.USER) {
-				StudentUI s1 = new StudentUI();
-				s1.printUI();
-			}
-		if (validated== true && this.mode == ModeType.ADMIN) {
-				AdminUI a1 = new AdminUI();
-				a1.printUI();
-		}
-	}
-	
 	public boolean match(User user) {
-    	if(this.getUsername().equals(user.getUsername()) && this.getPassword().equals(user.getPassword())) {
+    	if((this.getUsername().toLowerCase()).equals((user.getUsername().toLowerCase())) && this.getPassword().equals(user.getPassword())) {
     		return true;
     	}
     	else return false;
     }
 	
 	public boolean match(Student student) {
-    	if(this.getUsername().equals(student.getUsername()) && this.getPassword().equals(student.getPassword())) {
+//		System.out.println("lower case input = "+ this.getUsername().toLowerCase());
+//		System.out.println("Matched against = " + student.getUsername().toLowerCase());
+//		System.out.println("lower case input = "+ this.getPassword());
+//		System.out.println("Matched against = " +student.getPassword());
+    	if((this.getUsername().toLowerCase()).equals((student.getUsername().toLowerCase())) && this.getPassword().equals(student.getPassword())) {
     		return true;
     	}
     	else return false;
     }
+	
+	public String hashPassword(String password) {
+		String passwordToHash = password;
+		String hashedpw = null;
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(passwordToHash.getBytes());
+			byte[] bytes = md.digest();
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i <bytes.length; i++) {
+				sb.append(Integer.toString((bytes[i]&0xff)+0x100,32).substring(1));
+			}
+		hashedpw = sb.toString();
+//		System.out.println(hashedpw);
+		return hashedpw;
+		}
+		catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

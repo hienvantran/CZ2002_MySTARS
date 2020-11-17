@@ -21,7 +21,7 @@ public class StudentDB {
 			// pass in the string to the string tokenizer using delimiter "," 
 			StringTokenizer tokenizer = new StringTokenizer(field, SEPARATOR);	
 			//username/password/matricNo/year/nationality/email/accessStart/accessEnd
-			String  username = tokenizer.nextToken().trim();	
+			String  username = tokenizer.nextToken();	
 			String  pass = tokenizer.nextToken().trim();	
 			String matricNum = tokenizer.nextToken().trim(); 
 			String nationality = tokenizer.nextToken().trim(); 
@@ -29,9 +29,8 @@ public class StudentDB {
 			String email = tokenizer.nextToken().trim(); 
 			Calendar accessStart = CalendarCtrl.stringToCalendar(tokenizer.nextToken().trim()); 
 			Calendar accessEnd = CalendarCtrl.stringToCalendar(tokenizer.nextToken().trim()); 
-			System.out.println("username ="+ username);
 			// create Student object and add to student list 
-			Student std = new Student( username, matricNum, ModeType.USER, matricNum, nationality, studyY, email, accessStart, accessEnd);
+			Student std = new Student( username, pass, ModeType.USER, matricNum, nationality, studyY, email, accessStart, accessEnd);
 			
 			// add to Students list
 			studentList.add(std);
