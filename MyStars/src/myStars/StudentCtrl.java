@@ -86,15 +86,16 @@ public class StudentCtrl {
 		ArrayList<Index> indexList = IndexDB.retrieveIndex();
 		ArrayList<Index> idxList = IndexDB.retrieveIndex();
 		
+
 		for(CourseRegister course : courseRegistrations){
 			System.out.println(course.getStudent() + "   " + course.getIndex());
 			if (course.getIndex() == indexNo && course.getStudent().equals(studentID)){
 				System.out.println("Index " + course.getIndex() + " (" + course.getCourse() + ") for student "+course.getStudent());
-				courseReg.remove(course);
-				System.out.println(courseReg.size());
-				CourseRegDB.saveCourse(courseReg);
+				courseRegistrations.remove(course);
+				System.out.println(courseRegistrations.size());
+				CourseRegDB.saveCourse(courseRegistrations);
 		        
-				
+				System.out.println("Index " + indexNo + " (" + courseCode + ") has been removed!");
 				for (Index i : indexList){
 					int vacancy = i.getVacancy();
 					int waitingList = i.getWaitList();
