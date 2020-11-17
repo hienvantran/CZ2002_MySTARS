@@ -60,15 +60,15 @@ public class LoginCtrl {
 				if(this.match(student)) {
 					System.out.println("Successfully logged in!");
 					System.out.println("Checking access time...");
-					if(CalendarCtrl.CheckAccessTime(student.getAccessEnd(), student.getAccessEnd())==true) {
+					if(CalendarCtrl.CheckAccessTime(student.getAccessStart(), student.getAccessEnd())==true) {
 						this.makeValid();
 						StudentUI studentui = new StudentUI();
 						studentui.printUI(student);
 						return true;
 					}
 				}
-				else return false;
 			}
+			return false;
 		} 
 		else {
 			ArrayList<User> admindb = AdminDB.retrieveAdmin();
@@ -76,6 +76,8 @@ public class LoginCtrl {
 				if(this.match(user)) {
 					System.out.println("Successfully logged in!"); 	
 					this.makeValid();
+					AdminUI admin = new AdminUI();
+					admin.printUI();
 					return true;
 				}
 			}

@@ -10,7 +10,7 @@ import myStars.CalendarCtrl;
 public class StudentDB {
 	public static final String SEPARATOR = "|";
 	public static ArrayList<Student> studentList = new ArrayList<Student>();
-	private static final String StudentFileName = "D:\\Programming\\Java\\MySTARS\\MySTARS\\src\\data\\Student.txt";
+	private static final String StudentFileName = "data\\Student.txt";
 	public static ArrayList<Student> retrieveStudent() throws FileNotFoundException, ParseException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(StudentFileName);
@@ -29,9 +29,9 @@ public class StudentDB {
 			String email = tokenizer.nextToken().trim(); 
 			Calendar accessStart = CalendarCtrl.stringToCalendar(tokenizer.nextToken().trim()); 
 			Calendar accessEnd = CalendarCtrl.stringToCalendar(tokenizer.nextToken().trim()); 
-			
+			System.out.println("username ="+ username);
 			// create Student object and add to student list 
-			Student std = new Student( username, pass, ModeType.USER, matricNum, nationality, studyY, email, accessStart, accessEnd);
+			Student std = new Student( username, matricNum, ModeType.USER, matricNum, nationality, studyY, email, accessStart, accessEnd);
 			
 			// add to Students list
 			studentList.add(std);
