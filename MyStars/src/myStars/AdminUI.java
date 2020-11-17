@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 import Entities.*;
 
-public class AdminUI {
+public class AdminUI extends UserInterface {
 
 	public AdminUI() {
 		
@@ -17,17 +17,16 @@ public class AdminUI {
 		Scanner sc = new Scanner(System.in);
 
 		while(choice!=0){
-			System.out.println("Welcome to the Admin UI");
-			System.out.println("===========================");
-			System.out.println("1. Edit student access period");
-			System.out.println("2. Add a student");
-			System.out.println("3. Add a course");
-			System.out.println("4. Update a course");
-			System.out.println("5. Check available slot for an index number (vacancy in a class)");
-			System.out.println("6. Print student list by index");
-			System.out.println("7. Print student list by course (All student registered for the selected course)");
-			System.out.println("0. Exit");
-			System.out.println("===========================");
+			printHeader("Welcome to the Admin UI",
+					"1. Edit student access period",
+					"2. Add a student",
+					"3. Add a course",
+					"4. Update a course",
+					"5. Check available slot for an index number (vacancy in a class)",
+					"6. Print student list by index",
+					"7. Print student list by course (All student registered for the selected course)",
+					"0. Exit");
+
 			System.out.println("Select a number from 1 to 7: ");
 			choice = sc.nextInt();
 
@@ -62,9 +61,8 @@ public class AdminUI {
 
 		boolean validInput;
 
-		System.out.println("===========================");
-		System.out.println("Edit student access time UI");
-		System.out.println("===========================");
+		printHeader("Edit student access time UI");
+
 		System.out.println("Enter -1 to return to Admin UI");
 
 		validInput = false;
@@ -79,7 +77,7 @@ public class AdminUI {
 				System.out.println("Please try again!");
 			} else validInput=true;
 		}
-		//to do check the two dates accessEnd and accessStart if they're lesser or more
+		//todo check the two dates accessEnd and accessStart if they're lesser or more
 		accessStart = getDateInput("Enter access start for student: ");
 		if (accessStart == null) return;
 
@@ -96,9 +94,7 @@ public class AdminUI {
 		int yearOfStudy;
 		Calendar accessStart, accessEnd;
 
-		System.out.println("===========================");
-		System.out.println("Add a student UI");
-		System.out.println("===========================");
+		printHeader("Add a student UI");
 
 		validInput=false;
 		while(!validInput){
@@ -162,9 +158,7 @@ public class AdminUI {
 		int courseAU;
 		boolean validInput;
 
-		System.out.println("===========================");
-		System.out.println("Add a course UI");
-		System.out.println("===========================");
+		printHeader("Add a course UI");
 
 		validInput = false;
 
@@ -203,9 +197,7 @@ public class AdminUI {
 
 		Scanner sc = new Scanner(System.in);
 
-		System.out.println("===========================");
-		System.out.println("Update a course UI");
-		System.out.println("===========================");
+		printHeader("Update a course UI");
 
 		validInput = false;
 
@@ -220,13 +212,11 @@ public class AdminUI {
 			} else validInput=true;
 		}
 
-		System.out.println("===========================");
-		System.out.println("1. Update the course's code");
-		System.out.println("2. Update the course's school");
-		System.out.println("3. Update the course's index number");
-		System.out.println("4. Update the course's vacancy");
-		System.out.println("5. Exit update course UI");
-		System.out.println("===========================");
+		printHeader("1. Update the course's code",
+				"2. Update the course's school",
+				"3. Update the course's index number",
+				"4. Update the course's vacancy",
+				"5. Exit update course UI");
 
 		System.out.println("What part of the course do you want to update?");
 
@@ -234,10 +224,10 @@ public class AdminUI {
 
 		switch(choice){
 			case (1):
-				System.out.println("Enter the course code you'd like to update");
+				System.out.println("Enter the course code you'd like to change to");
 				break;
 			case (2):
-				System.out.println("Enter the course code you'd like to update");
+				System.out.println("Enter the school you'd like to change to");
 				break;
 			case (3):
 				System.out.println("Enter the course code you'd like to update");
@@ -281,71 +271,16 @@ public class AdminUI {
 
 		System.out.println("The vacancy left is: " +  AdminCrsCtrl.checkIndexVacancy(courseCode, indexNo));
 
-
-
 	}
+
 	public void printStudentByIndexUI(){
-		System.out.println("===========================");
-		System.out.println("Print student list by index UI");
-		System.out.println("===========================");
-
-
+		printHeader("Print student list by index UI");
 	}
+
 	public void printStudentByCourseUI(){
-		System.out.println("===========================");
-		System.out.println("Print student list by course UI");
-		System.out.println("===========================");
+		printHeader("Print student list by course UI");
 	}
 
-	private Calendar getDateInput(String prompt){
-		boolean validInput = false;
-		String temp;
-		Scanner sc = new Scanner(System.in);
-		Calendar result = null;
 
-		while(!validInput){
-			System.out.println(prompt);
-			temp = sc.nextLine();
-
-			if(temp.equals("-1")) return null;
-
-			try {
-				result = CalendarCtrl.stringToCalendar(temp);
-				validInput=true;
-			} catch (ParseException e) {
-				System.out.println("You should input a good format dd/MM/yyyy HH:mm");
-			}
-		}
-		return result;
-	}
-
-	private String getStringInput(String prompt){
-		String temp;
-		Scanner sc = new Scanner(System.in);
-
-		System.out.println(prompt);
-
-		temp = sc.nextLine();
-		if(temp.equals("-1")) return "-1";
-		else return temp;
-	}
-
-	private int getIntInput(String prompt, int rangeStart, int rangeEnd){
-		int temp = 0;
-		boolean valid = false;
-		Scanner sc = new Scanner(System.in);
-
-		System.out.println(prompt);
-
-		while(!valid){
-			temp = sc.nextInt();
-			if(temp==-1) return -1;
-			if (temp > rangeEnd || temp < rangeStart)
-				System.out.println("Invalid range. Please enter from " + rangeStart + " to " + rangeEnd);
-			else valid = true;
-		}
-
-		return temp;
-	}
 
 }
