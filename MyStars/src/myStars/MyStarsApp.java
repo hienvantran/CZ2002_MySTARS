@@ -40,6 +40,5 @@ public class MyStarsApp {
 			System.out.println("Please try again.\n");
 			loggedin = login.login();
 		}
-		login.showUI();
 	}
 }
