@@ -9,7 +9,7 @@ import myStars.CalendarCtrl;
 public class IndexDB {
 	public static final String SEPARATOR = "|";
 
-	private static final String IndexFileName = "src//data//Index.txt";
+	private static final String IndexFileName = "data//Index.txt";
 	public static ArrayList<Index> retrieveIndex() throws FileNotFoundException, ParseException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(IndexFileName);
