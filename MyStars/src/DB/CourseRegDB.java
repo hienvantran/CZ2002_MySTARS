@@ -13,7 +13,7 @@ import Entities.CourseRegister;
 public class CourseRegDB {
 	public static final String SEPARATOR = "|";
 	
-	private static final String CourseRegisterFileName = "D:\\Programming\\Java\\MySTARS\\MySTARS\\src\\data\\StudentRegCrs.txt";
+	private static final String CourseRegisterFileName = "data\\StudentRegCrs.txt";
 	private static boolean status= false;
 	public static ArrayList<CourseRegister> retrieveCourseRegister() throws FileNotFoundException, ParseException{
     	// read String from text file
