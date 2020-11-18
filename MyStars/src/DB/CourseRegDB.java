@@ -1,3 +1,5 @@
+
+  
 package DB;
 
 import java.io.*;
@@ -10,13 +12,13 @@ import Entities.CourseRegister;
 
 public class CourseRegDB {
 	public static final String SEPARATOR = "|";
-	public static ArrayList<CourseRegister> courseList = new ArrayList<CourseRegister>();
+	
 	private static final String CourseRegisterFileName = "D:\\Programming\\Java\\MySTARS\\MySTARS\\src\\data\\StudentRegCrs.txt";
 	private static boolean status= false;
 	public static ArrayList<CourseRegister> retrieveCourseRegister() throws FileNotFoundException, ParseException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(CourseRegisterFileName);
-
+    	ArrayList<CourseRegister> courseList = new ArrayList<CourseRegister>();
     	for (int i = 0 ; i < stringArray.size() ; i++) {
             String field = (String) stringArray.get(i);
 			// get individual 'fields' of the string separated by SEPARATOR
@@ -58,3 +60,4 @@ public class CourseRegDB {
 			IOforDB.write(CourseRegisterFileName, newcourseList);
 		}
 }
+
