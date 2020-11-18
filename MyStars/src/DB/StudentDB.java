@@ -9,12 +9,12 @@ import Entities.Student;
 import myStars.CalendarCtrl;
 public class StudentDB {
 	public static final String SEPARATOR = "|";
-	public static ArrayList<Student> studentList = new ArrayList<Student>();
+	
 	private static final String StudentFileName = "data\\Student.txt";
 	public static ArrayList<Student> retrieveStudent() throws FileNotFoundException, ParseException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(StudentFileName);
-
+	ArrayList<Student> studentList = new ArrayList<Student>();
     	for (int i = 0 ; i < stringArray.size() ; i++) {
             String field = (String) stringArray.get(i);
 			// get individual 'fields' of the string separated by SEPARATOR
