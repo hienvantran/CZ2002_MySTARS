@@ -9,7 +9,7 @@ import myStars.CalendarCtrl;
 public class CourseDB {
 	public static final String SEPARATOR = "|";
 
-	private static final String CourseFileName = "src//data//Course.txt";
+	private static final String CourseFileName = "data//Course.txt";
 	public static ArrayList<Course> retrieveCourse() throws FileNotFoundException, ParseException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(CourseFileName);
