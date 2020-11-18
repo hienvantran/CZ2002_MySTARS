@@ -8,12 +8,12 @@ import Entities.*;
 import myStars.CalendarCtrl;
 public class CourseDB {
 	public static final String SEPARATOR = "|";
-	public static ArrayList<Course> courseList = new ArrayList<Course>();
-	private static final String CourseFileName = "D:\\Programming\\Java\\MySTARS\\MySTARS\\src\\data\\Course.txt";
+
+	private static final String CourseFileName = "src//data//Course.txt";
 	public static ArrayList<Course> retrieveCourse() throws FileNotFoundException, ParseException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(CourseFileName);
-
+    	ArrayList<Course> courseList = new ArrayList<Course>();
     	for (int i = 0 ; i < stringArray.size() ; i++) {
             String field = (String) stringArray.get(i);
 			// get individual 'fields' of the string separated by SEPARATOR
