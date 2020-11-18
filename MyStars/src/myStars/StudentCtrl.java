@@ -24,9 +24,10 @@ public class StudentCtrl {
 		}
         Index currentIndex = null;
         ArrayList<Index> indexList = IndexDB.retrieveIndex();
-        ArrayList<Index> idxList = IndexDB.retrieveIndex();
+		ArrayList<Index> idxList = IndexDB.retrieveIndex();
+		System.out.println(indexList.size());
 		for (Index idx : indexList) {
-			if(idx.getIndex()==indexNo) {
+			if(idx.getIndex()==indexNo && idx.getCourseCode().equals(courseCode)) {
 				currentIndex = idx;
 				int vacancy = idx.getVacancy();
 				int waitingList = idx.getWaitList();
@@ -43,7 +44,7 @@ public class StudentCtrl {
 					registerStatus = "Registered";
 					
 				}
-				// Adding
+				// Adding course
 				boolean crsStt = false;
 				if (registerStatus == "Registered") {crsStt = true;}
 				else if (registerStatus == "On Waiting List") {crsStt = false;}
@@ -53,19 +54,20 @@ public class StudentCtrl {
 				CourseRegDB.saveCourse(crsReg);
 			    
 				// Update new vacancy & waiting list
-				idxList.remove(idx); 
+
+				System.out.println(idxList.size());
 			    Index newIndex = new Index(idx.getCourseCode(), indexNo, idx.getGroup(), vacancy, waitingList);
 			    idxList.add(newIndex);
-			    IndexDB.saveIndex(idxList);
-			
-				System.out.println();
+				idxList.remove(idxList.get(indexList.indexOf(idx))); 
+				IndexDB.saveIndex(idxList);
+				System.out.println(idxList.size());
 				if (registerStatus.equals("On Waiting List")){
 					System.out.println("Due to lack of vacancy, your Index " + indexNo + " (" + courseCode + ") will be put into waiting list.");
 				}
 				else if (registerStatus.equals("Registered")){
 					System.out.println("Index " + indexNo + " (" + courseCode + ") has been successfully added!");
 				}
-				break;
+			break;
 			}
 		}
 		
@@ -82,20 +84,14 @@ public class StudentCtrl {
             return;
         }	
 		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
-		ArrayList<CourseRegister> courseReg = CourseRegDB.retrieveCourseRegister();
-		ArrayList<Index> indexList = IndexDB.retrieveIndex();
-		ArrayList<Index> idxList = IndexDB.retrieveIndex();
 		
-
+		ArrayList<Index> indexList = IndexDB.retrieveIndex();
 		for(CourseRegister course : courseRegistrations){
-			System.out.println(course.getStudent() + "   " + course.getIndex());
 			if (course.getIndex() == indexNo && course.getStudent().equals(studentID)){
-				System.out.println("Index " + course.getIndex() + " (" + course.getCourse() + ") for student "+course.getStudent());
-				courseRegistrations.remove(course);
-				System.out.println(courseRegistrations.size());
-				CourseRegDB.saveCourse(courseRegistrations);
-		        
-				System.out.println("Index " + indexNo + " (" + courseCode + ") has been removed!");
+				ArrayList<CourseRegister> courseReg = CourseRegDB.retrieveCourseRegister();
+				courseReg.remove(courseReg.get(courseRegistrations.indexOf(course)));
+				CourseRegDB.saveCourse(courseReg);
+				System.out.println("Index " + indexNo + " (" + courseCode +  " for student "+course.getStudent() + ") has been removed!");
 				for (Index i : indexList){
 					int vacancy = i.getVacancy();
 					int waitingList = i.getWaitList();
@@ -106,11 +102,14 @@ public class StudentCtrl {
 						waitingList--;
 					}
 					
-					if (i.getIndex() == indexNo){
+					if (i.getIndex() == indexNo  && i.getCourseCode().equals(courseCode)){
 						// Update new vacancy & waiting list
-						idxList.remove(i); 
-					    Index newIndex = new Index(i.getCourseCode(), indexNo, i.getGroup(), vacancy, waitingList);
+						ArrayList<Index> idxList = IndexDB.retrieveIndex();
+						Index removedIdx = idxList.get(indexList.indexOf(i));
+						System.out.println(removedIdx.getIndex());
+						Index newIndex = new Index(i.getCourseCode(), indexNo, i.getGroup(), vacancy, waitingList);
 					    idxList.add(newIndex);
+						idxList.remove(removedIdx); 
 					    IndexDB.saveIndex(idxList);
 					    System.out.println("Done");
 					}
@@ -184,7 +183,9 @@ public class StudentCtrl {
 			this.dropCourse(ownStudId, courseCode, yourIdx);
 			this.dropCourse(peerStudId, courseCode, peerIdx);
 			this.registerCourse(ownStudId, courseCode, peerIdx);
+			this.printRegCourse(ownStudId);
 			this.registerCourse(peerStudId, courseCode, yourIdx);
+			this.printRegCourse(peerStudId);
 			System.out.println("Swap index successfully");
 	}
 	
