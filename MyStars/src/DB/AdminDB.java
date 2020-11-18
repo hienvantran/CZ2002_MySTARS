@@ -11,7 +11,7 @@ import Entities.User;
 public class AdminDB {
 	public static final String SEPARATOR = "|";
 	
-	private static final String AdminAccFileName = "src//data//AdminAcc.txt";
+	private static final String AdminAccFileName = "data//AdminAcc.txt";
 	public static ArrayList<User> retrieveAdmin() throws FileNotFoundException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(AdminAccFileName);
