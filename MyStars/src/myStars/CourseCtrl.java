@@ -29,17 +29,6 @@ public class CourseCtrl {
 
 		return myCourse;
 	}
-	public void addCrs(Course course)throws IOException, ParseException {
-		ArrayList<Course> courseList = CourseDB.retrieveCourse();
-		courseList.add(course);
-		CourseDB.saveCourse(courseList);
-	}
-	public void removeCrsByCode(Course course)throws IOException, ParseException {
-		ArrayList<Course> courseList = CourseDB.retrieveCourse();
-		courseList.remove(course);
-		CourseDB.saveCourse(courseList);
-	}
-
 	public ArrayList<Index> getIndexList()throws IOException, ParseException {
 		ArrayList<Index> indexList = IndexDB.retrieveIndex();
 		return indexList;

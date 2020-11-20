@@ -1,5 +1,6 @@
 package myStars;
 
+import DB.CourseDB;
 import Entities.Course;
 import Entities.Index;
 
@@ -22,6 +23,17 @@ public class AdminCrsCtrl extends CourseCtrl {
             e.printStackTrace();
         }
 
+    }
+
+    public void addCrs(Course course)throws IOException, ParseException {
+        ArrayList<Course> courseList = CourseDB.retrieveCourse();
+        courseList.add(course);
+        CourseDB.saveCourse(courseList);
+    }
+    public void removeCrsByCode(Course course)throws IOException, ParseException {
+        ArrayList<Course> courseList = CourseDB.retrieveCourse();
+        courseList.remove(course);
+        CourseDB.saveCourse(courseList);
     }
 
     public static void updateCourseCode(String courseCode, String newCourseCode){
