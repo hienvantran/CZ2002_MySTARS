@@ -20,7 +20,7 @@ public class IOforDB {
 		return mydata;
 	}
 	public static void write(String fileName, ArrayList mydata) throws IOException {
-		PrintWriter out = new PrintWriter(new FileWriter(fileName));
+		PrintWriter out = new PrintWriter(new FileWriter(fileName, false));
 
 		try {
 			for (int i = 0; i < mydata.size(); i++) {

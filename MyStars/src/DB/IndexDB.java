@@ -8,12 +8,12 @@ import Entities.*;
 import myStars.CalendarCtrl;
 public class IndexDB {
 	public static final String SEPARATOR = "|";
-	public static ArrayList<Index> indexList = new ArrayList<Index>();
-	private static final String IndexFileName = "D:\\Programming\\Java\\MySTARS\\MySTARS\\src\\data\\Index.txt";
+
+	private static final String IndexFileName = "data//Index.txt";
 	public static ArrayList<Index> retrieveIndex() throws FileNotFoundException, ParseException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(IndexFileName);
-    	
+    	ArrayList<Index> indexList = new ArrayList<Index>();
     	for (int i = 0 ; i < stringArray.size() ; i++) {
             String field = (String) stringArray.get(i);
 			// get individual 'fields' of the string separated by SEPARATOR
@@ -25,12 +25,9 @@ public class IndexDB {
 			String  group = tokenizer.nextToken().trim();
 			int vacancy = Integer. parseInt((tokenizer.nextToken().trim()));
 			int waitlist = Integer. parseInt((tokenizer.nextToken().trim()));
-			
-			
-			
-			// create Course object and add to course list 
+			// create Index object and add to course list 
 			Index idx = new Index( crsCode, index, group, vacancy, waitlist);
-			// add to Course list
+			// add to Index list
 			indexList.add(idx);
 		}
 		return indexList;

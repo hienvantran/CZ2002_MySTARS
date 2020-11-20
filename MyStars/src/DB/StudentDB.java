@@ -9,19 +9,19 @@ import Entities.Student;
 import myStars.CalendarCtrl;
 public class StudentDB {
 	public static final String SEPARATOR = "|";
-	public static ArrayList<Student> studentList = new ArrayList<Student>();
-	private static final String StudentFileName = "D:\\Programming\\Java\\MySTARS\\MySTARS\\src\\data\\Student.txt";
+	
+	private static final String StudentFileName = "data\\Student.txt";
 	public static ArrayList<Student> retrieveStudent() throws FileNotFoundException, ParseException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(StudentFileName);
-
+	ArrayList<Student> studentList = new ArrayList<Student>();
     	for (int i = 0 ; i < stringArray.size() ; i++) {
             String field = (String) stringArray.get(i);
 			// get individual 'fields' of the string separated by SEPARATOR
 			// pass in the string to the string tokenizer using delimiter "," 
 			StringTokenizer tokenizer = new StringTokenizer(field, SEPARATOR);	
 			//username/password/matricNo/year/nationality/email/accessStart/accessEnd
-			String  username = tokenizer.nextToken().trim();	
+			String  username = tokenizer.nextToken();	
 			String  pass = tokenizer.nextToken().trim();	
 			String matricNum = tokenizer.nextToken().trim(); 
 			String nationality = tokenizer.nextToken().trim(); 
@@ -29,7 +29,6 @@ public class StudentDB {
 			String email = tokenizer.nextToken().trim(); 
 			Calendar accessStart = CalendarCtrl.stringToCalendar(tokenizer.nextToken().trim()); 
 			Calendar accessEnd = CalendarCtrl.stringToCalendar(tokenizer.nextToken().trim()); 
-			
 			// create Student object and add to student list 
 			Student std = new Student( username, pass, ModeType.USER, matricNum, nationality, studyY, email, accessStart, accessEnd);
 			

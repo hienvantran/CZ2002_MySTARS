@@ -10,12 +10,12 @@ import Entities.User;
 
 public class AdminDB {
 	public static final String SEPARATOR = "|";
-	public static ArrayList<User> admin = new ArrayList<User>();
-	private static final String AdminAccFileName = "D:\\Programming\\Java\\MySTARS\\MySTARS\\src\\data\\AdminAcc.txt";
+	
+	private static final String AdminAccFileName = "data//AdminAcc.txt";
 	public static ArrayList<User> retrieveAdmin() throws FileNotFoundException{
     	// read String from text file
     	ArrayList<String> stringArray = (ArrayList) IOforDB.read(AdminAccFileName);
-
+    	ArrayList<User> admin = new ArrayList<User>();
     	for (int i = 0 ; i < stringArray.size() ; i++) {
             String field = (String) stringArray.get(i);
 			// get individual 'fields' of the string separated by SEPARATOR
