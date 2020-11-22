@@ -346,17 +346,35 @@ public class AdminUI extends UserInterface {
 						AdminCrsCtrl.updateIndexVacancy(courseCode, index, vacancy);
 					}else{
 						System.out.println("The course index does not exist!");
-						// get the lsit of course index
+						// todo get the list of course index
 					}
 
 				}
 				break;
 			case 8:
+				validInput = false;
+				while(!validInput){
+					int index = getIntInput("Enter an index you'd like to create: ", 0, 99999);
+					if (index==-1) return;
 
-				System.out.println("Enter an index you'd like to create");
-				//get the valid index first then create
+					String group = getStringInput("Enter the group of the index: ");
+					if (group.equals("-1")) return;
+
+					int vacancy = getIntInput("Enter the vacancy of the index: ", 0, 10000);
+
+					if(AdminCrsCtrl.isExistingIndex(courseCode, index)){
+						// reject the person
+						System.out.println("The index already exists!");
+					}
+					if (AdminCrsCtrl.isExistingGroup(courseCode, index, group)){
+						System.out.println("The group already exists!");
+					}else{
+						// create the index
+						AdminCrsCtrl.createIndex(courseCode, index, group, vacancy);
+						System.out.println("You've successfully created an index!");
+					}
+				}
 				break;
-
 		}
 	}
 	public void checkVacancyUI(){

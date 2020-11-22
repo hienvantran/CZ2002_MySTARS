@@ -143,7 +143,18 @@ public class AdminCrsCtrl extends CourseCtrl {
             e.printStackTrace();
         }
     }
+    public static void createIndex(String courseCode, int indexNum, String group, int vacancy){
+        CourseCtrl courseCtrl = new CourseCtrl();
+        try{
+            ArrayList<Index> indices = courseCtrl.getIndexList();
+            Index newIndex = new Index(courseCode, indexNum, "TEST", vacancy, 0);
+        }catch(IOException e){
+            e.printStackTrace();
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
 
+    }
     public static void updateIndexVacancy(String courseCode, int indexNum, int vacancy){
         CourseCtrl courseCtrl = new CourseCtrl();
         try{
@@ -199,6 +210,22 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
         return false;
 
+    }
+
+    public static boolean isExistingGroup(String courseCode, int indexNo, String group){
+        CourseCtrl courseCtrl = new CourseCtrl();
+        try{
+            ArrayList<Index> indices = courseCtrl.getIndexList();
+            for(Index index: indices){
+                if (index.getGroup().equals(group)) return true;
+            }
+            return false;
+        }catch(IOException e){
+            e.printStackTrace();
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public static boolean isExistingCourse(String courseCode){
