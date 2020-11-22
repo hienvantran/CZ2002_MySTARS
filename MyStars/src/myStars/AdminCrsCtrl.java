@@ -8,33 +8,38 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+/**
+ * Admin course controller!
+ * The Admin course controller extends course controller and
+ * The Admin course controller is a controller helps to interface
+ * UI with the course.
+ * <p>
+ * <b>Note:</b> Giving proper comments in your program makes it more
+ * user friendly and it is assumed as a high quality code.
+ * </p>
+ * @author Ong Eng Hao
+ * @version 1.0
+ * @since 2020-11-21
+*/
 public class AdminCrsCtrl extends CourseCtrl {
     public static void addCourse(Course course){
-
-        // I think this one we can remove it from the courseCtrl because courseCtrol seems to be for everone and don't have to add course in there
-
         CourseCtrl courseCtrl = new CourseCtrl();
-
         try {
-            courseCtrl.addCrs(course);
+            ArrayList<Course> courseList = courseCtrl.getCourseList();
+            courseList.add(course);
+            courseCtrl.setCourseList(courseList);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
     }
-
-    public void addCrs(Course course)throws IOException, ParseException {
-        ArrayList<Course> courseList = CourseDB.retrieveCourse();
-        courseList.add(course);
-        CourseDB.saveCourse(courseList);
-    }
+/*
     public void removeCrsByCode(Course course)throws IOException, ParseException {
         ArrayList<Course> courseList = CourseDB.retrieveCourse();
         courseList.remove(course);
         CourseDB.saveCourse(courseList);
-    }
+    }*/
 
     public static void updateCourseCode(String courseCode, String newCourseCode){
         CourseCtrl courseCtrl = new CourseCtrl();
@@ -73,6 +78,7 @@ public class AdminCrsCtrl extends CourseCtrl {
             e.printStackTrace();
         }
     }
+
     public static void updateCourseSchool(String courseCode, String newCourseSchool){
         CourseCtrl courseCtrl = new CourseCtrl();
         try {
@@ -121,6 +127,49 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
     }
 
+    public static void updateCourseIndex(String courseCode, int indexNum, int newIndexNum){
+        CourseCtrl courseCtrl = new CourseCtrl();
+        try {
+            ArrayList<Index> indices = courseCtrl.getIndexList();
+
+            for(Index index: indices){
+                if(index.getCourseCode().equals(courseCode) && index.getIndex()==indexNum)
+                    index.setIndexNumber(newIndexNum);
+            }
+            courseCtrl.setIndexList(indices);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateIndexVacancy(String courseCode, int indexNum, int vacancy){
+        CourseCtrl courseCtrl = new CourseCtrl();
+        try{
+            ArrayList<Index> indices = courseCtrl.getIndexList();
+            for(Index index: indices){
+                if ((index.getCourseCode().equals(courseCode)) && index.getIndex()==indexNum){
+                    index.setVacancy(vacancy);
+                }
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method is used to add two integers. This is
+     * a the simplest form of a class method, just to
+     * show the usage of various javadoc Tags.
+     * @return void
+     * int This returns sum of numA and numB.
+     * @param courseCode course's code.
+     * @param indexNo index number of the course
+     *
+     */
     public static int noOfIndexVacancy(String courseCode, int indexNo){
         CourseCtrl courseCtrl = new CourseCtrl();
 
@@ -149,7 +198,6 @@ public class AdminCrsCtrl extends CourseCtrl {
             e.printStackTrace();
         }
         return false;
-
 
     }
 

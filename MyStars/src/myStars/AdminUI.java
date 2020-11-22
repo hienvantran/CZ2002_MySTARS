@@ -1,5 +1,7 @@
 package myStars;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Scanner;
 
@@ -52,7 +54,6 @@ public class AdminUI extends UserInterface {
 		}
 	}
 
-	// TODO studentCtrl
 	public void editStudentAccessTimeUI() {
 		String matric = null;
 
@@ -72,7 +73,7 @@ public class AdminUI extends UserInterface {
 
 			if(matric.equals("-1")) return;
 
-			if(AdminStudCtrl.checkStudentExists(matric)==false){
+			if(AdminStudCtrl.isStudentMatricExists(matric)==false){
 				System.out.println("Student does not exist!");
 				System.out.println("Please try again!");
 			} else validInput=true;
@@ -86,9 +87,9 @@ public class AdminUI extends UserInterface {
 
 		AdminStudCtrl.editStudentAccessTime(matric, accessStart, accessEnd);
 
+		System.out.println("You've successfully edited student's access time!");
 	}
 
-	// TODO studentCtrl
 	public void addStudentUI(){
 		boolean validInput;
 		String matric = null, nationality, email = null, username = null, pass;
@@ -103,7 +104,7 @@ public class AdminUI extends UserInterface {
 
 			if(matric.equals("-1")) return;
 
-			if(AdminStudCtrl.checkStudentExists(matric)==true)
+			if(AdminStudCtrl.isStudentMatricExists(matric)==true)
 				System.out.println("Student already exists!");
 			else
 				validInput=true;
@@ -115,26 +116,27 @@ public class AdminUI extends UserInterface {
 
 			if(username.equals("-1")) return;
 
-			if(AdminStudCtrl.checkUsernameExists(username)==true)
+			if(AdminStudCtrl.isStudentUserExists(username)==true)
 				System.out.println("Username already exists!");
+			else
+				validInput=true;
+		}
+
+		email = getStringInput("Enter the email of student: ");
+		validInput=false;
+		while(!validInput){
+			email = getStringInput("Enter the email of student: ");
+
+			if(email.equals("-1")) return;
+
+			if(AdminStudCtrl.isStudentEmailExists(email)==true)
+				System.out.println("Email already exists!");
 			else
 				validInput=true;
 		}
 
 		pass = getStringInput("Enter password of student: ");
 		if (pass.equals("-1")) return;
-
-		validInput=false;
-		while(!validInput){
-			email = getStringInput("Enter username of student: ");
-
-			if(email.equals("-1")) return;
-
-			if(AdminStudCtrl.checkEmailExists(email)==true)
-				System.out.println("Username already exists!");
-			else
-				validInput=true;
-		}
 
 		nationality = getStringInput("Enter nationality number of student: ");
 		if (nationality.equals("-1")) return;
@@ -148,10 +150,33 @@ public class AdminUI extends UserInterface {
 		accessEnd = getDateInput("Enter access end for student: ");
 		if (accessEnd == null) return;
 
-		// create Student object and add to student list
+		pass = hashPassword(pass);
+
 		Student student = new Student(username, pass, ModeType.USER, matric, nationality, yearOfStudy, email, accessStart, accessEnd);
 		AdminStudCtrl.addStudent(student);
 
+	}
+
+	// todo put this hashPassword to a new class and in adminstudctrl
+	public String hashPassword(String password) {
+		String passwordToHash = password;
+		String hashedpw = null;
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(passwordToHash.getBytes());
+			byte[] bytes = md.digest();
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i <bytes.length; i++) {
+				sb.append(Integer.toString((bytes[i]&0xff)+0x100,32).substring(1));
+			}
+			hashedpw = sb.toString();
+//		System.out.println(hashedpw);
+			return hashedpw;
+		}
+		catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public void addCourseUI(){
@@ -231,7 +256,7 @@ public class AdminUI extends UserInterface {
 				// update course code
 				validInput = false;
 				while(!validInput){
-					String newCourseCode = getStringInput("Enter the new course code for " + courseCode);
+					String newCourseCode = getStringInput("Enter the new course code for: " + courseCode);
 
 					if(newCourseCode.equals("-1")) return;
 
@@ -246,7 +271,7 @@ public class AdminUI extends UserInterface {
 			case 2:
 				// update course name
 				//TODO testing
-				String newCourseName = getStringInput("Enter the course name for " + courseCode);
+				String newCourseName = getStringInput("Enter the course name for: " + courseCode);
 
 				if(newCourseName.equals("-1")) return;
 
@@ -254,7 +279,7 @@ public class AdminUI extends UserInterface {
 				break;
 			case 3:
 				//TODO testing
-				String newCourseSchool = getStringInput("Enter the school name for course " + courseCode);
+				String newCourseSchool = getStringInput("Enter the school name for course: " + courseCode);
 
 				if(newCourseSchool.equals("-1")) return;
 
@@ -262,7 +287,7 @@ public class AdminUI extends UserInterface {
 				break;
 			case 4:
 				//TODO testing
-				int newCourseAU = getIntInput("Enter the AU you'd like to change to for course " + courseCode,0, 5000);
+				int newCourseAU = getIntInput("Enter the AU you'd like to change to for course: " + courseCode,0, 5000);
 
 				if(newCourseAU==-1) return;
 
@@ -271,7 +296,7 @@ public class AdminUI extends UserInterface {
 				break;
 			case 5:
 				//TODO testing
-				String newCourseType = getStringInput("Enter the type you'd like to change to for course " + courseCode);
+				String newCourseType = getStringInput("Enter the type you'd like to change to for course: " + courseCode);
 
 				if(newCourseType.equals("-1")) return;
 
@@ -279,13 +304,55 @@ public class AdminUI extends UserInterface {
 
 				break;
 			case 6:
-				System.out.println("Enter the index you'd like to update");
-				// get the valid index first then update
+				// update course code
+				validInput = false;
+				while(!validInput){
+					int index = getIntInput("Enter the index you'd like to update: ", 0,99999);
+
+					if(index==-1) return;
+
+					if(AdminCrsCtrl.isExistingIndex(courseCode,index)){
+						do{
+							int newIndex = getIntInput("Enter the new index", 0,99999);
+							if (AdminCrsCtrl.isExistingIndex(courseCode,newIndex)==false){
+								AdminCrsCtrl.updateCourseIndex(courseCode, index, newIndex);
+								System.out.println("You've successfully updated the course index!");
+								break;
+							}
+							else{
+								System.out.println("The course index you've entered already exist!");
+							}
+						}
+						while(true);
+
+						validInput = true;
+					}
+					else {
+						validInput = false;
+					}
+				}
 				break;
 			case 7:
-				System.out.println("Enter the course index you'd like to update the vacancy");
+				validInput = false;
+				while(!validInput){
+					int index = getIntInput("Enter the index you'd ike to update the course's vacancy: ", 0, 99999);
+
+					if (index==-1) return;
+
+					if(AdminCrsCtrl.isExistingIndex(courseCode, index)){
+						int vacancy = getIntInput("Enter your desired vacancy: ", 0, 5000);
+						if (vacancy==-1) return;
+
+						AdminCrsCtrl.updateIndexVacancy(courseCode, index, vacancy);
+					}else{
+						System.out.println("The course index does not exist!");
+						// get the lsit of course index
+					}
+
+				}
 				break;
 			case 8:
+
 				System.out.println("Enter an index you'd like to create");
 				//get the valid index first then create
 				break;
