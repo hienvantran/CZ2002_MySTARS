@@ -139,8 +139,8 @@ public class StudentCtrl {
 					AUcount = AUcount + crs.getCourseAU();
 					System.out.println("Scheduled lessons for this index:");
 					for (Lesson lesson : lessonList) {
-						System.out.print("\t");
 						if(regCrs.getIndex()==lesson.getindexNo()) {
+							System.out.print("\t");
 							System.out.println(lesson.getLessonType() + " at " + lesson.getLessonVenue() + " on " + lesson.getLessonDay()+ " " + lesson.getLessonTime() + " (" + lesson.getindexNo() + ") ");
 						}
 					}
