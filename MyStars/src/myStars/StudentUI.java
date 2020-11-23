@@ -1,3 +1,4 @@
+
 package myStars;
 
 import java.io.*;
@@ -5,100 +6,131 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import DB.CourseDB;
 import DB.CourseRegDB;
 import DB.IndexDB;
 import DB.StudentDB;
+import Entities.Course;
 import Entities.CourseRegister;
 import Entities.Index;
 import Entities.Student;
 
-
-public class StudentUI {
+/**
+ * This class is created solely for the Student's user-interface
+ * @author zappe
+ *
+ */
+public class StudentUI extends UserInterface{
 	
-	private Student student;
-	private Scanner sc = new Scanner(System.in);
-	
+	Scanner sc = new Scanner(System.in);
+	StudentCtrl mystudent = new StudentCtrl();
 	public StudentUI() {
-		
 	}
-	
-	public void printUI(Student student)
+	/**
+	 * Display different kinds of options for students to choose from 
+	 * Student can register/drop courses, view their already registered courses
+	 * Check class vacancy, change index number, swap index with peers
+	 * @param studentID
+	 */
+	public void printUI(String studentID)
 	{
-		
 		while(true)
 		{
-			System.out.println("Hello how can I help you today?");
-			System.out.println("Please select an option below");
-			System.out.println("1: Register Course");
-			System.out.println("2: Drop Course");
-			System.out.println("3: Check/Print Course Registered");
-			System.out.println("4: Check Vacancies available");
-			System.out.println("5: Change Index Number of Course");
-			System.out.println("6: Swap Index Number with another Student");
-			System.out.println("7: Log out");
-			
-			int choice =0;
+			printHeader("Hello how can I help you today?\n",
+					"Please select an option below",
+					"1: Register Course",
+					"2: Drop Course",
+					"3: Check/Print Course Registered",
+					"4: Check Vacancies available",
+					"5: Change Index Number of Course",
+					"6: Swap Index Number with another Student",
+					"-1. Exit");
+			int choice = 1;
 			
 			try
 			{
-				System.out.println("Please select an option below: ");
+				System.out.println("Select a number from 1 to 6: ");
 				choice = Integer.parseInt(sc.nextLine());
 				switch(choice)
 				{
 					case 1:
-						registerCourseUI();
+						registerCourseUI(studentID);
 						break;
 					case 2:
-						dropCourseUI();
+						dropCourseUI(studentID);
 						break;
 					case 3:
-						CourseRegisterUI();
+						courseRegisterUI(studentID);
 						break;
 					case 4:
-						checkVacancyUI();
+						checkVacancyUI(studentID);
 						break;
 					case 5:
-						changeIndexUI();
+						changeIndexUI(studentID);
 						break;
 					case 6:
-						SwapIndexUI();
+						swapIndexUI(studentID);
 						break;
-					case 7:
-						NotificationUI();
-					case 8:
-						LogOutUI();
 					default:
-						System.out.println("Invalid Input! \n");
+						System.out.println("Invalid Input! Please select a number from 1 to 6: ");
 				}
 			}
 			catch (Exception e)
 			{
-				System.out.println("Invalid Input! Please enter a valid input: \n");
+				System.out.println("Invalid Input! Please enter a valid input ");
+				System.out.println();
 			}
 		}
 	}
-	
-	public void registerCourseUI() throws ParseException, IOException
+	/**
+	 * Display RegisterCourse interface, prompting student for input
+	 * @param studentID
+	 * @throws ParseException
+	 * @throws IOException
+	 */
+	public void registerCourseUI(String studentID) throws ParseException, IOException
 	{
-		//ArrayList<Student> studList = StudentDB.retrieveStudent();
+		//retrieve indexList/CourseList
 		ArrayList<Index> indexList = IndexDB.retrieveIndex();
-		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
+		ArrayList<Course> courseList = CourseDB.retrieveCourse();
 		
 		int inputIndex = 0;
-		String courseCode;
-		String studentID = student.getMatricNum();
+		String inputCrsCode = null;
+		boolean again = true;
+		boolean validInput = false;
+		
+		//Ask student to input CourseCode
+		while (!validInput)
+		{
+			inputCrsCode = getStringInput("Enter the course code: ");
+			inputCrsCode = inputCrsCode.toUpperCase();
+			for (Course course : courseList)
+			{
+				if(course.getCourseCode().equals(inputCrsCode))
+				{
+					validInput = true;
+					break;
+				}
+				if(inputCrsCode.equals("-1")) return;
+			}
+			if (validInput == false)
+			{
+				System.out.println("No such coursecode... Please try again!");
+			}
+		}
 		//To see if student input a number
-		while(true)
+		while(again)
 		{
 			try	
 			{
-				System.out.println("Enter the index number you want to register: \n");
-				inputIndex = sc.nextInt();
-				break;
+				//System.out.println("Enter the index number you want to register: \n");
+				inputIndex = getIntInput("Enter the index number you want to register: ", 0,99999);
+				again = false;
+				if (inputIndex == -1) return;
 			}
 			catch(Exception e)
 			{
-				System.out.println("Invalid Input! Input must be a number: \n");
+				System.out.println("Invalid Input! Please enter only valid number ");
 			}
 		}
 		// Check the database to see if this Index exist
@@ -106,119 +138,287 @@ public class StudentUI {
 		
 		for (Index idx : indexList)
 		{
-			if(idx.getIndex() == inputIndex) 
+		
+			if(idx.getIndex()== inputIndex && idx.getCourseCode().equals(inputCrsCode))
 			{
 				checkIndex = true;
-				courseCode = idx.getCourseCode();
+				inputCrsCode = idx.getCourseCode();
 				break;
 			}
 		}
 		if (checkIndex == false)
 		{
-			System.out.println("The Index you have entered does not exist\n");
+			System.out.println("The Index you have entered does not exist");
 			return;
 		}
+		
 		//Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
-		System.out.println("Confirm to register this index? Please enter (Y/N): \n");
-		char choice = sc.nextLine().charAt(0);
-		Character.toUpperCase(choice);
+		System.out.println("Confirm to register this index? Please enter (Y|N) ");
+		String sel= sc.nextLine();
+		sel = sel.toUpperCase();
 		
-		if (choice == 'Y')
+		if(sel.equals("Y"))
 		{
-			StudentCtrl.registerCourse(studentID,courseCode,inputIndex);
+			mystudent.registerCourse(studentID,inputCrsCode,inputIndex);
 		}
-	}
-	
-	 public void dropCourseUI() throws ParseException, IOException
+	 }
+	/**
+	 * Display DropCourse interface, prompting student for input
+	 * @param studentID
+	 * @throws ParseException
+	 * @throws IOException
+	 */
+	 public void dropCourseUI(String studentID) throws ParseException, IOException
 	 {
+		ArrayList<Course> courseList = CourseDB.retrieveCourse();
 		//Display the list of registeredCourses
-		String studentID = student.getMatricNum();
-		PrintInfoCtrl.printRegCourse(studentID);
+		mystudent.printRegCourse(studentID);
 		
-		ArrayList<Index> indexList = IndexDB.retrieveIndex();
-		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
-			
 		int inputIndex = 0;
-		String courseCode;
-			
+		String inputCrsCode = null;
+		boolean again = true;
+		boolean validInput = false;
+		
+		//Ask user to input the CourseCode
+		while (!validInput)
+		{
+			inputCrsCode = getStringInput("Enter the course code: ");
+			inputCrsCode = inputCrsCode.toUpperCase();
+			for (Course course : courseList)
+			{
+				if(course.getCourseCode().equals(inputCrsCode))
+				{
+					validInput = true;
+					break;
+				}
+				if(inputCrsCode.equals("-1")) return;
+			}
+			if (validInput == false)
+			{
+				System.out.println("No such coursecode... Please try again!");
+			}
+		}
+		
 		//To see if student input a number
-		while(true)
+		while(again)
 		{
 			try	
 			{
-				System.out.println("Enter the index number you want to Drop: \n");
-				inputIndex = sc.nextInt();
-				break;
+				inputIndex = getIntInput("Enter the index number you want to Drop: ", 0,99999);
+				again = false;
+				if (inputIndex == -1) return;
 			}
 			catch(Exception e)
 			{
-				System.out.println("Invalid Input! Input must be a number\n");
+				System.out.println("Invalid Input! Please enter only valid number ");
 			}
 		}
-		//Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
-		System.out.println("Confirm to register this index? Please enter (Y/N): \n");
-		char choice = sc.nextLine().charAt(0);
-		Character.toUpperCase(choice);
 		
-		if (choice == 'Y')
+		
+		//Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
+		System.out.println("Confirm to register this index? Please enter (Y|N) ");
+		String sel= sc.nextLine();
+		sel = sel.toUpperCase();
+		
+		if(sel.equals("Y"))
 		{
-			StudentCtrl.dropCourse(studentID,courseCode,inputIndex);
+			mystudent.dropCourse(studentID,inputCrsCode,inputIndex);
 		}
+		System.out.println();
 	 }
-	 
-	 public void checkVacancyUI() throws IOException, ParseException
+	 /**
+	  * Display CheckVacancy interface, prompting student for input
+	  * @param studentID
+	  * @throws IOException
+	  * @throws ParseException
+	  */
+	 public void checkVacancyUI(String studentID) throws IOException, ParseException
 	 {
 		 ArrayList<Index> indexList = IndexDB.retrieveIndex();
 		 int inputIndex = 0;
-		 String courseCode;
-			
-		 while(true)
-			{
-				try	
-				{
-					System.out.println("Enter the index number you want to view \n");
-					inputIndex = sc.nextInt();
-					break;
-				}
-				catch(Exception e)
-				{
-					System.out.println("Invalid Input! Please enter again\n");
-				}
-			}
-		// Check the database to see if this index exist
-			boolean checkIndex = false;
-			
-			for (Index idx : indexList)
-			{
-				if(idx.getIndex() == inputIndex) 
-				{
-					checkIndex = true;
-					courseCode = idx.getCourseCode();
-					break;
-				}
-			}
-			if (checkIndex == false)
-			{
-				System.out.println("The Index you have entered does not exist\n");
-				return;
-			}
-			//Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
-			StudentCtrl.checkVacancy(courseCode);
-	 }
-	 
-	 public void changeIndexUI() throws IOException, ParseException
-	 {
-		 System.out.print("Enter Current Index Number: \n");
-		 int currentIndexNo = sc.nextInt();
+		 String courseCode = null;
+		 boolean again = true;
 		 
-		 System.out.print("Enter the New Index Number you want to change: \n");
-		 int newIndexNo = sc.nextInt();
-		 
-		 //Display Old and New Index Info
+		 while(again)
+		 {
+			try	
+			{
+				inputIndex = getIntInput("Enter the index number you want to view: ", 0,99999);
+				again = false;
+				if (inputIndex == -1) return;
+			}
+			catch(Exception e)
+			{
+				System.out.println("Invalid Input! Please enter only valid number ");
+			}
+		 }
+		 // Check the database to see if this index exist
+		 boolean checkIndex = false;
+			
+		 for (Index idx : indexList)
+		 {
+			 if(idx.getIndex() == inputIndex) 
+			 {
+				 checkIndex = true;
+				 courseCode = idx.getCourseCode();
+				 break;
+			 }
+		 }
+		 if  (checkIndex == false)
+		 {
+			 System.out.println("The Index you have entered does not exist");
+			 return;
+		 }
 		 //Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
+		 mystudent.checkVacancy(courseCode);
 	 }
-	 
+	 /**
+	  * Display ChangeIndex interface, prompting student for input
+	  * @param studentID
+	  * @throws IOException
+	  * @throws ParseException
+	  */
+	 public void changeIndexUI(String studentID) throws IOException, ParseException
+	 {
+		 ArrayList<Course> courseList = CourseDB.retrieveCourse();
+		 StudentCtrl mystudent = new StudentCtrl();
+		 int currIndex = 0;
+		 int newIndex = 0;
+		 String inputCrsCode = null;
+		 boolean again = true;
+		 boolean validInput = false;
+			
+		//Ask user to input the CourseCode
+		while (!validInput)
+		{
+			inputCrsCode = getStringInput("Enter the course code: ");
+			inputCrsCode = inputCrsCode.toUpperCase();
+			for (Course course : courseList)
+			{
+				if(course.getCourseCode().equals(inputCrsCode))
+				{
+					validInput = true;
+					break;
+				}
+				if(inputCrsCode.equals("-1")) return;
+			}
+			if (validInput == false)
+			{
+				System.out.println("No such coursecode... Please try again!");
+			}
+		}
+		 
+		 while(again)
+		 {
+			try	
+			{
+				currIndex = getIntInput("Enter current index number: ", 0,99999);
+				again = false;
+				if (currIndex == -1) return;
+			}
+			catch(Exception e)
+			{
+				System.out.println("Invalid Input! Please enter only valid number ");
+			}
+		 }
+		 again = true;
+		 // Display New Index Info
+		 while(again)
+		 {
+			try	
+			{
+				newIndex = getIntInput("Enter new index number: ", 0,99999);
+				again = false;
+				if (newIndex == -1) return;
+			}
+			catch(Exception e)
+			{
+				System.out.println("Invalid Input! Please enter only valid number ");
+			}
+		 }
+		 //Display New Index Info
+		 //Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
+		 mystudent.changeIndex(studentID, inputCrsCode,currIndex, newIndex);
+	 }
+	 /**
+	  * Display SwapIndex interface, prompting student for input
+	  * @param studentID
+	  * @throws IOException
+	  * @throws ParseException
+	  */
+	 public void swapIndexUI(String studentID) throws IOException, ParseException
+	 {
+		 ArrayList<Course> courseList = CourseDB.retrieveCourse();
+		 StudentCtrl mystudent = new StudentCtrl();
+		 String peerID = null;
+		 int peerIndex = 0;
+		 int ownIndex = 0;
+		 String inputCrsCode = null;
+		 boolean again = true;
+		 boolean validInput = false;
+			
+		//Ask user to input the CourseCode
+		while (!validInput)
+		{
+			inputCrsCode = getStringInput("Enter the course code: ");
+			inputCrsCode = inputCrsCode.toUpperCase();
+			for (Course course : courseList)
+			{
+				if(course.getCourseCode().equals(inputCrsCode))
+				{
+					validInput = true;
+					break;
+				}
+				if(inputCrsCode.equals("-1")) return;
+			}
+			if (validInput == false)
+			{
+				System.out.println("No such coursecode... Please try again!");
+			}
+		}
+		 
+		 while(again)
+		 {
+			try	
+			{
+				ownIndex = getIntInput("Enter your own index number: ",0,99999);
+				again = false;
+				if(ownIndex == -1) return;
+			}
+			catch(Exception e)
+			{
+				System.out.println("Invalid Input! Please enter only valid number ");
+			}
+		 }
+		 again = true;
+		//Ask user to input Peer's studentID
+		 peerID = getStringInput("Enter Peer's studentID: ");
+		 if(peerID.equals("-1")) return;
+		 
+		 while(again)
+		 {
+			try	
+			{
+				peerIndex = getIntInput("Enter Peer's index number: ",0,99999);
+				again = false;
+				if(peerIndex == -1) return;
+			}
+			catch(Exception e)
+			{
+				System.out.println("Invalid Input! Please enter only valid number ");
+			}
+		 }
+		 //Display New Index Info
+		 //Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
+		 mystudent.swapIdx(studentID, peerID, inputCrsCode, ownIndex, peerIndex);
+	 }
+	 public void courseRegisterUI(String studentID) throws IOException, ParseException
+	 {
+		 mystudent.printRegCourse(studentID);
+	 }
 }
+
+
 	 
 	 
 	 
