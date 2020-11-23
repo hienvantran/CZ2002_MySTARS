@@ -23,7 +23,7 @@ public class PrintInfoCtrl {
 			ArrayList<Student> students = StudentDB.retrieveStudent();
 			ArrayList<CourseRegister> courseRegDBS = CourseRegDB.retrieveCourseRegister();
 			for(CourseRegister courseRegister: courseRegDBS){
-				if(courseRegister.getIndex()==indexNum && courseRegister.getCourse().equals(course))
+				if(courseRegister.getIndex()==indexNum && courseRegister.getCourse().equals(course) && courseRegister.getStatus()==true)
 					matric.add(courseRegister.getStudent());
 			}
 			for(Student student: students){
@@ -43,7 +43,7 @@ public class PrintInfoCtrl {
 			ArrayList<Student> students = StudentDB.retrieveStudent();
 			ArrayList<CourseRegister> courseRegDBS = CourseRegDB.retrieveCourseRegister();
 			for(CourseRegister courseRegister: courseRegDBS){
-				if(courseRegister.getCourse().equals(course))
+				if(courseRegister.getCourse().equals(course) && courseRegister.getStatus()==true)
 					matric.add(courseRegister.getStudent());
 			}
 			for(Student student: students){
