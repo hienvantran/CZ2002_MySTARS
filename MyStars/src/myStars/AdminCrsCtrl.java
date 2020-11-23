@@ -143,6 +143,7 @@ public class AdminCrsCtrl extends CourseCtrl {
             e.printStackTrace();
         }
     }
+
     public static void createIndex(String courseCode, int indexNum, String group, int vacancy){
         CourseCtrl courseCtrl = new CourseCtrl();
         try{
@@ -155,6 +156,7 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
 
     }
+
     public static void updateIndexVacancy(String courseCode, int indexNum, int vacancy){
         CourseCtrl courseCtrl = new CourseCtrl();
         try{
