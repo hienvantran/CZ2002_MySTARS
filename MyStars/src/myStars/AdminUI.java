@@ -336,7 +336,7 @@ public class AdminUI extends UserInterface {
 			case 7:
 				validInput = false;
 				while(!validInput){
-					int index = getIntInput("Enter the index you'd ike to update the course's total slot: ", 0, 99999);
+					int index = getIntInput("Enter the index you'd like to update the course's total slot: ", 0, 99999);
 
 					if (index==-1) return;
 
@@ -345,11 +345,11 @@ public class AdminUI extends UserInterface {
 						if (totalSlot==-1) return;
 
 						adminCrsCtrl.updateIndexTotalSlot(courseCode, index, totalSlot);
+						validInput = true;
 					}else{
 						System.out.println("The course index does not exist!");
 						// todo get the list of course index
 					}
-
 				}
 				break;
 			case 8:
@@ -383,9 +383,7 @@ public class AdminUI extends UserInterface {
 		boolean validInput;
 		String courseCode = null;
 
-		System.out.println("===========================");
-		System.out.println("Check vacancy UI");
-		System.out.println("===========================");
+		printHeader("Check vacancy UI");
 
 		validInput = false;
 		while(!validInput){

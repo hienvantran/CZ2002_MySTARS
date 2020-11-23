@@ -2,6 +2,7 @@ package myStars;
 
 import Entities.Course;
 import Entities.Index;
+import Entities.ModeType;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -158,6 +159,8 @@ public class AdminCrsCtrl extends CourseCtrl {
                     index.setTotalSlot(totalSlot);
                 }
             }
+            courseCtrl.setIndexList(indices);
+            updateRegisteredList(courseCode, indexNum, ModeType.ADMIN);
         }catch(IOException e){
             e.printStackTrace();
         }catch (ParseException e) {

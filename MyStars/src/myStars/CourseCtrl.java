@@ -6,11 +6,45 @@ import java.util.*;
 import Entities.Course;
 import Entities.CourseRegister;
 import Entities.Index;
+import Entities.ModeType;
 import DB.CourseDB;
 import DB.CourseRegDB;
 import DB.IndexDB;
 
 public class CourseCtrl {
+
+    /**
+     * Changes student on waiting list to register on a first
+     * come first serve basis
+     * @param courseCode
+     * @param indexNo
+     */
+    public void updateRegisteredList(String courseCode, int indexNo, ModeType mode){
+        try {
+            ArrayList<CourseRegister> courseRegisters = CourseRegDB.retrieveCourseRegister();
+
+            System.out.println("no of index vacancy: " + noOfIndexVacancy(courseCode, indexNo));
+            
+            for(int i=0; i<noOfIndexVacancy(courseCode, indexNo); i++){
+            	
+                for(CourseRegister courseRegister: courseRegisters){
+                    if(courseRegister.getStatus()==false && courseRegister.getCourse().equals(courseCode) && courseRegister.getIndex()==indexNo){
+                        courseRegister.setStatus(true);
+                        if(mode.equals(ModeType.ADMIN))
+                        	System.out.println(courseRegister.getStudent() + " has been allocated to " + courseCode + ", " + indexNo);
+                        break;
+                    }
+                }
+            }
+            CourseRegDB.saveCourse(courseRegisters);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public int noOfIndexVacancy(String courseCode, int indexNo) {
     	int totalSlot, vacancy=0;
@@ -21,7 +55,6 @@ public class CourseCtrl {
             // deduct the people taking the index no and registered
             ArrayList<CourseRegister> courseReg = CourseRegDB.retrieveCourseRegister();
             for(CourseRegister course: courseReg) {
-            	System.out.println(course.getIndex());
             	if (course.getIndex()==indexNo && course.getStatus()==true)
             		vacancy--;
             }
