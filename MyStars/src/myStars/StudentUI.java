@@ -36,7 +36,7 @@ public class StudentUI extends UserInterface{
 	{
 		while(true)
 		{
-			printHeader("Hello how can I help you today?\n",
+			printHeader("Hello " + studentID + " how can I help you today?\n",
 					"Please select an option below",
 					"1: Register Course",
 					"2: Drop Course",

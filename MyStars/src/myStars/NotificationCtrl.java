@@ -10,7 +10,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class NotificationCtrl {
-    public void sendMail(String receiver, String courseCode, int IndexNo, int type, String peerID, int peerIndex)
+    public static void sendMail(String receiver, String courseCode, int IndexNo, int type, String peerID, int peerIndex)
     {
         String TextMsg = null;
         String subject = null;
