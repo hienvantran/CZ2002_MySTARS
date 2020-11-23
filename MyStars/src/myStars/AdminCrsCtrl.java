@@ -40,7 +40,6 @@ public class AdminCrsCtrl extends CourseCtrl {
             ArrayList<Course> courseList = courseCtrl.getCourseList();
             courseList.add(course);
             courseCtrl.setCourseList(courseList);
-            // TODO prints out all the lists of courses
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -63,7 +62,6 @@ public class AdminCrsCtrl extends CourseCtrl {
             }
             courseCtrl.setCourseList(courseList);
             System.out.println("You've successfully remove the course: " + courseCode);
-            // TODO prints out all the lists of courses
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -270,4 +268,5 @@ public class AdminCrsCtrl extends CourseCtrl {
             e.printStackTrace();
         }
     }
+
 }
