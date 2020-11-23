@@ -244,7 +244,7 @@ public class AdminUI extends UserInterface {
 				"4. Update the course's AU",
 				"5. Update the course's type",
 				"6. Update the course's index number",
-				"7. Update the vacancy of a course index",
+				"7. Update the total slot of a course index",
 				"8. Create a new index",
 				"-1. Exit update course UI");
 
@@ -336,15 +336,15 @@ public class AdminUI extends UserInterface {
 			case 7:
 				validInput = false;
 				while(!validInput){
-					int index = getIntInput("Enter the index you'd ike to update the course's vacancy: ", 0, 99999);
+					int index = getIntInput("Enter the index you'd ike to update the course's total slot: ", 0, 99999);
 
 					if (index==-1) return;
 
 					if(adminCrsCtrl.isExistingIndex(courseCode, index)){
-						int vacancy = getIntInput("Enter your desired vacancy: ", 0, 5000);
-						if (vacancy==-1) return;
+						int totalSlot = getIntInput("Enter your desired total slot: ", 0, 5000);
+						if (totalSlot==-1) return;
 
-						adminCrsCtrl.updateIndexVacancy(courseCode, index, vacancy);
+						adminCrsCtrl.updateIndexTotalSlot(courseCode, index, totalSlot);
 					}else{
 						System.out.println("The course index does not exist!");
 						// todo get the list of course index
@@ -361,7 +361,7 @@ public class AdminUI extends UserInterface {
 					String group = getStringInput("Enter the group of the index: ");
 					if (group.equals("-1")) return;
 
-					int vacancy = getIntInput("Enter the vacancy of the index: ", 0, 10000);
+					int totalSlot = getIntInput("Enter the total slot of the index: ", 0, 10000);
 
 					if(adminCrsCtrl.isExistingIndex(courseCode, index)){
 						// reject the person
@@ -371,7 +371,7 @@ public class AdminUI extends UserInterface {
 						System.out.println("The group already exists!");
 					}else{
 						// create the index
-						adminCrsCtrl.createIndex(courseCode, index, group, vacancy);
+						adminCrsCtrl.createIndex(courseCode, index, group, totalSlot);
 						System.out.println("You've successfully created an index!");
 					}
 				}
@@ -411,8 +411,8 @@ public class AdminUI extends UserInterface {
 			} else validInput=true;
 		}
 
-		System.out.println("The vacancy left is: " +  
-		adminCrsCtrl.noOfIndexVacancyLeft(courseCode, indexNo) + "/" + adminCrsCtrl.noOfIndexVacancy(courseCode, indexNo));
+		System.out.println("The vacancy is: " +
+		adminCrsCtrl.noOfIndexVacancy(courseCode, indexNo) + "/" + adminCrsCtrl.noOfIndexTotalSlot(courseCode, indexNo));
 		
 		System.out.println("Done printing, bringing you back to the admin UI...");
 	}

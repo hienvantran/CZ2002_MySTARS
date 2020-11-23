@@ -46,7 +46,7 @@ public class Index {
 	{
 		this.group = group;
 	}
-	//Vacancy
+	// TotalSlot
 	public int getTotalSlot()
 	{
 		return totalSlot;
@@ -54,19 +54,6 @@ public class Index {
 	public void setTotalSlot(int totalSlot)
 	{
 		this.totalSlot = totalSlot;
-	}
-	public boolean decrementVacancy()
-	{
-		if (totalSlot > 0)
-		{
-			System.out.println("Student successfully registered.");
-			totalSlot--;
-			return true;
-		} else
-		{
-			System.out.println("Lesson is full!");
-			return false;
-		}
 	}
 	
 	//Waiting List

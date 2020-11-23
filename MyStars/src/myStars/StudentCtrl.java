@@ -50,6 +50,7 @@ public class StudentCtrl {
 		for (Index idx : indexList) {
 			if(idx.getIndex()==indexNo && idx.getCourseCode().equals(courseCode)) {
 				currentIndex = idx;
+				// get vacancy from the CourseCtrl method
 				int vacancy = idx.getTotalSlot();
 				int waitingList = idx.getWaitList();
 				String registerStatus = "On Waiting List";
@@ -61,6 +62,7 @@ public class StudentCtrl {
 				    break;
 				    }
 				else if (idx.getTotalSlot() > 0){
+					// we do not need to deduct
 					vacancy--;
 					registerStatus = "Registered";
 					
@@ -114,16 +116,20 @@ public class StudentCtrl {
 				System.out.println("Index " + indexNo + " (" + courseCode +  " for student "+course.getStudent() + ") has been removed!");
 				NotificationCtrl.sendMail(studentEmail,courseCode,indexNo,3,null,0);
 
+				// need to edit
 				for (Index i : indexList){
+					// get from CourseCtrl vacancy
 					int vacancy = i.getTotalSlot();
+					int totalSlot = i.getTotalSlot();
 					int waitingList = i.getWaitList();
+
 					if (course.getStatus()==true){vacancy++;}
 					else{waitingList--;}
 					if (i.getIndex() == indexNo  && i.getCourseCode().equals(courseCode)){
 						// Update new vacancy & waiting list
 						ArrayList<Index> idxList = IndexDB.retrieveIndex();
 						Index removedIdx = idxList.get(indexList.indexOf(i));
-						Index newIndex = new Index(i.getCourseCode(), indexNo, i.getGroup(), vacancy, waitingList);
+						Index newIndex = new Index(i.getCourseCode(), indexNo, i.getGroup(), totalSlot, waitingList);
 					    idxList.add(newIndex);
 						idxList.remove(removedIdx); 
 					    IndexDB.saveIndex(idxList);

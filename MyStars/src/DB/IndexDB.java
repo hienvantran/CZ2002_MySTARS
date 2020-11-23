@@ -19,14 +19,14 @@ public class IndexDB {
 			// get individual 'fields' of the string separated by SEPARATOR
 			// pass in the string to the string tokenizer using delimiter "," 
 			StringTokenizer tokenizer = new StringTokenizer(field, SEPARATOR);	
-			//CourseCode/index/Group/vacancy/waitList
+			//CourseCode/index/Group/totalSlot/waitList
 			String  crsCode = tokenizer.nextToken().trim();	
 			int index = Integer. parseInt((tokenizer.nextToken().trim())); 
 			String  group = tokenizer.nextToken().trim();
-			int vacancy = Integer. parseInt((tokenizer.nextToken().trim()));
+			int totalSlot = Integer. parseInt((tokenizer.nextToken().trim()));
 			int waitlist = Integer. parseInt((tokenizer.nextToken().trim()));
 			// create Index object and add to course list 
-			Index idx = new Index( crsCode, index, group, vacancy, waitlist);
+			Index idx = new Index( crsCode, index, group, totalSlot, waitlist);
 			// add to Index list
 			indexList.add(idx);
 		}

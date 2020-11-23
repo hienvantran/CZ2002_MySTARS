@@ -12,28 +12,28 @@ import DB.IndexDB;
 
 public class CourseCtrl {
 
-    public int noOfIndexVacancyLeft(String courseCode, int indexNo) {
-    	int totalVacancy, vacancyLeft=0;
+    public int noOfIndexVacancy(String courseCode, int indexNo) {
+    	int totalSlot, vacancy=0;
     	
     	try {
-            totalVacancy = getIndexbyCode(courseCode, indexNo).getTotalSlot();
-            vacancyLeft = totalVacancy;
+            totalSlot = getIndexbyCode(courseCode, indexNo).getTotalSlot();
+            vacancy = totalSlot;
             // deduct the people taking the index no and registered
             ArrayList<CourseRegister> courseReg = CourseRegDB.retrieveCourseRegister();
             for(CourseRegister course: courseReg) {
             	System.out.println(course.getIndex());
             	if (course.getIndex()==indexNo && course.getStatus()==true)
-            		vacancyLeft--;
+            		vacancy--;
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-		return vacancyLeft;
+		return vacancy;
     	
     }
-    public int noOfIndexVacancy(String courseCode, int indexNo){
+    public int noOfIndexTotalSlot(String courseCode, int indexNo){
 
         try {
             return getIndexbyCode(courseCode, indexNo).getTotalSlot();

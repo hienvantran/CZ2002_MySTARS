@@ -138,10 +138,10 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
     }
 
-    public void createIndex(String courseCode, int indexNum, String group, int vacancy){
+    public void createIndex(String courseCode, int indexNum, String group, int totalSlot){
         try{
             ArrayList<Index> indices = courseCtrl.getIndexList();
-            Index newIndex = new Index(courseCode, indexNum, "TEST", vacancy, 0);
+            Index newIndex = new Index(courseCode, indexNum, "TEST", totalSlot, 0);
         }catch(IOException e){
             e.printStackTrace();
         }catch (ParseException e) {
@@ -150,12 +150,12 @@ public class AdminCrsCtrl extends CourseCtrl {
 
     }
 
-    public void updateIndexVacancy(String courseCode, int indexNum, int vacancy){
+    public void updateIndexTotalSlot(String courseCode, int indexNum, int totalSlot){
         try{
             ArrayList<Index> indices = courseCtrl.getIndexList();
             for(Index index: indices){
                 if ((index.getCourseCode().equals(courseCode)) && index.getIndex()==indexNum){
-                    index.setTotalSlot(vacancy);
+                    index.setTotalSlot(totalSlot);
                 }
             }
         }catch(IOException e){
