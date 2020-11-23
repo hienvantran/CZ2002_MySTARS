@@ -135,7 +135,7 @@ public class StudentCtrl {
 			System.out.println(regCrs.getCourse());
 			for (Course crs : courseList) {
 				if(regCrs.getCourse().equals(crs.getCourseCode())) {
-					System.out.println("Course Code " + crs.getCourseCode() + " (" + regCrs.getIndex() + ") " + " AU: " + crs.getCourseAU());
+					System.out.println("Course Code " + crs.getCourseCode() + " ( index no." + regCrs.getIndex() +") " + " AU: " + crs.getCourseAU());
 					AUcount = AUcount + crs.getCourseAU();
 					System.out.println("Scheduled lessons for this index:");
 					for (Lesson lesson : lessonList) {

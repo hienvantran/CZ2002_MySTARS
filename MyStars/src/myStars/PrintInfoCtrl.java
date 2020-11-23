@@ -5,26 +5,49 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import DB.CourseDB;
 import DB.CourseRegDB;
+import DB.LessonDB;
+import Entities.Course;
 import Entities.CourseRegister;
+import Entities.Lesson;
 
 
 public class PrintInfoCtrl {
 	
-	public static void printRegCourse(String studentID) throws FileNotFoundException, ParseException, IOException
-	{
+	public void printRegCourse(String studentID) throws FileNotFoundException, ParseException, IOException{
 		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
+		ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
+		ArrayList<Course> courseList = CourseDB.retrieveCourse();
 		ArrayList<CourseRegister> stCrsReg = new ArrayList<CourseRegister>();
 		for(CourseRegister course : courseRegistrations){
-			
-			if (course.getStudent().equals(studentID)){
+			if (course.getStudent().equals(studentID) && course.getStatus()==true){
 				stCrsReg.add(course);
 			}
 		}
-		System.out.println("The registered courses for this student " + studentID + " is \n");
 		for (CourseRegister regCrs : stCrsReg) {
-			System.out.println("Index " + regCrs.getIndex() + " (" + regCrs.getCourse() + ") ");
+			System.out.println(regCrs.getCourse()+ regCrs.getIndex() +regCrs.getStudent());
 		}
+		System.out.println("The registered courses for this student " + studentID + " are as follows ");
+		int AUcount =0;
+		for (CourseRegister regCrs : stCrsReg) {
+			System.out.println(regCrs.getCourse());
+			for (Course crs : courseList) {
+				if(regCrs.getCourse().equals(crs.getCourseCode())) {
+					System.out.println("Course Code " + crs.getCourseCode() + " ( index no." + regCrs.getIndex() +") " + " AU: " + crs.getCourseAU());
+					AUcount = AUcount + crs.getCourseAU();
+					System.out.println("Scheduled lessons for this index:");
+					for (Lesson lesson : lessonList) {
+						if(regCrs.getIndex()==lesson.getindexNo()) {
+							System.out.print("\t");
+							System.out.println(lesson.getLessonType() + " at " + lesson.getLessonVenue() + " on " + lesson.getLessonDay()+ " " + lesson.getLessonTime() + " (" + lesson.getindexNo() + ") ");
+						}
+					}
+				}
+			}
+		}
+		System.out.println("total Au = " + AUcount);
+		return;
 	}
 	
 }

@@ -37,7 +37,7 @@ public class LoginCtrl {
 		String password;
 		System.out.println("Please enter your password: ");
 		password=pass();
-		this.password= this.hashPassword(password);
+		this.password= HashCtrl.hashPassword(password);
 	}
 	
 	public String pass() {
@@ -124,24 +124,5 @@ public class LoginCtrl {
     	else return false;
     }
 	
-	public String hashPassword(String password) {
-		String passwordToHash = password;
-		String hashedpw = null;
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(passwordToHash.getBytes());
-			byte[] bytes = md.digest();
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i <bytes.length; i++) {
-				sb.append(Integer.toString((bytes[i]&0xff)+0x100,32).substring(1));
-			}
-		hashedpw = sb.toString();
-//		System.out.println(hashedpw);
-		return hashedpw;
-		}
-		catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+	
 }
