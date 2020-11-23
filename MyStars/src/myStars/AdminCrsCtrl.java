@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * @since 2020-11-21
 */
 public class AdminCrsCtrl extends CourseCtrl {
-    public static void addCourse(Course course){
+    public void addCourse(Course course){
         CourseCtrl courseCtrl = new CourseCtrl();
         try {
             ArrayList<Course> courseList = courseCtrl.getCourseList();
@@ -41,7 +41,7 @@ public class AdminCrsCtrl extends CourseCtrl {
         CourseDB.saveCourse(courseList);
     }*/
 
-    public static void updateCourseCode(String courseCode, String newCourseCode){
+    public void updateCourseCode(String courseCode, String newCourseCode){
         CourseCtrl courseCtrl = new CourseCtrl();
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
@@ -63,7 +63,7 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
     }
 
-    public static void updateCourseName(String courseCode, String newCourseName){
+    public void updateCourseName(String courseCode, String newCourseName){
         CourseCtrl courseCtrl = new CourseCtrl();
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
@@ -79,7 +79,7 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
     }
 
-    public static void updateCourseSchool(String courseCode, String newCourseSchool){
+    public void updateCourseSchool(String courseCode, String newCourseSchool){
         CourseCtrl courseCtrl = new CourseCtrl();
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
@@ -95,7 +95,7 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
     }
 
-    public static void updateCourseAU(String courseCode, int newAU){
+    public void updateCourseAU(String courseCode, int newAU){
         CourseCtrl courseCtrl = new CourseCtrl();
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
@@ -111,7 +111,7 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
     }
 
-    public static void updateCourseType(String courseCode, String newType){
+    public void updateCourseType(String courseCode, String newType){
         CourseCtrl courseCtrl = new CourseCtrl();
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
@@ -127,7 +127,7 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
     }
 
-    public static void updateCourseIndex(String courseCode, int indexNum, int newIndexNum){
+    public void updateCourseIndex(String courseCode, int indexNum, int newIndexNum){
         CourseCtrl courseCtrl = new CourseCtrl();
         try {
             ArrayList<Index> indices = courseCtrl.getIndexList();
@@ -144,7 +144,7 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
     }
 
-    public static void createIndex(String courseCode, int indexNum, String group, int vacancy){
+    public void createIndex(String courseCode, int indexNum, String group, int vacancy){
         CourseCtrl courseCtrl = new CourseCtrl();
         try{
             ArrayList<Index> indices = courseCtrl.getIndexList();
@@ -157,7 +157,7 @@ public class AdminCrsCtrl extends CourseCtrl {
 
     }
 
-    public static void updateIndexVacancy(String courseCode, int indexNum, int vacancy){
+    public void updateIndexVacancy(String courseCode, int indexNum, int vacancy){
         CourseCtrl courseCtrl = new CourseCtrl();
         try{
             ArrayList<Index> indices = courseCtrl.getIndexList();
@@ -183,7 +183,7 @@ public class AdminCrsCtrl extends CourseCtrl {
      * @param indexNo index number of the course
      *
      */
-    public static int noOfIndexVacancy(String courseCode, int indexNo){
+    public int noOfIndexVacancy(String courseCode, int indexNo){
         CourseCtrl courseCtrl = new CourseCtrl();
 
         try {
@@ -194,57 +194,6 @@ public class AdminCrsCtrl extends CourseCtrl {
             e.printStackTrace();
         }
         return 0;
-    }
-
-    public static boolean isExistingIndex(String courseCode, int indexNo){
-        // checks if the index exists
-        CourseCtrl courseCtrl = new CourseCtrl();
-        Index index;
-        try {
-            index = courseCtrl.getIndexbyCode(courseCode, indexNo);
-
-            if (index.getCourseCode()=="Unknown") return false;
-            else return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return false;
-
-    }
-
-    public static boolean isExistingGroup(String courseCode, int indexNo, String group){
-        CourseCtrl courseCtrl = new CourseCtrl();
-        try{
-            ArrayList<Index> indices = courseCtrl.getIndexList();
-            for(Index index: indices){
-                if (index.getGroup().equals(group)) return true;
-            }
-            return false;
-        }catch(IOException e){
-            e.printStackTrace();
-        }catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public static boolean isExistingCourse(String courseCode){
-        // checks if the course exists
-        CourseCtrl courseCtrl = new CourseCtrl();
-        Course course;
-        try {
-            course = courseCtrl.getCrsbyCode(courseCode);
-
-            if (course.getCourseCode()=="Unknown") return false;
-            else return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
 }

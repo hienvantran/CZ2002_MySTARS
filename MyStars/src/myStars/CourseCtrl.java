@@ -9,6 +9,59 @@ import DB.CourseDB;
 import DB.IndexDB;
 
 public class CourseCtrl {
+
+    public boolean isExistingCourse(String courseCode){
+        // checks if the course exists
+        CourseCtrl courseCtrl = new CourseCtrl();
+        Course course;
+        try {
+            course = courseCtrl.getCrsbyCode(courseCode);
+
+            if (course.getCourseCode()=="Unknown") return false;
+            else return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isExistingGroup(String courseCode, int indexNo, String group){
+        CourseCtrl courseCtrl = new CourseCtrl();
+        try{
+            ArrayList<Index> indices = courseCtrl.getIndexList();
+            for(Index index: indices){
+                if (index.getGroup().equals(group)) return true;
+            }
+            return false;
+        }catch(IOException e){
+            e.printStackTrace();
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isExistingIndex(String courseCode, int indexNo){
+        // checks if the index exists
+        CourseCtrl courseCtrl = new CourseCtrl();
+        Index index;
+        try {
+            index = courseCtrl.getIndexbyCode(courseCode, indexNo);
+
+            if (index.getCourseCode()=="Unknown") return false;
+            else return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
+    
 	public ArrayList<Course> getCourseList()throws IOException, ParseException {
 		ArrayList<Course> courseList = CourseDB.retrieveCourse();
 		return courseList;
