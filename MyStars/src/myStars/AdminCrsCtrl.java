@@ -22,8 +22,17 @@ import java.util.ArrayList;
  * @since 2020-11-21
 */
 public class AdminCrsCtrl extends CourseCtrl {
+    /**
+     * A new object of CourseCtrl
+     */
     CourseCtrl courseCtrl = new CourseCtrl();
-    
+
+    /**
+     * Adds a course to the database
+     * the course should have all the required attributes such as
+     * course code, course name, AU, school, type
+     * @param course The desired course to add to the database
+     */
     public void addCourse(Course course){
         try {
             ArrayList<Course> courseList = courseCtrl.getCourseList();
@@ -35,6 +44,7 @@ public class AdminCrsCtrl extends CourseCtrl {
             e.printStackTrace();
         }
     }
+    // TODO
 /*
     public void removeCrsByCode(Course course)throws IOException, ParseException {
         ArrayList<Course> courseList = CourseDB.retrieveCourse();
@@ -42,6 +52,12 @@ public class AdminCrsCtrl extends CourseCtrl {
         CourseDB.saveCourse(courseList);
     }*/
 
+    /**
+     * Update a course's code
+     * The old course code should not be the same
+     * @param courseCode the old course code
+     * @param newCourseCode the new course code
+     */
     public void updateCourseCode(String courseCode, String newCourseCode){
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
@@ -63,6 +79,11 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
     }
 
+    /**
+     * Update a course's name
+     * @param courseCode the course code
+     * @param newCourseName the new desired course name
+     */
     public void updateCourseName(String courseCode, String newCourseName){
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
@@ -78,6 +99,11 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
     }
 
+    /**
+     * Update course's school
+     * @param courseCode the course code
+     * @param newCourseSchool the new desired course school
+     */
     public void updateCourseSchool(String courseCode, String newCourseSchool){
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
@@ -93,6 +119,11 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
     }
 
+    /**
+     * Update the course's AU
+     * @param courseCode the course code
+     * @param newAU the new desired course AU
+     */
     public void updateCourseAU(String courseCode, int newAU){
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
@@ -108,6 +139,11 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
     }
 
+    /**
+     * Update the course's type
+     * @param courseCode the course code
+     * @param newType the new desired course type
+     */
     public void updateCourseType(String courseCode, String newType){
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
@@ -123,6 +159,12 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
     }
 
+    /**
+     * Update the course's index number
+     * @param courseCode the course's code
+     * @param indexNum the old course name
+     * @param newIndexNum the new course name
+     */
     public void updateCourseIndex(String courseCode, int indexNum, int newIndexNum){
         try {
             ArrayList<Index> indices = courseCtrl.getIndexList();
@@ -139,10 +181,17 @@ public class AdminCrsCtrl extends CourseCtrl {
         }
     }
 
+    /**
+     * Create a new index for a particular course
+     * @param courseCode the course code
+     * @param indexNum the desired course index
+     * @param group the desired course group
+     * @param totalSlot the desired total slot for the index
+     */
     public void createIndex(String courseCode, int indexNum, String group, int totalSlot){
         try{
             ArrayList<Index> indices = courseCtrl.getIndexList();
-            Index newIndex = new Index(courseCode, indexNum, "TEST", totalSlot, 0);
+            Index newIndex = new Index(courseCode, indexNum, group, totalSlot, 0);
         }catch(IOException e){
             e.printStackTrace();
         }catch (ParseException e) {
@@ -151,6 +200,16 @@ public class AdminCrsCtrl extends CourseCtrl {
 
     }
 
+    /**
+     * Update an index's total slot
+     * The new total index slot should not be lesser than the old index slot
+     * After updating, it will update the vacancy of the course and
+     * registers students that are on waiting list on a first come first serve
+     * basis
+     * @param courseCode the course code
+     * @param indexNum the course's index
+     * @param totalSlot the desired total slot to be updated
+     */
     public void updateIndexTotalSlot(String courseCode, int indexNum, int totalSlot){
         try{
             ArrayList<Index> indices = courseCtrl.getIndexList();
@@ -167,16 +226,4 @@ public class AdminCrsCtrl extends CourseCtrl {
             e.printStackTrace();
         }
     }
-
-    /**
-     * This method is used to add two integers. This is
-     * a the simplest form of a class method, just to
-     * show the usage of various javadoc Tags.
-     * @return void
-     * int This returns sum of numA and numB.
-     * @param courseCode course's code.
-     * @param indexNo index number of the course
-     *
-     */
-
 }

@@ -14,10 +14,13 @@ import DB.IndexDB;
 public class CourseCtrl {
 
     /**
-     * Changes student on waiting list to register on a first
-     * come first serve basis
-     * @param courseCode
-     * @param indexNo
+     * Changes student's status from "On waiting list" to "Registered" on a first
+     * come first serve basis based on the course code and course index
+     * Admin will be informed of those student whose status changed from "On waiting
+     * list" to "Registered"
+     * @param courseCode the course code
+     * @param indexNo the course's index
+     * @param mode the mode of the account
      */
     public void updateRegisteredList(String courseCode, int indexNo, ModeType mode){
         try {
@@ -46,6 +49,12 @@ public class CourseCtrl {
         }
     }
 
+    /**
+     * Returns the total number of vacancy for the index
+     * @param courseCode the course code
+     * @param indexNo the index number
+     * @return the total number of vacancy left
+     */
     public int noOfIndexVacancy(String courseCode, int indexNo) {
     	int totalSlot, vacancy=0;
     	
@@ -66,6 +75,13 @@ public class CourseCtrl {
 		return vacancy;
     	
     }
+
+    /**
+     * Returns the total number of slot of an index
+     * @param courseCode the course code
+     * @param indexNo the index number
+     * @return the total number of slot of the index
+     */
     public int noOfIndexTotalSlot(String courseCode, int indexNo){
 
         try {
@@ -77,8 +93,13 @@ public class CourseCtrl {
         }
         return 0;
     }
+
+    /**
+     * Returns the existence of a course
+     * @param courseCode the course code
+     * @return true if the course exists, else false
+     */
     public boolean isExistingCourse(String courseCode){
-        // checks if the course exists
         CourseCtrl courseCtrl = new CourseCtrl();
         Course course;
         try {
@@ -94,6 +115,13 @@ public class CourseCtrl {
         return false;
     }
 
+    /**
+     * Returns the existence of a course group
+     * @param courseCode the course's code
+     * @param indexNo the index number of the course
+     * @param group the group of the course
+     * @return true if the group exists, else false
+     */
     public boolean isExistingGroup(String courseCode, int indexNo, String group){
         CourseCtrl courseCtrl = new CourseCtrl();
         try{
@@ -110,6 +138,12 @@ public class CourseCtrl {
         return false;
     }
 
+    /**
+     * Returns the existence of a course index
+     * @param courseCode the course's code
+     * @param indexNo the index of the course
+     * @return true if the index exists, else false
+     */
     public boolean isExistingIndex(String courseCode, int indexNo){
         // checks if the index exists
         CourseCtrl courseCtrl = new CourseCtrl();
@@ -128,14 +162,34 @@ public class CourseCtrl {
 
     }
 
-    
+    /**
+     * Returns an array list of course
+     * @return an array list of course
+     * @throws IOException if IO exception occurs
+     * @throws ParseException if parse exception occurs
+     */
 	public ArrayList<Course> getCourseList()throws IOException, ParseException {
 		ArrayList<Course> courseList = CourseDB.retrieveCourse();
 		return courseList;
 	}
+
+    /**
+     * Set an array list of course to the database
+     * @param courseList an array list of course
+     * @throws IOException if IO exception occurs
+     * @throws ParseException if parse exception occurs
+     */
 	public void setCourseList(ArrayList<Course> courseList)throws IOException, ParseException {
 		CourseDB.saveCourse(courseList);
 	}
+
+    /**
+     * Get the course by course code
+     * @param CourseCode the course code desired
+     * @return course
+     * @throws IOException if IO exception occurs
+     * @throws ParseException if parse exception occurs
+     */
 	public Course getCrsbyCode(String CourseCode)throws IOException, ParseException {
 		ArrayList<Course> courseList = CourseDB.retrieveCourse();
 		Course myCourse = new Course("Unknown", "Unknown", 0, "Unknown","Unknown");
@@ -149,14 +203,36 @@ public class CourseCtrl {
 
 		return myCourse;
 	}
+
+    /**
+     * Get the array list of indices
+     * @return array list of indices
+     * @throws IOException if IO exception occurs
+     * @throws ParseException if parse exception occurs
+     */
 	public ArrayList<Index> getIndexList()throws IOException, ParseException {
 		ArrayList<Index> indexList = IndexDB.retrieveIndex();
 		return indexList;
 	}
+
+    /**
+     * set an array list of indices to the database
+     * @param indexList index list desired
+     * @throws IOException if IO exception occurs
+     * @throws ParseException if parse exception occurs
+     */
 	public void setIndexList(ArrayList<Index> indexList)throws IOException, ParseException {
 		IndexDB.saveIndex(indexList);
 	}
 
+    /**
+     * Get the course index based on course code
+     * @param CourseCode the course code
+     * @param indexNo the course index
+     * @return Index object based on the course code and index number
+     * @throws IOException if IO exception occurs
+     * @throws ParseException if parse exception occurs
+     */
 	public Index getIndexbyCode(String CourseCode, int indexNo) throws IOException, ParseException{
 		ArrayList<Index> indexList = IndexDB.retrieveIndex();
 		Index myIndex = new Index("Unknown", 0, "Unknown", 0, 0);
@@ -166,7 +242,4 @@ public class CourseCtrl {
 		}
 		return myIndex;
 	}
-		
-	
-	
 }

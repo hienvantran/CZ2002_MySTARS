@@ -49,10 +49,8 @@ public class AdminStudCtrl {
 
     /**
      * Checks whether the student exists using matriculation number
-     * returns true when student exists in the database
-     * returns false when student does not exist in the database
      * @param matric String
-     * @return boolean value of student's matriculation existence
+     * @return true when student exists in the database, else false
      */
     public static boolean isStudentMatricExists(String matric){
         try {
@@ -71,9 +69,8 @@ public class AdminStudCtrl {
 
     /**
      * Checks whether a student exists using username
-     * returns true when username exists in the database
-     * @param username String
-     * @return boolean value of user's username existence
+     * @param username The username of a student
+     * @return true when username exists in the database, else false
      */
     public static boolean isStudentUserExists(String username){
         try{
@@ -95,9 +92,9 @@ public class AdminStudCtrl {
 
     /**
      * Checks whether a student email exists
-     * returns true when email exists in the database
      * @param email
-     * @return
+     * @return true when email exists in the database, else false
+     *
      */
     public static boolean isStudentEmailExists(String email){
         try{

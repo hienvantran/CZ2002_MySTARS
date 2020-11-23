@@ -9,11 +9,21 @@ import Entities.*;
 
 public class AdminUI extends UserInterface {
 
+	/**
+	 * A new object of AdminCtrl
+	 */
 	AdminCrsCtrl adminCrsCtrl = new AdminCrsCtrl();
+
+	/**
+	 * Default constructor
+	 */
 	public AdminUI() {
 		
 	}
-
+	
+	/**
+	 * Provide the UI of the AdminUI
+	 */
 	public void printUI() {
 		int choice=1;
 		Scanner sc = new Scanner(System.in);
@@ -55,6 +65,9 @@ public class AdminUI extends UserInterface {
 		}
 	}
 
+	/**
+	 * Provide the UI for editing a student's access time
+	 */
 	public void editStudentAccessTimeUI() {
 		String matric = null;
 
@@ -91,6 +104,9 @@ public class AdminUI extends UserInterface {
 		System.out.println("You've successfully edited student's access time!");
 	}
 
+	/**
+	 * Provide the UI for adding student profile
+	 */
 	public void addStudentUI(){
 		boolean validInput;
 		String matric = null, nationality, email = null, username = null, pass;
@@ -151,35 +167,16 @@ public class AdminUI extends UserInterface {
 		accessEnd = getDateInput("Enter access end for student: ");
 		if (accessEnd == null) return;
 
-		pass = hashPassword(pass);
+		pass = HashCtrl.hashPassword(pass);
 
 		Student student = new Student(username, pass, ModeType.USER, matric, nationality, yearOfStudy, email, accessStart, accessEnd);
 		AdminStudCtrl.addStudent(student);
 
 	}
 
-	// todo put this hashPassword to a new class and in adminstudctrl
-	public String hashPassword(String password) {
-		String passwordToHash = password;
-		String hashedpw = null;
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(passwordToHash.getBytes());
-			byte[] bytes = md.digest();
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i <bytes.length; i++) {
-				sb.append(Integer.toString((bytes[i]&0xff)+0x100,32).substring(1));
-			}
-			hashedpw = sb.toString();
-//		System.out.println(hashedpw);
-			return hashedpw;
-		}
-		catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
+	/**
+	 * Provide the UI for adding course
+	 */
 	public void addCourseUI(){
 		String courseCode = null, courseName, school, courseType;
 		int courseAU;
@@ -217,6 +214,9 @@ public class AdminUI extends UserInterface {
 
 	}
 
+	/**
+	 * Provide the UI for updating a course
+	 */
 	public void updateCourseUI(){
 		int choice;
 		String courseCode = null;
@@ -378,6 +378,10 @@ public class AdminUI extends UserInterface {
 				break;
 		}
 	}
+
+	/**
+	 * Provide the UI for checking vacancy of a course
+	 */
 	public void checkVacancyUI(){
 		int indexNo = 0;
 		boolean validInput;
@@ -415,6 +419,9 @@ public class AdminUI extends UserInterface {
 		System.out.println("Done printing, bringing you back to the admin UI...");
 	}
 
+	/**
+	 * Provide the UI for printing student by index
+	 */
 	public void printStudentByIndexUI(){
 		boolean validInput;
 		String courseCode = null;
@@ -451,6 +458,9 @@ public class AdminUI extends UserInterface {
 		System.out.println("Done printing, bringing you back to the admin UI...");
 	}
 
+	/**
+	 * Provide the UI for printing student by course
+	 */
 	public void printStudentByCourseUI(){
 		boolean validInput;
 		String courseCode = null;

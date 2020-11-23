@@ -5,18 +5,32 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-import DB.CourseDB;
-import DB.CourseRegDB;
-import DB.LessonDB;
-import DB.StudentDB;
-import Entities.Course;
-import Entities.CourseRegister;
-import Entities.Lesson;
-import Entities.Student;
+import DB.*;
+import Entities.*;
 
 
 public class PrintInfoCtrl {
+	/**
+	 * Prints out the list of indices based on the course code
+	 * @param course The course's code
+	 */
+	public void printIndexByCourse(String course){
+		try{
+			ArrayList<Index> indices = IndexDB.retrieveIndex();
+			for(Index index: indices){
+				System.out.println(index.getIndex());
+			}
+		}catch(FileNotFoundException | ParseException e){
+			e.printStackTrace();
+		}
+	}
 
+	/**
+	 * Prints out the list of students registered to the course by indices and course code
+	 * This method excludes those students whose status is "On waiting list"
+	 * @param indexNum The course's index number
+	 * @param course The course's code
+	 */
 	public void printStudByIndex(int indexNum, String course){
 		try {
 			ArrayList<String> matric = new ArrayList<>();
@@ -35,8 +49,12 @@ public class PrintInfoCtrl {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
 	}
+
+	/**
+	 * Prints out the list of registered based on a course code
+	 * @param course the course's code
+	 */
 	public void printStudByCourse(String course){
 		try {
 			ArrayList<String> matric = new ArrayList<>();
