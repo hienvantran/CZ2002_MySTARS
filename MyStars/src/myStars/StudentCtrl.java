@@ -14,17 +14,37 @@ import DB.LessonDB;
 import DB.CourseRegDB;
 
 public class StudentCtrl {
+	private static final int numAUlimit = 21;
+	static ArrayList<Student> studList = new ArrayList<Student>();
+	static ArrayList<Course> courseList = new ArrayList<Course>();
+	static ArrayList<Index> indexList = new ArrayList<Index>();
+	static ArrayList<CourseRegister> crsReg = new ArrayList<CourseRegister>();
+	static ArrayList<Lesson> lessonList = new ArrayList<Lesson>();
+	public StudentCtrl() throws FileNotFoundException, ParseException, IOException {
+		studList = StudentDB.retrieveStudent();
+		courseList = CourseDB.retrieveCourse();
+		indexList = IndexDB.retrieveIndex();
+		crsReg = CourseRegDB.retrieveCourseRegister();
+		lessonList = LessonDB.retrieveLesson();
+	}
 	public static void registerCourse(String studentID, String courseCode,int indexNo, StudentCtrl studentCtrl) throws FileNotFoundException, ParseException, IOException{
 		System.out.println("Going to Registration");
 		Student currentStudent = null;
-		ArrayList<Student> studList = StudentDB.retrieveStudent();
+		for (Course crs : courseList) {
+			if(crs.getCourseCode().equals(courseCode)) {
+				int crsAU = crs.getCourseAU();
+				if (studentCtrl.totalAU(studentID) + crsAU > numAUlimit) {
+					System.out.println("Exceed the number of AUs can register per sem: " + numAUlimit + "AUs");
+		            return;
+				}
+			}}
 		for (Student stud : studList) {
 			if(stud.getUsername().equals(studentID)) {
 				currentStudent = stud;
 			}
 		}
         Index currentIndex = null;
-        ArrayList<Index> indexList = IndexDB.retrieveIndex();
+        
 		ArrayList<Index> idxList = IndexDB.retrieveIndex();
 		if (studentCtrl.checkCourseRegistrationExists(studentID, courseCode,indexNo) == true) {
 			System.out.println("This student already registers this course.");
@@ -34,6 +54,7 @@ public class StudentCtrl {
 			System.out.println("This course is clashed, cannot add");
             return;
 		}
+		
 		for (Index idx : indexList) {
 			if(idx.getIndex()==indexNo && idx.getCourseCode().equals(courseCode)) {
 				currentIndex = idx;
@@ -57,18 +78,15 @@ public class StudentCtrl {
 				if (registerStatus == "Registered") {crsStt = true;}
 				else if (registerStatus == "On Waiting List") {crsStt = false;}
 				CourseRegister newStudentCourse = new CourseRegister(studentID, courseCode, indexNo, crsStt);
-				ArrayList<CourseRegister> crsReg = CourseRegDB.retrieveCourseRegister();
+				
 				crsReg.add(newStudentCourse);
 				CourseRegDB.saveCourse(crsReg);
 			    
 				// Update new vacancy & waiting list
-
-				System.out.println(idxList.size());
 			    Index newIndex = new Index(idx.getCourseCode(), indexNo, idx.getGroup(), vacancy, waitingList);
 			    idxList.add(newIndex);
 				idxList.remove(idxList.get(indexList.indexOf(idx))); 
 				IndexDB.saveIndex(idxList);
-				System.out.println(idxList.size());
 				if (registerStatus.equals("On Waiting List")){
 					System.out.println("Due to lack of vacancy, your Index " + indexNo + " (" + courseCode + ") will be put into waiting list.");
 				}
@@ -117,11 +135,9 @@ public class StudentCtrl {
 	}
 	
 	public void printRegCourse(String studentID) throws FileNotFoundException, ParseException, IOException{
-		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
-		ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
-		ArrayList<Course> courseList = CourseDB.retrieveCourse();
+
 		ArrayList<CourseRegister> stCrsReg = new ArrayList<CourseRegister>();
-		for(CourseRegister course : courseRegistrations){
+		for(CourseRegister course : crsReg){
 			if (course.getStudent().equals(studentID) && course.getStatus()==true){
 				stCrsReg.add(course);
 			}
@@ -151,9 +167,29 @@ public class StudentCtrl {
 		return;
 	}
 	
+	public int totalAU(String studentID) throws FileNotFoundException, ParseException, IOException{
+
+
+		ArrayList<CourseRegister> stCrsReg = new ArrayList<CourseRegister>();
+		for(CourseRegister course : crsReg){
+			if (course.getStudent().equals(studentID) && course.getStatus()==true){
+				stCrsReg.add(course);
+			}
+		}
+		int AUcount =0;
+		for (CourseRegister regCrs : stCrsReg) {
+			for (Course crs : courseList) {
+				if(regCrs.getCourse().equals(crs.getCourseCode())) {	
+					AUcount = AUcount + crs.getCourseAU();
+				}
+			}
+		}
+		
+		
+		return AUcount;
+	}
 	
 	public static void checkVacancy(String courseID) throws FileNotFoundException, ParseException, IOException{
-		ArrayList<Index> indexList = IndexDB.retrieveIndex();
 		ArrayList<Index> crsindexList = new ArrayList<Index>();
 		HashMap<Integer, Integer> idxVacancy = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> idxWaitlist = new HashMap<Integer, Integer>();
@@ -206,9 +242,8 @@ public class StudentCtrl {
 	}
 	
 	public boolean checkCourseRegistrationExists(String studentID, String courseID, int indexNo) throws FileNotFoundException, ParseException{
-        ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
         
-        for(CourseRegister course:courseRegistrations) {
+        for(CourseRegister course: crsReg) {
         	if(course.getCourse().equals(courseID)&& course.getStudent().equals(studentID) &&course.getIndex()==indexNo) {
         		
         		return true;
@@ -218,9 +253,7 @@ public class StudentCtrl {
 
     }
 	public boolean checkCourseClash(String studentID, String courseCode, int indexNo) throws FileNotFoundException, ParseException, IOException{
-        System.out.println("Going to clash! ");
-		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
-        ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
+
         boolean clash = false;
         if (this.checkCourseRegistrationExists(studentID, courseCode,indexNo) == false) {
         	// get the lesson time for desired reg course
@@ -236,7 +269,6 @@ public class StudentCtrl {
             			lecDay = lesson.getLessonDay();
             			double sHour = Double.parseDouble(lesson.getLessonTime().substring(0,2)) + 0.5;
             			double eHour = Double.parseDouble(lesson.getLessonTime().substring(5,7)) + 0.5;
-            			System.out.println(sHour + " " + eHour);
             			lechourMin.add(sHour);
             			lechourMin.add(eHour);
 
@@ -261,13 +293,13 @@ public class StudentCtrl {
             }
         	
         	// iterate through registered crs to check if the desired one clash or not
-    		ArrayList<CourseRegister> crsReg = new ArrayList<CourseRegister>();
-    		for(CourseRegister course : courseRegistrations){
+    		ArrayList<CourseRegister> newcrsReg = new ArrayList<CourseRegister>();
+    		for(CourseRegister course : crsReg){
     			if (course.getStudent().equals(studentID)){
-    				crsReg.add(course);
+    				newcrsReg.add(course);
     			}
     		}
-        	for (CourseRegister crs: crsReg) {
+        	for (CourseRegister crs: newcrsReg) {
         		int idxNo = crs.getIndex();
         		String crsCode = crs.getCourse();
         		for(Lesson lesson:lessonList) {
