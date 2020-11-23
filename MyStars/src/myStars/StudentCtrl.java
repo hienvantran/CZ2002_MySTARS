@@ -15,7 +15,7 @@ import DB.CourseRegDB;
 
 public class StudentCtrl {
 	private static final int numAUlimit = 21;
-	public static void registerCourse(String studentID, String courseCode,int indexNo, StudentCtrl studentCtrl) throws FileNotFoundException, ParseException, IOException{
+	public void registerCourse(String studentID, String courseCode,int indexNo) throws FileNotFoundException, ParseException, IOException{
 		System.out.println("Going to Registration");
 		Student currentStudent = null;
 		ArrayList<Student> studList = StudentDB.retrieveStudent();
@@ -23,7 +23,7 @@ public class StudentCtrl {
 		for (Course crs : courseList) {
 			if(crs.getCourseCode().equals(courseCode)) {
 				int crsAU = crs.getCourseAU();
-				if (studentCtrl.totalAU(studentID) + crsAU > numAUlimit) {
+				if (this.totalAU(studentID) + crsAU > numAUlimit) {
 					System.out.println("Exceed the number of AUs can register per sem: " + numAUlimit + "AUs");
 		            return;
 				}
@@ -36,11 +36,11 @@ public class StudentCtrl {
         Index currentIndex = null;
         ArrayList<Index> indexList = IndexDB.retrieveIndex();
 		ArrayList<Index> idxList = IndexDB.retrieveIndex();
-		if (studentCtrl.checkCourseRegistrationExists(studentID, courseCode,indexNo) == true) {
+		if (this.checkCourseRegistrationExists(studentID, courseCode,indexNo) == true) {
 			System.out.println("This student already registers this course.");
             return;
         }	
-		if (studentCtrl.checkCourseClash(studentID, courseCode, indexNo)) {
+		if (this.checkCourseClash(studentID, courseCode, indexNo)) {
 			System.out.println("This course is clashed, cannot add");
             return;
 		}
@@ -87,9 +87,9 @@ public class StudentCtrl {
 			}
 		}
 	}
-	public static void dropCourse(String studentID, String courseCode,int indexNo, StudentCtrl studentCtrl) throws FileNotFoundException, ParseException, IOException{
+	public void dropCourse(String studentID, String courseCode,int indexNo) throws FileNotFoundException, ParseException, IOException{
 		System.out.println("Going to Drop Registration");
-		if (studentCtrl.checkCourseRegistrationExists(studentID, courseCode,indexNo) == false) {
+		if (this.checkCourseRegistrationExists(studentID, courseCode,indexNo) == false) {
 			System.out.println("Sorry. This student has not yet registered this course.");
             return;
         }	
@@ -159,7 +159,7 @@ public class StudentCtrl {
 		return;
 	}
 	
-	public int totalAU(String studentID) throws FileNotFoundException, ParseException, IOException{
+	public  int totalAU(String studentID) throws FileNotFoundException, ParseException, IOException{
 		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
 		ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
 		ArrayList<Course> courseList = CourseDB.retrieveCourse();
@@ -182,7 +182,7 @@ public class StudentCtrl {
 		return AUcount;
 	}
 	
-	public static void checkVacancy(String courseID) throws FileNotFoundException, ParseException, IOException{
+	public void checkVacancy(String courseID) throws FileNotFoundException, ParseException, IOException{
 		ArrayList<Index> indexList = IndexDB.retrieveIndex();
 		ArrayList<Index> crsindexList = new ArrayList<Index>();
 		HashMap<Integer, Integer> idxVacancy = new HashMap<Integer, Integer>();
@@ -210,8 +210,8 @@ public class StudentCtrl {
         	String sel= sc.nextLine();
         	switch(sel) {
         	  case "Y":
-        		  this.dropCourse(studentID, courseCode, curidxNo, this);
-        		  this.registerCourse(studentID, courseCode, newidxNo, this);
+        		  this.dropCourse(studentID, courseCode, curidxNo);
+        		  this.registerCourse(studentID, courseCode, newidxNo);
         		  break;
         	  case "N":
         		  System.out.println("Come back to last page!");
@@ -226,11 +226,11 @@ public class StudentCtrl {
 		System.out.println("Go to swap index");
 		System.out.println("Swap index with student " + peerStudId + "(his index " + peerIdx + ")");
 
-			this.dropCourse(ownStudId, courseCode, yourIdx, this);
-			this.dropCourse(peerStudId, courseCode, peerIdx, this);
-			this.registerCourse(ownStudId, courseCode, peerIdx, this);
+			this.dropCourse(ownStudId, courseCode, yourIdx);
+			this.dropCourse(peerStudId, courseCode, peerIdx);
+			this.registerCourse(ownStudId, courseCode, peerIdx);
 			this.printRegCourse(ownStudId);
-			this.registerCourse(peerStudId, courseCode, yourIdx, this);
+			this.registerCourse(peerStudId, courseCode, yourIdx);
 			this.printRegCourse(peerStudId);
 			System.out.println("Swap index successfully");
 	}
@@ -240,7 +240,6 @@ public class StudentCtrl {
         
         for(CourseRegister course:courseRegistrations) {
         	if(course.getCourse().equals(courseID)&& course.getStudent().equals(studentID) &&course.getIndex()==indexNo) {
-        		
         		return true;
 			}
         }
