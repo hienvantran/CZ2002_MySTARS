@@ -223,7 +223,7 @@ public class StudentCtrl {
 		String studentEmail = null;
 			for (Student stud : studList) 
 			{
-				if(stud.getUsername().equals(studentID)) 
+				if(stud.getMatricNum().equals(studentID)) 
 				{
 					studentEmail = stud.getEmail();
 				}
@@ -273,11 +273,11 @@ public class StudentCtrl {
 		String peerEmail = null;
 		for (Student stud : studList) 
 		{
-			if(stud.getUsername().equals(ownStudId)) 
+			if(stud.getMatricNum().equals(ownStudId)) 
 			{
 				studentEmail = stud.getEmail();
 			}
-			if(stud.getUsername().equals(peerStudId)) 
+			if(stud.getMatricNum().equals(peerStudId)) 
 			{
 				peerEmail = stud.getEmail();
 			}
