@@ -14,10 +14,20 @@ import DB.LessonDB;
 import DB.CourseRegDB;
 
 public class StudentCtrl {
+	private static final int numAUlimit = 8;
 	public static void registerCourse(String studentID, String courseCode,int indexNo, StudentCtrl studentCtrl) throws FileNotFoundException, ParseException, IOException{
 		System.out.println("Going to Registration");
 		Student currentStudent = null;
 		ArrayList<Student> studList = StudentDB.retrieveStudent();
+		ArrayList<Course> courseList = CourseDB.retrieveCourse();
+		for (Course crs : courseList) {
+			if(crs.getCourseCode().equals(courseCode)) {
+				int crsAU = crs.getCourseAU();
+				if (studentCtrl.totalAU(studentID) + crsAU > numAUlimit) {
+					System.out.println("Exceed the number of AUs can register per sem: " + numAUlimit + "AUs");
+		            return;
+				}
+			}}
 		for (Student stud : studList) {
 			if(stud.getUsername().equals(studentID)) {
 				currentStudent = stud;
@@ -34,6 +44,7 @@ public class StudentCtrl {
 			System.out.println("This course is clashed, cannot add");
             return;
 		}
+		
 		for (Index idx : indexList) {
 			if(idx.getIndex()==indexNo && idx.getCourseCode().equals(courseCode)) {
 				currentIndex = idx;
@@ -62,13 +73,10 @@ public class StudentCtrl {
 				CourseRegDB.saveCourse(crsReg);
 			    
 				// Update new vacancy & waiting list
-
-				System.out.println(idxList.size());
 			    Index newIndex = new Index(idx.getCourseCode(), indexNo, idx.getGroup(), vacancy, waitingList);
 			    idxList.add(newIndex);
 				idxList.remove(idxList.get(indexList.indexOf(idx))); 
 				IndexDB.saveIndex(idxList);
-				System.out.println(idxList.size());
 				if (registerStatus.equals("On Waiting List")){
 					System.out.println("Due to lack of vacancy, your Index " + indexNo + " (" + courseCode + ") will be put into waiting list.");
 				}
@@ -151,6 +159,28 @@ public class StudentCtrl {
 		return;
 	}
 	
+	public int totalAU(String studentID) throws FileNotFoundException, ParseException, IOException{
+		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
+		ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
+		ArrayList<Course> courseList = CourseDB.retrieveCourse();
+		ArrayList<CourseRegister> stCrsReg = new ArrayList<CourseRegister>();
+		for(CourseRegister course : courseRegistrations){
+			if (course.getStudent().equals(studentID) && course.getStatus()==true){
+				stCrsReg.add(course);
+			}
+		}
+		int AUcount =0;
+		for (CourseRegister regCrs : stCrsReg) {
+			for (Course crs : courseList) {
+				if(regCrs.getCourse().equals(crs.getCourseCode())) {	
+					AUcount = AUcount + crs.getCourseAU();
+				}
+			}
+		}
+		
+		
+		return AUcount;
+	}
 	
 	public static void checkVacancy(String courseID) throws FileNotFoundException, ParseException, IOException{
 		ArrayList<Index> indexList = IndexDB.retrieveIndex();
@@ -218,7 +248,6 @@ public class StudentCtrl {
 
     }
 	public boolean checkCourseClash(String studentID, String courseCode, int indexNo) throws FileNotFoundException, ParseException, IOException{
-        System.out.println("Going to clash! ");
 		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
         ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
         boolean clash = false;
@@ -236,7 +265,6 @@ public class StudentCtrl {
             			lecDay = lesson.getLessonDay();
             			double sHour = Double.parseDouble(lesson.getLessonTime().substring(0,2)) + 0.5;
             			double eHour = Double.parseDouble(lesson.getLessonTime().substring(5,7)) + 0.5;
-            			System.out.println(sHour + " " + eHour);
             			lechourMin.add(sHour);
             			lechourMin.add(eHour);
 
