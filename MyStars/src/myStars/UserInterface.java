@@ -45,8 +45,14 @@ public class UserInterface {
 
             if(temp.equals("-1")) return null;
 
+            if(temp.length()!=16) {
+                System.out.println("You should input a good format dd/MM/yyyy HH:mm");
+                continue;
+            }
+
             try {
                 result = CalendarCtrl.stringToCalendar(temp);
+                System.out.println(CalendarCtrl.calendarToString(result));
                 validInput=true;
             } catch (ParseException e) {
                 System.out.println("You should input a good format dd/MM/yyyy HH:mm");
