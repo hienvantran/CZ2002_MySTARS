@@ -4,12 +4,46 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 import Entities.Course;
+import Entities.CourseRegister;
 import Entities.Index;
 import DB.CourseDB;
+import DB.CourseRegDB;
 import DB.IndexDB;
 
 public class CourseCtrl {
 
+    public int noOfIndexVacancyLeft(String courseCode, int indexNo) {
+    	int totalVacancy, vacancyLeft=0;
+    	
+    	try {
+            totalVacancy = getIndexbyCode(courseCode, indexNo).getVacancy();
+            vacancyLeft = totalVacancy;
+            // deduct the people taking the index no and registered
+            ArrayList<CourseRegister> courseReg = CourseRegDB.retrieveCourseRegister();
+            for(CourseRegister course: courseReg) {
+            	System.out.println(course.getIndex());
+            	if (course.getIndex()==indexNo && course.getStatus()==true)
+            		vacancyLeft--;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+		return vacancyLeft;
+    	
+    }
+    public int noOfIndexVacancy(String courseCode, int indexNo){
+
+        try {
+            return getIndexbyCode(courseCode, indexNo).getVacancy();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
     public boolean isExistingCourse(String courseCode){
         // checks if the course exists
         CourseCtrl courseCtrl = new CourseCtrl();
