@@ -9,6 +9,7 @@ import Entities.*;
 
 public class AdminUI extends UserInterface {
 
+	AdminCrsCtrl adminCrsCtrl = new AdminCrsCtrl();
 	public AdminUI() {
 		
 	}
@@ -193,7 +194,7 @@ public class AdminUI extends UserInterface {
 
 			if(courseCode.equals("-1")) return;
 
-			if(AdminCrsCtrl.isExistingCourse(courseCode)==true){
+			if(adminCrsCtrl.isExistingCourse(courseCode)==true){
 				System.out.println("Course code already exists!");
 				System.out.println("Please try again!");
 			} else validInput=true;
@@ -212,7 +213,7 @@ public class AdminUI extends UserInterface {
 		if (courseType.equals("-1")) return;
 
 		Course course = new Course(courseCode, courseName, courseAU, school, courseType);
-		AdminCrsCtrl.addCourse(course);
+		adminCrsCtrl.addCourse(course);
 
 	}
 
@@ -231,7 +232,7 @@ public class AdminUI extends UserInterface {
 
 			if(courseCode.equals("-1")) return;
 
-			if(AdminCrsCtrl.isExistingCourse(courseCode)==false){
+			if(adminCrsCtrl.isExistingCourse(courseCode)==false){
 				System.out.println("Course code does not exist!");
 				System.out.println("Please try again!");
 			} else validInput=true;
@@ -260,10 +261,10 @@ public class AdminUI extends UserInterface {
 
 					if(newCourseCode.equals("-1")) return;
 
-					if(AdminCrsCtrl.isExistingCourse(newCourseCode))
+					if(adminCrsCtrl.isExistingCourse(newCourseCode))
 						System.out.println("Course already exist! Change to other course code");
 					else {
-						AdminCrsCtrl.updateCourseCode(courseCode, newCourseCode);
+						adminCrsCtrl.updateCourseCode(courseCode, newCourseCode);
 						validInput = true;
 					}
 				}
@@ -275,7 +276,7 @@ public class AdminUI extends UserInterface {
 
 				if(newCourseName.equals("-1")) return;
 
-				AdminCrsCtrl.updateCourseName(courseCode, newCourseName);
+				adminCrsCtrl.updateCourseName(courseCode, newCourseName);
 				break;
 			case 3:
 				//TODO testing
@@ -283,7 +284,7 @@ public class AdminUI extends UserInterface {
 
 				if(newCourseSchool.equals("-1")) return;
 
-				AdminCrsCtrl.updateCourseSchool(courseCode, newCourseSchool);
+				adminCrsCtrl.updateCourseSchool(courseCode, newCourseSchool);
 				break;
 			case 4:
 				//TODO testing
@@ -291,7 +292,7 @@ public class AdminUI extends UserInterface {
 
 				if(newCourseAU==-1) return;
 
-				AdminCrsCtrl.updateCourseAU(courseCode, newCourseAU);
+				adminCrsCtrl.updateCourseAU(courseCode, newCourseAU);
 
 				break;
 			case 5:
@@ -300,7 +301,7 @@ public class AdminUI extends UserInterface {
 
 				if(newCourseType.equals("-1")) return;
 
-				AdminCrsCtrl.updateCourseType(courseCode, newCourseType);
+				adminCrsCtrl.updateCourseType(courseCode, newCourseType);
 
 				break;
 			case 6:
@@ -311,11 +312,11 @@ public class AdminUI extends UserInterface {
 
 					if(index==-1) return;
 
-					if(AdminCrsCtrl.isExistingIndex(courseCode,index)){
+					if(adminCrsCtrl.isExistingIndex(courseCode,index)){
 						do{
 							int newIndex = getIntInput("Enter the new index", 0,99999);
-							if (AdminCrsCtrl.isExistingIndex(courseCode,newIndex)==false){
-								AdminCrsCtrl.updateCourseIndex(courseCode, index, newIndex);
+							if (adminCrsCtrl.isExistingIndex(courseCode,newIndex)==false){
+								adminCrsCtrl.updateCourseIndex(courseCode, index, newIndex);
 								System.out.println("You've successfully updated the course index!");
 								break;
 							}
@@ -339,11 +340,11 @@ public class AdminUI extends UserInterface {
 
 					if (index==-1) return;
 
-					if(AdminCrsCtrl.isExistingIndex(courseCode, index)){
+					if(adminCrsCtrl.isExistingIndex(courseCode, index)){
 						int vacancy = getIntInput("Enter your desired vacancy: ", 0, 5000);
 						if (vacancy==-1) return;
 
-						AdminCrsCtrl.updateIndexVacancy(courseCode, index, vacancy);
+						adminCrsCtrl.updateIndexVacancy(courseCode, index, vacancy);
 					}else{
 						System.out.println("The course index does not exist!");
 						// todo get the list of course index
@@ -362,15 +363,15 @@ public class AdminUI extends UserInterface {
 
 					int vacancy = getIntInput("Enter the vacancy of the index: ", 0, 10000);
 
-					if(AdminCrsCtrl.isExistingIndex(courseCode, index)){
+					if(adminCrsCtrl.isExistingIndex(courseCode, index)){
 						// reject the person
 						System.out.println("The index already exists!");
 					}
-					if (AdminCrsCtrl.isExistingGroup(courseCode, index, group)){
+					if (adminCrsCtrl.isExistingGroup(courseCode, index, group)){
 						System.out.println("The group already exists!");
 					}else{
 						// create the index
-						AdminCrsCtrl.createIndex(courseCode, index, group, vacancy);
+						adminCrsCtrl.createIndex(courseCode, index, group, vacancy);
 						System.out.println("You've successfully created an index!");
 					}
 				}
@@ -392,7 +393,7 @@ public class AdminUI extends UserInterface {
 
 			if(courseCode.equals("-1")) return;
 
-			if(AdminCrsCtrl.isExistingCourse(courseCode)==false){
+			if(adminCrsCtrl.isExistingCourse(courseCode)==false){
 				System.out.println("Course code does not exist!");
 				System.out.println("Please try again!");
 			} else validInput=true;
@@ -404,13 +405,13 @@ public class AdminUI extends UserInterface {
 
 			if (indexNo==-1) return;
 
-			if(AdminCrsCtrl.isExistingIndex(courseCode, indexNo)==false){
+			if(adminCrsCtrl.isExistingIndex(courseCode, indexNo)==false){
 				System.out.println("Index does not exist!");
 				System.out.println("Please try again!");
 			} else validInput=true;
 		}
 
-		System.out.println("The vacancy left is: " +  AdminCrsCtrl.noOfIndexVacancy(courseCode, indexNo));
+		System.out.println("The vacancy left is: " +  adminCrsCtrl.noOfIndexVacancy(courseCode, indexNo));
 
 	}
 
@@ -426,7 +427,7 @@ public class AdminUI extends UserInterface {
 
 			if(courseCode.equals("-1")) return;
 
-			if(AdminCrsCtrl.isExistingCourse(courseCode)==false){
+			if(adminCrsCtrl.isExistingCourse(courseCode)==false){
 				System.out.println("Course code does not exist!");
 				System.out.println("Please try again!");
 			} else validInput=true;
@@ -438,7 +439,7 @@ public class AdminUI extends UserInterface {
 
 			if (indexNo==-1) return;
 
-			if(AdminCrsCtrl.isExistingIndex(courseCode, indexNo)==false){
+			if(adminCrsCtrl.isExistingIndex(courseCode, indexNo)==false){
 				System.out.println("Index does not exist!");
 				System.out.println("Please try again!");
 			} else validInput=true;
@@ -462,7 +463,7 @@ public class AdminUI extends UserInterface {
 
 			if(courseCode.equals("-1")) return;
 
-			if(AdminCrsCtrl.isExistingCourse(courseCode)==false){
+			if(adminCrsCtrl.isExistingCourse(courseCode)==false){
 				System.out.println("Course code does not exist!");
 				System.out.println("Please try again!");
 			} else validInput=true;
