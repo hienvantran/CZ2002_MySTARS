@@ -14,7 +14,7 @@ import DB.LessonDB;
 import DB.CourseRegDB;
 
 public class StudentCtrl {
-	private static final int numAUlimit = 8;
+	private static final int numAUlimit = 21;
 	public static void registerCourse(String studentID, String courseCode,int indexNo, StudentCtrl studentCtrl) throws FileNotFoundException, ParseException, IOException{
 		System.out.println("Going to Registration");
 		Student currentStudent = null;
