@@ -127,7 +127,8 @@ public class CourseCtrl {
         try{
             ArrayList<Index> indices = courseCtrl.getIndexList();
             for(Index index: indices){
-                if (index.getGroup().equals(group)) return true;
+                if (index.getGroup().equals(group) &&
+                        index.getCourseCode().equals(courseCode) && index.getIndex()==indexNo) return true;
             }
             return false;
         }catch(IOException e){

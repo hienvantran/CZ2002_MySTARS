@@ -1,9 +1,11 @@
 package myStars;
 
+import DB.CourseDB;
 import Entities.Course;
 import Entities.Index;
 import Entities.ModeType;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -38,19 +40,61 @@ public class AdminCrsCtrl extends CourseCtrl {
             ArrayList<Course> courseList = courseCtrl.getCourseList();
             courseList.add(course);
             courseCtrl.setCourseList(courseList);
+            // TODO prints out all the lists of courses
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
-    // TODO
-/*
-    public void removeCrsByCode(Course course)throws IOException, ParseException {
-        ArrayList<Course> courseList = CourseDB.retrieveCourse();
-        courseList.remove(course);
-        CourseDB.saveCourse(courseList);
-    }*/
+
+    /**
+     * Remove a course by course code
+     * @param courseCode the course code desired to be removed
+     */
+    public void removeCourse(String courseCode){
+        try {
+            ArrayList<Course> courseList = courseCtrl.getCourseList();
+            for(Course course: courseList) {
+                if (course.getCourseCode().equals(courseCode)){
+                    courseList.remove(course);
+                    break;
+                }
+            }
+            courseCtrl.setCourseList(courseList);
+            System.out.println("You've successfully remove the course: " + courseCode);
+            // TODO prints out all the lists of courses
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Removes the index for the course
+     * @param courseCode the course code
+     * @param indexNum the index to remove
+     */
+    public void removeIndex(String courseCode, int indexNum){
+
+        try{
+            ArrayList<Index> indices = courseCtrl.getIndexList();
+            for(Index index: indices){
+                if(index.getIndex()==indexNum&&index.getCourseCode().equals(courseCode)){
+                    indices.remove(index);
+                    break;
+                }
+            }
+            courseCtrl.setIndexList(indices);
+            System.out.println("You've successfully remove the index: " + indexNum);
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Update a course's code
@@ -184,7 +228,7 @@ public class AdminCrsCtrl extends CourseCtrl {
     /**
      * Create a new index for a particular course
      * @param courseCode the course code
-     * @param indexNum the desired course index
+     * @param indexNum the desired course index to add
      * @param group the desired course group
      * @param totalSlot the desired total slot for the index
      */

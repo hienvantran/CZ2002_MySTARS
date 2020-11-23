@@ -42,6 +42,9 @@ public class AdminStudCtrl {
             ArrayList<Student> students = StudentDB.retrieveStudent();
             students.add(student);
             StudentDB.saveStudent(students);
+            // TODO prints out all the students
+
+
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }

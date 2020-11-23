@@ -1,7 +1,5 @@
 package myStars;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Scanner;
 
@@ -20,7 +18,7 @@ public class AdminUI extends UserInterface {
 	public AdminUI() {
 		
 	}
-	
+
 	/**
 	 * Provide the UI of the AdminUI
 	 */
@@ -245,7 +243,9 @@ public class AdminUI extends UserInterface {
 				"5. Update the course's type",
 				"6. Update the course's index number",
 				"7. Update the total slot of a course index",
-				"8. Create a new index",
+				"8. Remove the course",
+				"9. Create a new index",
+				"10. Remove a course's index",
 				"-1. Exit update course UI");
 
 		System.out.println("What part of the course do you want to update?");
@@ -353,6 +353,10 @@ public class AdminUI extends UserInterface {
 				}
 				break;
 			case 8:
+				printHeader("Removing a course UI");
+				adminCrsCtrl.removeCourse(courseCode);
+				break;
+			case 9:
 				validInput = false;
 				while(!validInput){
 					int index = getIntInput("Enter an index you'd like to create: ", 0, 99999);
@@ -373,6 +377,20 @@ public class AdminUI extends UserInterface {
 						// create the index
 						adminCrsCtrl.createIndex(courseCode, index, group, totalSlot);
 						System.out.println("You've successfully created an index!");
+					}
+				}
+				break;
+			case 10:
+				validInput = false;
+				while(!validInput){
+					int index = getIntInput("Enter an index you'd like to remove: ", 0, 99999);
+					if (index==-1) return;
+
+					if(adminCrsCtrl.isExistingIndex(courseCode, index)){
+						adminCrsCtrl.removeIndex(courseCode, index);
+						validInput = true;
+					}else{
+						System.out.println("Index doesn't exists!");
 					}
 				}
 				break;

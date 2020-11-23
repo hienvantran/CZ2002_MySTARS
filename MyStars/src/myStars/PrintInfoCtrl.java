@@ -32,6 +32,7 @@ public class PrintInfoCtrl {
 	 * @param course The course's code
 	 */
 	public void printStudByIndex(int indexNum, String course){
+		int count = 0;
 		try {
 			ArrayList<String> matric = new ArrayList<>();
 			ArrayList<Student> students = StudentDB.retrieveStudent();
@@ -41,9 +42,12 @@ public class PrintInfoCtrl {
 					matric.add(courseRegister.getStudent());
 			}
 			for(Student student: students){
-				if(matric.contains(student.getMatricNum()))
+				if(matric.contains(student.getMatricNum())){
 					System.out.println(student.getMatricNum());
+					count++;
+				}
 			}
+			if(count==0) System.out.println("There are no students registered with: " + course + ", " + indexNum);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
@@ -56,6 +60,7 @@ public class PrintInfoCtrl {
 	 * @param course the course's code
 	 */
 	public void printStudByCourse(String course){
+		int count = 0;
 		try {
 			ArrayList<String> matric = new ArrayList<>();
 			ArrayList<Student> students = StudentDB.retrieveStudent();
@@ -65,9 +70,13 @@ public class PrintInfoCtrl {
 					matric.add(courseRegister.getStudent());
 			}
 			for(Student student: students){
-				if(matric.contains(student.getMatricNum()))
-					System.out.println(student.getMatricNum());
+				if(matric.contains(student.getMatricNum())){
+					System.out.println("Student name: " + student.getFirstName()+ " " + student.getFirstName()
+							+ " Gender: " + student.getGender() + "Nationality: " + student.getNationality());
+					count++;
+				}
 			}
+			if(count==0) System.out.println("There are no students registered with: " + course + ".");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
