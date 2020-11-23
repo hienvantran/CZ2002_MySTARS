@@ -81,7 +81,8 @@ public class LoginCtrl {
 					if(CalendarCtrl.CheckAccessTime(student.getAccessStart(), student.getAccessEnd())==true) {
 						this.makeValid();
 						StudentUI studentui = new StudentUI();
-						studentui.printUI(student);
+						student.getMatricNum();
+						studentui.printUI(student.getMatricNum());
 						return true;
 					}
 				}

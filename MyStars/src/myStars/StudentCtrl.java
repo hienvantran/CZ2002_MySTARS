@@ -30,7 +30,7 @@ public class StudentCtrl {
 				}
 			}}
 		for (Student stud : studList) {
-			if(stud.getUsername().equals(studentID)) {
+			if(stud.getMatricNum().equals(studentID)) {
 				currentStudent = stud;
 				studentEmail = stud.getEmail();
 			}
@@ -96,7 +96,7 @@ public class StudentCtrl {
 		String studentEmail = null;
 		ArrayList<Student> studList = StudentDB.retrieveStudent();
 		for (Student stud : studList) {
-			if(stud.getUsername().equals(studentID)) {
+			if(stud.getMatricNum().equals(studentID)) {
 				studentEmail = stud.getEmail();
 			}
 		}
