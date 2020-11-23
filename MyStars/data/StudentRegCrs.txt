@@ -1,14 +1,14 @@
-stud2|CZ3001|10005|Registered
-stud4|CZ4005|10009|Registered
-stud2|CZ3001|10003|Registered
+stud1|MH2500|13002|Registered
+stud2|CZ2001|12547|Registered
+stud2|CZ4004|11345|Registered
+stud2|CZ4005|14557|On Waiting List
+stud3|CZ4005|14556|On Waiting List
+stud3|MH1812|12897|Registered
+stud3|MH2500|13002|Registered
+stud4|CZ3001|10001|Registered
+stud4|CZ2002|11287|Registered
+stud4|MH2500|13000|On Waiting List
 stud2|CZ3001|10006|Registered
-stud1|CZ4005|10009|Registered
-stud1|CZ1004|50002|Registered
-stud2|CZ1004|40003|Registered
-stud4|CZ3001|10003|Registered
-stud4|CZ4005|12345|On Waiting List
-stud4|CZ1004|40003|Registered
-stud3|CZ4005|10009|On Waiting List
-stud3|CZ1004|50000|Registered
-stud2|CZ4005|10009|On Waiting List
-stud3|CZ4006|10008|Registered
+stud3|CZ3001|10005|Registered
+stud4|CZ4005|14555|Registered
+stud1|CZ4005|14555|Registered
