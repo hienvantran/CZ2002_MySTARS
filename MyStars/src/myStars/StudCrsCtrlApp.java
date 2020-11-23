@@ -52,7 +52,7 @@ public class StudCrsCtrlApp {
 			mystudent.dropCourse(studentID, alrcourseCode, alrindexNo);
 			break;
 		case 3:
-			mystudent.printRegCourse(studentID);
+			PrintInfoCtrl.printRegCourse(studentID);
 			break;
 		case 4:
 			System.out.print("Enter courseCode to check ");
