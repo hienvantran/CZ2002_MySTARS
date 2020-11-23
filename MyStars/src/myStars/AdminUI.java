@@ -419,6 +419,7 @@ public class AdminUI extends UserInterface {
 		String courseCode = null;
 		int indexNo = 0;
 
+		printHeader("Print student list by index UI");
 		validInput = false;
 		while(!validInput){
 			courseCode = getStringInput("Enter Course Code: ");
@@ -433,7 +434,7 @@ public class AdminUI extends UserInterface {
 
 		validInput = false;
 		while(!validInput){
-			indexNo = getIntInput("Enter the index number you'd like to check for vacancy",10000,99999);
+			indexNo = getIntInput("Enter the index number you'd like to print",10000,99999);
 
 			if (indexNo==-1) return;
 
@@ -443,9 +444,10 @@ public class AdminUI extends UserInterface {
 			} else validInput=true;
 		}
 
-		printHeader("Print student list by index UI");
 		PrintInfoCtrl printInfoCtrl = new PrintInfoCtrl();
 		printInfoCtrl.printStudByIndex(indexNo, courseCode);
+		System.out.println("\n\n");
+		System.out.println("Done printing, bringing you back to the admin UI...");
 	}
 
 	public void printStudentByCourseUI(){
@@ -453,6 +455,7 @@ public class AdminUI extends UserInterface {
 		String courseCode = null;
 		int indexNo = 0;
 
+		printHeader("Print student list by course UI");
 		validInput = false;
 		while(!validInput){
 			courseCode = getStringInput("Enter Course Code: ");
@@ -464,9 +467,10 @@ public class AdminUI extends UserInterface {
 				System.out.println("Please try again!");
 			} else validInput=true;
 		}
-		printHeader("Print student list by course UI");
 		PrintInfoCtrl printInfoCtrl = new PrintInfoCtrl();
 		printInfoCtrl.printStudByCourse(courseCode);
+		System.out.println("\n\n");
+		System.out.println("Done printing, bringing you back to the admin UI...");
 	}
 
 }
