@@ -16,7 +16,7 @@ public class CourseCtrl {
     	int totalVacancy, vacancyLeft=0;
     	
     	try {
-            totalVacancy = getIndexbyCode(courseCode, indexNo).getVacancy();
+            totalVacancy = getIndexbyCode(courseCode, indexNo).getTotalSlot();
             vacancyLeft = totalVacancy;
             // deduct the people taking the index no and registered
             ArrayList<CourseRegister> courseReg = CourseRegDB.retrieveCourseRegister();
@@ -36,7 +36,7 @@ public class CourseCtrl {
     public int noOfIndexVacancy(String courseCode, int indexNo){
 
         try {
-            return getIndexbyCode(courseCode, indexNo).getVacancy();
+            return getIndexbyCode(courseCode, indexNo).getTotalSlot();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {

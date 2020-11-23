@@ -5,7 +5,7 @@ import java.util.*;
 import java.text.ParseException;
 
 import Entities.*;
-import myStars.CalendarCtrl;
+
 public class IndexDB {
 	public static final String SEPARATOR = "|";
 
@@ -45,7 +45,7 @@ public class IndexDB {
 				st.append(SEPARATOR);
 				st.append(idx.getGroup().trim());
 				st.append(SEPARATOR);
-				st.append(Integer. toString(idx.getVacancy()).trim());
+				st.append(Integer. toString(idx.getTotalSlot()).trim());
 				st.append(SEPARATOR);
 				st.append(Integer. toString(idx.getWaitList()).trim());
 				newindexList.add(st.toString());

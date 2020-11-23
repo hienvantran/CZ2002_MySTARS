@@ -1,9 +1,6 @@
 package myStars;
 
-import DB.CourseDB;
-import DB.CourseRegDB;
 import Entities.Course;
-import Entities.CourseRegister;
 import Entities.Index;
 
 import java.io.IOException;
@@ -158,7 +155,7 @@ public class AdminCrsCtrl extends CourseCtrl {
             ArrayList<Index> indices = courseCtrl.getIndexList();
             for(Index index: indices){
                 if ((index.getCourseCode().equals(courseCode)) && index.getIndex()==indexNum){
-                    index.setVacancy(vacancy);
+                    index.setTotalSlot(vacancy);
                 }
             }
         }catch(IOException e){

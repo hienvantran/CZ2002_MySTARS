@@ -50,17 +50,17 @@ public class StudentCtrl {
 		for (Index idx : indexList) {
 			if(idx.getIndex()==indexNo && idx.getCourseCode().equals(courseCode)) {
 				currentIndex = idx;
-				int vacancy = idx.getVacancy();
+				int vacancy = idx.getTotalSlot();
 				int waitingList = idx.getWaitList();
 				String registerStatus = "On Waiting List";
 				String crsCode = idx.getCourseCode();
-				if (idx.getVacancy() <= 0) {
+				if (idx.getTotalSlot() <= 0) {
 					System.out.println("Sorry, the course has no vacancies any more.");
 					waitingList++;
 				    System.out.println("Student " + currentStudent.getUsername() + " wants to register " + currentIndex.getCourseCode());
 				    break;
 				    }
-				else if (idx.getVacancy() > 0){
+				else if (idx.getTotalSlot() > 0){
 					vacancy--;
 					registerStatus = "Registered";
 					
@@ -115,7 +115,7 @@ public class StudentCtrl {
 				NotificationCtrl.sendMail(studentEmail,courseCode,indexNo,3,null,0);
 
 				for (Index i : indexList){
-					int vacancy = i.getVacancy();
+					int vacancy = i.getTotalSlot();
 					int waitingList = i.getWaitList();
 					if (course.getStatus()==true){vacancy++;}
 					else{waitingList--;}
@@ -202,7 +202,7 @@ public class StudentCtrl {
 		HashMap<Integer, Integer> idxWaitlist = new HashMap<Integer, Integer>();
 		for(Index idx:indexList) {
 			if (idx.getCourseCode().equals(courseID)) {
-				idxVacancy.put(idx.getIndex(), idx.getVacancy());
+				idxVacancy.put(idx.getIndex(), idx.getTotalSlot());
 				idxWaitlist.put(idx.getIndex(), idx.getWaitList());
 			}
 		}
@@ -238,7 +238,7 @@ public class StudentCtrl {
                   {
                 	  if (idx.getCourseCode().equals(courseCode) && idx.getIndex()==newidxNo)
                 	  {
-                		  vacancy =  idx.getVacancy();
+                		  vacancy =  idx.getTotalSlot();
                 		  if (vacancy>0) 
                 		  {
                 			  if (this.checkCourseClash(studentID, courseCode, newidxNo) == false) 

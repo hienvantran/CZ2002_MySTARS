@@ -6,15 +6,15 @@ public class Index {
 	private String courseCode;
 	private int indexNo;
 	private String group;
-	private int vacancy;
+	private int totalSlot;
 	private int waitList;
 	private ArrayList<Lesson> lessonList;
 	
-	public Index(String courseCode, int indexNo, String group, int vacancy, int waitList) {
+	public Index(String courseCode, int indexNo, String group, int totalSlot, int waitList) {
 		this.courseCode = courseCode;
 		this.indexNo = indexNo;
 		this.group = group;
-		this.vacancy = vacancy;
+		this.totalSlot = totalSlot;
 		this.waitList = waitList;
 		lessonList = new ArrayList<Lesson>();
 	}
@@ -47,20 +47,20 @@ public class Index {
 		this.group = group;
 	}
 	//Vacancy
-	public int getVacancy()
+	public int getTotalSlot()
 	{
-		return vacancy;
+		return totalSlot;
 	}
-	public void setVacancy(int vacancy)
+	public void setTotalSlot(int totalSlot)
 	{
-		this.vacancy = vacancy;
+		this.totalSlot = totalSlot;
 	}
 	public boolean decrementVacancy()
 	{
-		if (vacancy > 0)
+		if (totalSlot > 0)
 		{
 			System.out.println("Student successfully registered.");
-			vacancy--;
+			totalSlot--;
 			return true;
 		} else
 		{
