@@ -415,11 +415,58 @@ public class AdminUI extends UserInterface {
 	}
 
 	public void printStudentByIndexUI(){
+		boolean validInput;
+		String courseCode = null;
+		int indexNo = 0;
+
+		validInput = false;
+		while(!validInput){
+			courseCode = getStringInput("Enter Course Code: ");
+
+			if(courseCode.equals("-1")) return;
+
+			if(AdminCrsCtrl.isExistingCourse(courseCode)==false){
+				System.out.println("Course code does not exist!");
+				System.out.println("Please try again!");
+			} else validInput=true;
+		}
+
+		validInput = false;
+		while(!validInput){
+			indexNo = getIntInput("Enter the index number you'd like to check for vacancy",10000,99999);
+
+			if (indexNo==-1) return;
+
+			if(AdminCrsCtrl.isExistingIndex(courseCode, indexNo)==false){
+				System.out.println("Index does not exist!");
+				System.out.println("Please try again!");
+			} else validInput=true;
+		}
+
 		printHeader("Print student list by index UI");
+		PrintInfoCtrl printInfoCtrl = new PrintInfoCtrl();
+		printInfoCtrl.printStudByIndex(indexNo, courseCode);
 	}
 
 	public void printStudentByCourseUI(){
+		boolean validInput;
+		String courseCode = null;
+		int indexNo = 0;
+
+		validInput = false;
+		while(!validInput){
+			courseCode = getStringInput("Enter Course Code: ");
+
+			if(courseCode.equals("-1")) return;
+
+			if(AdminCrsCtrl.isExistingCourse(courseCode)==false){
+				System.out.println("Course code does not exist!");
+				System.out.println("Please try again!");
+			} else validInput=true;
+		}
 		printHeader("Print student list by course UI");
+		PrintInfoCtrl printInfoCtrl = new PrintInfoCtrl();
+		printInfoCtrl.printStudByCourse(courseCode);
 	}
 
 }

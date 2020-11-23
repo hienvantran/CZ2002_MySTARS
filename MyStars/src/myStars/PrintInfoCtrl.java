@@ -8,13 +8,56 @@ import java.util.ArrayList;
 import DB.CourseDB;
 import DB.CourseRegDB;
 import DB.LessonDB;
+import DB.StudentDB;
 import Entities.Course;
 import Entities.CourseRegister;
 import Entities.Lesson;
+import Entities.Student;
 
 
 public class PrintInfoCtrl {
-	
+
+	public void printStudByIndex(int indexNum, String course){
+		try {
+			ArrayList<String> matric = new ArrayList<>();
+			ArrayList<Student> students = StudentDB.retrieveStudent();
+			ArrayList<CourseRegister> courseRegDBS = CourseRegDB.retrieveCourseRegister();
+			for(CourseRegister courseRegister: courseRegDBS){
+				if(courseRegister.getIndex()==indexNum && courseRegister.getCourse().equals(course))
+					matric.add(courseRegister.getStudent());
+			}
+			for(Student student: students){
+				if(matric.contains(student.getMatricNum()))
+					System.out.println(student.getMatricNum());
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+	}
+	public void printStudByCourse(String course){
+		try {
+			ArrayList<String> matric = new ArrayList<>();
+			ArrayList<Student> students = StudentDB.retrieveStudent();
+			ArrayList<CourseRegister> courseRegDBS = CourseRegDB.retrieveCourseRegister();
+			for(CourseRegister courseRegister: courseRegDBS){
+				if(courseRegister.getCourse().equals(course))
+					matric.add(courseRegister.getStudent());
+			}
+			for(Student student: students){
+				if(matric.contains(student.getMatricNum()))
+					System.out.println(student.getMatricNum());
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	public void printRegCourse(String studentID) throws FileNotFoundException, ParseException, IOException{
 		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
 		ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
