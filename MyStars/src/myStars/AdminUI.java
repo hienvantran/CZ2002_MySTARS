@@ -12,6 +12,12 @@ public class AdminUI extends UserInterface {
 	 */
 	AdminCrsCtrl adminCrsCtrl = new AdminCrsCtrl();
 
+
+	/**
+	 * A new object of PrintInfoCtrl
+	 */
+	PrintInfoCtrl printInfoCtrl = new PrintInfoCtrl();
+
 	/**
 	 * Default constructor
 	 */
@@ -69,8 +75,8 @@ public class AdminUI extends UserInterface {
 	public void editStudentAccessTimeUI() {
 		String matric = null;
 
-		Calendar accessStart;
-		Calendar accessEnd;
+		Calendar accessStart = null;
+		Calendar accessEnd = null;
 
 		boolean validInput;
 
@@ -90,12 +96,19 @@ public class AdminUI extends UserInterface {
 				System.out.println("Please try again!");
 			} else validInput=true;
 		}
-		//todo check the two dates accessEnd and accessStart if they're lesser or more
-		accessStart = getDateInput("Enter access start for student: ");
-		if (accessStart == null) return;
+		
+		validInput = false;
 
-		accessEnd = getDateInput("Enter access end for student: ");
-		if (accessEnd == null) return;
+		while(!validInput){
+			accessStart = getDateInput("Enter access start for student: ");
+			if (accessStart == null) return;
+
+			accessEnd = getDateInput("Enter access end for student: ");
+			if (accessEnd == null) return;
+
+			if(accessEnd.after(accessStart)) validInput = true;
+			else System.out.println("Access start date cannot be later than access end date!");
+		}
 
 		AdminStudCtrl.editStudentAccessTime(matric, accessStart, accessEnd);
 
@@ -109,7 +122,7 @@ public class AdminUI extends UserInterface {
 		boolean validInput;
 		String matric = null, nationality, email = null, username = null, pass;
 		int yearOfStudy;
-		Calendar accessStart, accessEnd;
+		Calendar accessStart = null, accessEnd = null;
 
 		printHeader("Add a student UI");
 
@@ -137,7 +150,6 @@ public class AdminUI extends UserInterface {
 				validInput=true;
 		}
 
-		email = getStringInput("Enter the email of student: ");
 		validInput=false;
 		while(!validInput){
 			email = getStringInput("Enter the email of student: ");
@@ -159,16 +171,27 @@ public class AdminUI extends UserInterface {
 		yearOfStudy = getIntInput("Enter year of study of student: ", 0,10);
 		if(yearOfStudy==-1) return;
 
-		accessStart = getDateInput("Enter access start for student: ");
-		if (accessStart == null) return;
+		validInput = false;
+		while(!validInput){
+			accessStart = getDateInput("Enter access start for student: ");
+			if (accessStart == null) return;
 
-		accessEnd = getDateInput("Enter access end for student: ");
-		if (accessEnd == null) return;
+			accessEnd = getDateInput("Enter access end for student: ");
+			if (accessEnd == null) return;
+
+			if(accessEnd.after(accessStart)) validInput = true;
+			else System.out.println("Access start date cannot be later than access end date!");
+		}
 
 		pass = HashCtrl.hashPassword(pass);
 
 		Student student = new Student(username, pass, ModeType.USER, matric, nationality, yearOfStudy, email, accessStart, accessEnd);
 		AdminStudCtrl.addStudent(student);
+
+		System.out.println("You've successfully added a student! The new list of students: ");
+		printInfoCtrl.printStudents();
+
+		System.out.println("Bringing you back to the main admin UI...");
 
 	}
 
@@ -210,6 +233,10 @@ public class AdminUI extends UserInterface {
 		Course course = new Course(courseCode, courseName, courseAU, school, courseType);
 		adminCrsCtrl.addCourse(course);
 
+		System.out.println("You've successfully added a course! The new list of courses: ");
+		printInfoCtrl.printCourse();
+
+		System.out.println("Bringing you back to the main admin UI...");
 	}
 
 	/**
@@ -265,49 +292,52 @@ public class AdminUI extends UserInterface {
 						System.out.println("Course already exist! Change to other course code");
 					else {
 						adminCrsCtrl.updateCourseCode(courseCode, newCourseCode);
+						System.out.println("You've successfully updated the course code! Bringing you back to the main admin UI...");
 						validInput = true;
 					}
 				}
 				break;
 			case 2:
 				// update course name
-				//TODO testing
 				String newCourseName = getStringInput("Enter the course name for: " + courseCode);
 
 				if(newCourseName.equals("-1")) return;
 
 				adminCrsCtrl.updateCourseName(courseCode, newCourseName);
+				System.out.println("You've successfully updated the course name! Bringing you back to the main admin UI...");
 				break;
 			case 3:
-				//TODO testing
 				String newCourseSchool = getStringInput("Enter the school name for course: " + courseCode);
 
 				if(newCourseSchool.equals("-1")) return;
 
 				adminCrsCtrl.updateCourseSchool(courseCode, newCourseSchool);
+				System.out.println("You've successfully updated the course school! Bringing you back to the main admin UI...");
 				break;
 			case 4:
-				//TODO testing
 				int newCourseAU = getIntInput("Enter the AU you'd like to change to for course: " + courseCode,0, 5000);
 
 				if(newCourseAU==-1) return;
 
 				adminCrsCtrl.updateCourseAU(courseCode, newCourseAU);
 
+				System.out.println("You've successfully updated the course AU! Bringing you back to the main admin UI...");
 				break;
 			case 5:
-				//TODO testing
 				String newCourseType = getStringInput("Enter the type you'd like to change to for course: " + courseCode);
 
 				if(newCourseType.equals("-1")) return;
 
 				adminCrsCtrl.updateCourseType(courseCode, newCourseType);
 
+				System.out.println("You've successfully updated the course type! Bringing you back to the main admin UI...");
 				break;
 			case 6:
 				// update course code
 				validInput = false;
 				while(!validInput){
+					System.out.println("Here is a list of index to update for the course code: " + courseCode);
+					printInfoCtrl.printIndexByCourse(courseCode);
 					int index = getIntInput("Enter the index you'd like to update: ", 0,99999);
 
 					if(index==-1) return;
@@ -317,7 +347,7 @@ public class AdminUI extends UserInterface {
 							int newIndex = getIntInput("Enter the new index", 0,99999);
 							if (adminCrsCtrl.isExistingIndex(courseCode,newIndex)==false){
 								adminCrsCtrl.updateCourseIndex(courseCode, index, newIndex);
-								System.out.println("You've successfully updated the course index!");
+								System.out.println("You've successfully updated the course index! Bringing you back to the main admin UI...");
 								break;
 							}
 							else{
@@ -336,6 +366,8 @@ public class AdminUI extends UserInterface {
 			case 7:
 				validInput = false;
 				while(!validInput){
+					System.out.println("Here is a list of index to update for the course code: " + courseCode);
+					printInfoCtrl.printIndexByCourse(courseCode);
 					int index = getIntInput("Enter the index you'd like to update the course's total slot: ", 0, 99999);
 
 					if (index==-1) return;
@@ -345,20 +377,23 @@ public class AdminUI extends UserInterface {
 						if (totalSlot==-1) return;
 
 						adminCrsCtrl.updateIndexTotalSlot(courseCode, index, totalSlot);
+						System.out.println("You've successfully updated the course total index slot! Bringing you back to the main admin UI...");
 						validInput = true;
 					}else{
 						System.out.println("The course index does not exist!");
-						// todo get the list of course index
 					}
 				}
 				break;
 			case 8:
 				printHeader("Removing a course UI");
 				adminCrsCtrl.removeCourse(courseCode);
+				System.out.println("You've successfully removed the course code: " + courseCode + "! Bringing you back to the main admin UI...");
 				break;
 			case 9:
 				validInput = false;
 				while(!validInput){
+					System.out.println("Here is a list of index already exist for the course code: " + courseCode);
+					printInfoCtrl.printIndexByCourse(courseCode);
 					int index = getIntInput("Enter an index you'd like to create: ", 0, 99999);
 					if (index==-1) return;
 
@@ -383,11 +418,14 @@ public class AdminUI extends UserInterface {
 			case 10:
 				validInput = false;
 				while(!validInput){
+					System.out.println("Here is a list of index to remove for the course code: " + courseCode);
+					printInfoCtrl.printIndexByCourse(courseCode);
 					int index = getIntInput("Enter an index you'd like to remove: ", 0, 99999);
 					if (index==-1) return;
 
 					if(adminCrsCtrl.isExistingIndex(courseCode, index)){
 						adminCrsCtrl.removeIndex(courseCode, index);
+						System.out.println("You've successfully removed the course index: " + index + "! Bringing you back to the main admin UI...");
 						validInput = true;
 					}else{
 						System.out.println("Index doesn't exists!");
@@ -470,7 +508,6 @@ public class AdminUI extends UserInterface {
 			} else validInput=true;
 		}
 
-		PrintInfoCtrl printInfoCtrl = new PrintInfoCtrl();
 		printInfoCtrl.printStudByIndex(indexNo, courseCode);
 		System.out.println("\n\n");
 		System.out.println("Done printing, bringing you back to the admin UI...");
@@ -496,7 +533,7 @@ public class AdminUI extends UserInterface {
 				System.out.println("Please try again!");
 			} else validInput=true;
 		}
-		PrintInfoCtrl printInfoCtrl = new PrintInfoCtrl();
+
 		printInfoCtrl.printStudByCourse(courseCode);
 		System.out.println("\n\n");
 		System.out.println("Done printing, bringing you back to the admin UI...");

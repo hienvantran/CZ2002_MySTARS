@@ -26,6 +26,39 @@ public class PrintInfoCtrl {
 	}
 
 	/**
+	 * Prints out the list of courses available
+	 */
+	public void printCourse(){
+		try {
+			ArrayList<Course> courseList = CourseDB.retrieveCourse();
+			for(Course course: courseList){
+				System.out.println("Course code: " + course.getCourseCode() + ", course name: " + course.getCourseName());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Prints out the list of students
+	 */
+	public void printStudents(){
+		try {
+			ArrayList<Student> students = StudentDB.retrieveStudent();
+			for(Student student: students){
+				System.out.println("Student matric: " + student.getMatricNum());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
 	 * Prints out the list of students registered to the course by indices and course code
 	 * This method excludes those students whose status is "On waiting list"
 	 * @param indexNum The course's index number
@@ -72,7 +105,7 @@ public class PrintInfoCtrl {
 			for(Student student: students){
 				if(matric.contains(student.getMatricNum())){
 					System.out.println("Student name: " + student.getFirstName()+ " " + student.getFirstName()
-							+ " Gender: " + student.getGender() + "Nationality: " + student.getNationality());
+							+ " Gender: " + student.getGender() + " Nationality: " + student.getNationality());
 					count++;
 				}
 			}
