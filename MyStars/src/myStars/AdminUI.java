@@ -411,8 +411,10 @@ public class AdminUI extends UserInterface {
 			} else validInput=true;
 		}
 
-		System.out.println("The vacancy left is: " +  adminCrsCtrl.noOfIndexVacancy(courseCode, indexNo));
-
+		System.out.println("The vacancy left is: " +  
+		adminCrsCtrl.noOfIndexVacancyLeft(courseCode, indexNo) + "/" + adminCrsCtrl.noOfIndexVacancy(courseCode, indexNo));
+		
+		System.out.println("Done printing, bringing you back to the admin UI...");
 	}
 
 	public void printStudentByIndexUI(){

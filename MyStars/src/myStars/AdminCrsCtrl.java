@@ -1,7 +1,9 @@
 package myStars;
 
 import DB.CourseDB;
+import DB.CourseRegDB;
 import Entities.Course;
+import Entities.CourseRegister;
 import Entities.Index;
 
 import java.io.IOException;
@@ -22,8 +24,9 @@ import java.util.ArrayList;
  * @since 2020-11-21
 */
 public class AdminCrsCtrl extends CourseCtrl {
+    CourseCtrl courseCtrl = new CourseCtrl();
+    
     public void addCourse(Course course){
-        CourseCtrl courseCtrl = new CourseCtrl();
         try {
             ArrayList<Course> courseList = courseCtrl.getCourseList();
             courseList.add(course);
@@ -42,7 +45,6 @@ public class AdminCrsCtrl extends CourseCtrl {
     }*/
 
     public void updateCourseCode(String courseCode, String newCourseCode){
-        CourseCtrl courseCtrl = new CourseCtrl();
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
             for(Course course:courses){
@@ -64,7 +66,6 @@ public class AdminCrsCtrl extends CourseCtrl {
     }
 
     public void updateCourseName(String courseCode, String newCourseName){
-        CourseCtrl courseCtrl = new CourseCtrl();
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
             for(Course course:courses){
@@ -80,7 +81,6 @@ public class AdminCrsCtrl extends CourseCtrl {
     }
 
     public void updateCourseSchool(String courseCode, String newCourseSchool){
-        CourseCtrl courseCtrl = new CourseCtrl();
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
             for(Course course:courses){
@@ -96,7 +96,6 @@ public class AdminCrsCtrl extends CourseCtrl {
     }
 
     public void updateCourseAU(String courseCode, int newAU){
-        CourseCtrl courseCtrl = new CourseCtrl();
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
             for(Course course:courses){
@@ -112,7 +111,6 @@ public class AdminCrsCtrl extends CourseCtrl {
     }
 
     public void updateCourseType(String courseCode, String newType){
-        CourseCtrl courseCtrl = new CourseCtrl();
         try {
             ArrayList<Course> courses = courseCtrl.getCourseList();
             for(Course course:courses){
@@ -128,7 +126,6 @@ public class AdminCrsCtrl extends CourseCtrl {
     }
 
     public void updateCourseIndex(String courseCode, int indexNum, int newIndexNum){
-        CourseCtrl courseCtrl = new CourseCtrl();
         try {
             ArrayList<Index> indices = courseCtrl.getIndexList();
 
@@ -145,7 +142,6 @@ public class AdminCrsCtrl extends CourseCtrl {
     }
 
     public void createIndex(String courseCode, int indexNum, String group, int vacancy){
-        CourseCtrl courseCtrl = new CourseCtrl();
         try{
             ArrayList<Index> indices = courseCtrl.getIndexList();
             Index newIndex = new Index(courseCode, indexNum, "TEST", vacancy, 0);
@@ -158,7 +154,6 @@ public class AdminCrsCtrl extends CourseCtrl {
     }
 
     public void updateIndexVacancy(String courseCode, int indexNum, int vacancy){
-        CourseCtrl courseCtrl = new CourseCtrl();
         try{
             ArrayList<Index> indices = courseCtrl.getIndexList();
             for(Index index: indices){
@@ -183,8 +178,28 @@ public class AdminCrsCtrl extends CourseCtrl {
      * @param indexNo index number of the course
      *
      */
+    public int noOfIndexVacancyLeft(String courseCode, int indexNo) {
+    	int totalVacancy, vacancyLeft=0;
+    	
+    	try {
+            totalVacancy = courseCtrl.getIndexbyCode(courseCode, indexNo).getVacancy();
+            vacancyLeft = totalVacancy;
+            // deduct the people taking the index no and registered
+            ArrayList<CourseRegister> courseReg = CourseRegDB.retrieveCourseRegister();
+            for(CourseRegister course: courseReg) {
+            	System.out.println(course.getIndex());
+            	if (course.getIndex()==indexNo && course.getStatus()==true)
+            		vacancyLeft--;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+		return vacancyLeft;
+    	
+    }
     public int noOfIndexVacancy(String courseCode, int indexNo){
-        CourseCtrl courseCtrl = new CourseCtrl();
 
         try {
             return courseCtrl.getIndexbyCode(courseCode, indexNo).getVacancy();
