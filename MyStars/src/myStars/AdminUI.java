@@ -432,6 +432,10 @@ public class AdminUI extends UserInterface {
 					}
 				}
 				break;
+			case -1:
+				validInput = true;
+				System.out.println("Exiting... Thank you for using MYSTARS! ");
+				break;
 		}
 	}
 

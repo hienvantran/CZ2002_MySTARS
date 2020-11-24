@@ -8,7 +8,6 @@ import Entities.ModeType;
 
 public class LoginUI extends UserInterface {
 
-	private ModeType accountType;
 	
 	public LoginUI() {
 		
