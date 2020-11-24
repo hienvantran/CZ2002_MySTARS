@@ -32,7 +32,7 @@ public class CourseRegister {
 	public CourseRegister(String stdUserName, String course, int index,  Boolean status)
 	{
 		this.status = status;
-		this.student = stdUserName;
+		this.stdUserName = stdUserName;
 		this.course = course;
 		this.index = index;
 	}
@@ -75,5 +75,5 @@ public class CourseRegister {
 	 * Change stdUserName
 	 * @param stdUserName
 	 */
-	public void setStudent(String stdUserName) { this.student = stdUserName;}
+	public void setStudent(String stdUserName) { this.stdUserName = stdUserName;}
 }
