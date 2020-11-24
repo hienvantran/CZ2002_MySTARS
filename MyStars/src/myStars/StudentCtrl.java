@@ -139,10 +139,8 @@ public class StudentCtrl {
 			}
 
 		}
-
-		
 	}
-	
+	/*
 	public void printRegCourse(String studentID) throws FileNotFoundException, ParseException, IOException{
 		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
 		ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
@@ -176,7 +174,7 @@ public class StudentCtrl {
 		}
 		System.out.println("total Au = " + AUcount);
 		return;
-	}
+	}*/
 	
 	public  int totalAU(String studentID) throws FileNotFoundException, ParseException, IOException{
 		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();

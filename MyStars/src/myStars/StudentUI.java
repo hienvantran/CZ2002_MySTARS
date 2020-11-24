@@ -16,20 +16,24 @@ import Entities.Index;
 import Entities.Student;
 
 /**
- * This class is created solely for the Student's user-interface
- * @author zappe
- *
+ * Student's user interface
+ * Display different kinds of options for students to choose from
  */
-public class StudentUI extends UserInterface{
-	
+	public class StudentUI extends UserInterface{
+	/**
+	 * A new object for StudentCtrl, CourseCtrl, PrintInfoCtrl
+	 */
 	Scanner sc = new Scanner(System.in);
 	StudentCtrl mystudent = new StudentCtrl();
+	CourseCtrl courseCtrl = new CourseCtrl();
+	PrintInfoCtrl printInfo = new PrintInfoCtrl();
+	/**
+	 * default constructor
+	 */
 	public StudentUI() {
 	}
 	/**
-	 * Display different kinds of options for students to choose from 
-	 * Student can register/drop courses, view their already registered courses
-	 * Check class vacancy, change index number, swap index with peers
+	 * Provide the user-interface for the StudentUI
 	 * @param studentID
 	 */
 	public void printUI(String studentID)
@@ -83,7 +87,7 @@ public class StudentUI extends UserInterface{
 		}
 	}
 	/**
-	 * Display RegisterCourse interface, prompting student for input
+	 * Provide the UI for student to register for a course
 	 * @param studentID
 	 * @throws ParseException
 	 * @throws IOException
@@ -98,25 +102,18 @@ public class StudentUI extends UserInterface{
 		String inputCrsCode = null;
 		boolean again = true;
 		boolean validInput = false;
-		
+
 		//Ask student to input CourseCode
-		while (!validInput)
-		{
-			inputCrsCode = getStringInput("Enter the course code: ");
+		while(!validInput){
+			inputCrsCode = getStringInput("Enter Course Code: ");
 			inputCrsCode = inputCrsCode.toUpperCase();
-			for (Course course : courseList)
-			{
-				if(course.getCourseCode().equals(inputCrsCode))
-				{
-					validInput = true;
-					break;
-				}
-				if(inputCrsCode.equals("-1")) return;
-			}
-			if (validInput == false)
-			{
-				System.out.println("No such coursecode... Please try again!");
-			}
+			if(inputCrsCode.equals("-1")) return;
+
+			if(courseCtrl.isExistingCourse(inputCrsCode)==false){
+				System.out.println("Input courseCode does not exists!");
+				System.out.println("Please try again!");
+			} 
+			else {validInput = true;}
 		}
 		//To see if student input a number
 		while(again)
@@ -163,7 +160,7 @@ public class StudentUI extends UserInterface{
 		}
 	 }
 	/**
-	 * Display DropCourse interface, prompting student for input
+	 * Provide the UI for student to drop the course
 	 * @param studentID
 	 * @throws ParseException
 	 * @throws IOException
@@ -172,7 +169,7 @@ public class StudentUI extends UserInterface{
 	 {
 		ArrayList<Course> courseList = CourseDB.retrieveCourse();
 		//Display the list of registeredCourses
-		mystudent.printRegCourse(studentID);
+		printInfo.printRegCourse(studentID);
 		
 		int inputIndex = 0;
 		String inputCrsCode = null;
@@ -180,25 +177,17 @@ public class StudentUI extends UserInterface{
 		boolean validInput = false;
 		
 		//Ask user to input the CourseCode
-		while (!validInput)
-		{
-			inputCrsCode = getStringInput("Enter the course code: ");
+		while(!validInput){
+			inputCrsCode = getStringInput("Enter Course Code: ");
 			inputCrsCode = inputCrsCode.toUpperCase();
-			for (Course course : courseList)
-			{
-				if(course.getCourseCode().equals(inputCrsCode))
-				{
-					validInput = true;
-					break;
-				}
-				if(inputCrsCode.equals("-1")) return;
-			}
-			if (validInput == false)
-			{
-				System.out.println("No such coursecode... Please try again!");
-			}
+			if(inputCrsCode.equals("-1")) return;
+
+			if(courseCtrl.isExistingCourse(inputCrsCode)==false){
+				System.out.println("Input courseCode does not exists!");
+				System.out.println("Please try again!");
+			} 
+			else {validInput = true;}
 		}
-		
 		//To see if student input a number
 		while(again)
 		{
@@ -227,7 +216,7 @@ public class StudentUI extends UserInterface{
 		System.out.println();
 	 }
 	 /**
-	  * Display CheckVacancy interface, prompting student for input
+	  * Provide the UI for student to check vacancy slot for the course
 	  * @param studentID
 	  * @throws IOException
 	  * @throws ParseException
@@ -273,7 +262,7 @@ public class StudentUI extends UserInterface{
 		 mystudent.checkVacancy(courseCode);
 	 }
 	 /**
-	  * Display ChangeIndex interface, prompting student for input
+	  * Provide the UI for student to change index
 	  * @param studentID
 	  * @throws IOException
 	  * @throws ParseException
@@ -289,24 +278,17 @@ public class StudentUI extends UserInterface{
 		 boolean validInput = false;
 			
 		//Ask user to input the CourseCode
-		while (!validInput)
-		{
-			inputCrsCode = getStringInput("Enter the course code: ");
-			inputCrsCode = inputCrsCode.toUpperCase();
-			for (Course course : courseList)
-			{
-				if(course.getCourseCode().equals(inputCrsCode))
-				{
-					validInput = true;
-					break;
-				}
+		 while(!validInput){
+				inputCrsCode = getStringInput("Enter Course Code: ");
+				inputCrsCode = inputCrsCode.toUpperCase();
 				if(inputCrsCode.equals("-1")) return;
+
+				if(courseCtrl.isExistingCourse(inputCrsCode)==false){
+					System.out.println("Input courseCode does not exists!");
+					System.out.println("Please try again!");
+				} 
+				else {validInput = true;}
 			}
-			if (validInput == false)
-			{
-				System.out.println("No such coursecode... Please try again!");
-			}
-		}
 		 
 		 while(again)
 		 {
@@ -341,7 +323,7 @@ public class StudentUI extends UserInterface{
 		 mystudent.changeIndex(studentID, inputCrsCode,currIndex, newIndex);
 	 }
 	 /**
-	  * Display SwapIndex interface, prompting student for input
+	  * Provide the UI for student to swap index with their peer's index
 	  * @param studentID
 	  * @throws IOException
 	  * @throws ParseException
@@ -358,24 +340,17 @@ public class StudentUI extends UserInterface{
 		 boolean validInput = false;
 			
 		//Ask user to input the CourseCode
-		while (!validInput)
-		{
-			inputCrsCode = getStringInput("Enter the course code: ");
-			inputCrsCode = inputCrsCode.toUpperCase();
-			for (Course course : courseList)
-			{
-				if(course.getCourseCode().equals(inputCrsCode))
-				{
-					validInput = true;
-					break;
-				}
+		 while(!validInput){
+				inputCrsCode = getStringInput("Enter Course Code: ");
+				inputCrsCode = inputCrsCode.toUpperCase();
 				if(inputCrsCode.equals("-1")) return;
+
+				if(courseCtrl.isExistingCourse(inputCrsCode)==false){
+					System.out.println("Input courseCode does not exists!");
+					System.out.println("Please try again!");
+				} 
+				else {validInput = true;}
 			}
-			if (validInput == false)
-			{
-				System.out.println("No such coursecode... Please try again!");
-			}
-		}
 		 
 		 while(again)
 		 {
@@ -412,9 +387,15 @@ public class StudentUI extends UserInterface{
 		 //Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
 		 mystudent.swapIdx(studentID, peerID, inputCrsCode, ownIndex, peerIndex);
 	 }
+	 /**
+	  * Provide the UI for student view their registered courses
+	  * @param studentID
+	  * @throws IOException
+	  * @throws ParseException
+	  */
 	 public void courseRegisterUI(String studentID) throws IOException, ParseException
 	 {
-		 mystudent.printRegCourse(studentID);
+		 printInfo.printRegCourse(studentID);
 	 }
 }
 
