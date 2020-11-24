@@ -117,7 +117,13 @@ public class PrintInfoCtrl {
 		}
 
 	}
-
+	/**
+	 * Prints out all the courses registered by the students
+	 * @param studentID
+	 * @throws FileNotFoundException
+	 * @throws ParseException
+	 * @throws IOException
+	 */
 	public void printRegCourse(String studentID) throws FileNotFoundException, ParseException, IOException{
 		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
 		ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
@@ -162,5 +168,40 @@ public class PrintInfoCtrl {
 		System.out.println("Total Course AU = " + AUcount);
 		return;
 	}
-	
+	/**
+	 * Prints out all the information of this IndexNo
+	 * @param IndexNo
+	 * @param courseCode
+	 * @throws FileNotFoundException
+	 * @throws ParseException
+	 * @throws IOException
+	 */
+	public void printIndexInfo(int IndexNo, String courseCode) throws FileNotFoundException, ParseException, IOException{
+		ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
+		ArrayList<Index> indexList = IndexDB.retrieveIndex();
+		ArrayList<Course> courseList = CourseDB.retrieveCourse();
+		
+		for (Course crs : courseList) {
+			for (Index idx : indexList) {
+				if(idx.getIndex()==IndexNo && idx.getCourseCode().equals(courseCode)) {
+					System.out.println("CourseCode\tIndex\tAU\tLesson Type\tLesson Venue\tLesson Day\tLesson Time");
+					System.out.println("------------------------------------------------------------------------------------------------");
+					System.out.print(courseCode + "\t\t");
+					System.out.print(IndexNo + "\t");
+					System.out.print(crs.getCourseAU() + "\t");
+					for(Lesson lesson : lessonList) {
+						if (idx.getIndex() == lesson.getindexNo() && courseCode.equals(lesson.getCrsCode())) {
+							System.out.print(lesson.getLessonType() + "\t\t");
+							System.out.print(lesson.getLessonVenue()+ "\t\t");
+							System.out.print(lesson.getLessonDay()+ "\t\t");
+							System.out.print(lesson.getLessonTime());
+							System.out.println();
+							System.out.print("\t\t\t\t");
+						}
+					}
+				}
+			}
+			return;
+		}
+	}
 }

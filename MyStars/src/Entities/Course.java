@@ -7,13 +7,29 @@ import java.util.List;
  * A school can have many different types of courses
  */
 public class Course{
-	
-	
+	/**
+	 * name/id of the course
+	 */
 	private String courseCode;
+	/**
+	 * name of the course
+	 */
 	private String courseName;
+	/**
+	 * name of the school
+	 */
 	private String school;
+	/**
+	 * number of AU for the course
+	 */
 	private int courseAU;
+	/**
+	 * type of the course
+	 */
 	private String courseType;
+	/**
+	 * the ArrayList for the index
+	 */
 	private ArrayList<Index> index;
 	
 	/**
@@ -22,7 +38,7 @@ public class Course{
 	public Course() {}
 	
 	/**
-	 * Constructor for Course
+	 * Create a new course with these parameters
 	 * @param courseCode
 	 * @param courseName
 	 * @param courseAU

@@ -1,11 +1,11 @@
-Htet|2m667oivda80msva|U1720738G|Myanmar|4|eeexort.invoker@gmail.com|01/04/2017 12:00|02/04/2017 13:00|3
-Alvin|1t29653jn428rvcv|U1811110F|Singaporean|3|alee032@e.ntu.edu.sg|31/03/2017 20:00|31/03/2017 23:00|3
-Yvette|9qkiv2pqofbv9crb|U1773842F|Singaporean|4|yvette@hotmail.com|02/04/2017 10:00|02/04/2017 10:00|3
-Bryan|dbiu18crh3fm3cro|U1828810A|Singaporean|3|bryanliu@gmail.com|06/04/2017 12:00|09/04/2017 13:00|3
-Yan Jun|bu1bgo3amumrof7k|U1922103D|Singaporean|2|alvin@e.ntu.edu.sg|11/11/1111 11:11|22/10/2223 22:22|3
-Hello|6b035v8l6fqa5m34|U1837281B|Singaporean|3|fff@gmail.com|11/11/1111 11:11|22/10/2223 22:22|3
-Jerrold|a36st3ggbopr0u5p|U1928193D|Malaysian|2|jerrold@gmail.com|20/03/2017 10:00|05/04/2017 11:00|3
-Wee|iffkelu4mnfi1p98|U2012345F|Singaporean|1|weekiat@gmail.com|22/04/2017 11:00|24/04/2017 11:00|3
-Mark|vptp7sgguntttvas|U1748493D|Singaporean|4|mark@hotmail.com|22/11/2017 11:11|23/11/2017 22:00|3
-Toni|e310d0lo12bquim0|U1822222E|Singaporean|3|ylim085@e.ntu.edu.sg|06/04/2017 11:00|06/04/2017 18:00|3
-Tony|vqq2fapa7ojk0rvg|U1920792D|Singaporean|2|toni001@e.ntu.edu.sg|11/11/1111 11:11|22/10/2223 22:22|3
+stud1|Htet|2m667oivda80msva|U1720738G|M|Myanmar|4|zapper2413@gmail.com|01/04/2017 12:00|02/04/2017 13:00
+stud2|Alvin|1t29653jn428rvcv|U1811110F|M|Singaporean|3|mapleseaokok@gmail.com|31/03/2017 20:00|31/03/2017 23:00
+stud3|Yvette|9qkiv2pqofbv9crb|U1773842F|M|Singaporean|4|plwk.13@gmail.com|02/04/2017 10:00|02/04/2017 10:00
+stud4|Bryan|dbiu18crh3fm3cro|U1828810A|M|Singaporean|3|abcd@gmail.com|06/04/2017 12:00|09/04/2017 13:00
+stud5|Yan Jun|bu1bgo3amumrof7k|U1922103D|M|Singaporean|2|abcdef@gmail.com|11/11/1111 11:11|22/10/2223 22:22
+stud6|Hello|6b035v8l6fqa5m34|U1837281B|F|Singaporean|3|fff@gmail.com|11/11/1111 11:11|22/10/2223 22:22
+stud7|Jerrold|a36st3ggbopr0u5p|U1928193D|M|Malaysian|2|jerrold@gmail.com|20/03/2017 10:00|05/04/2017 11:00
+stud8|Wee|iffkelu4mnfi1p98|U2012345F|M|Singaporean|1|weekiat@gmail.com|22/04/2017 11:00|24/04/2017 11:00
+stud9|Mark|vptp7sgguntttvas|U1748493D|M|Singaporean|4|mark@hotmail.com|22/11/2017 11:11|23/11/2017 22:00
+stud10|Toni|e310d0lo12bquim0|U1822222E|F|Singaporean|3|ylim085@e.ntu.edu.sg|06/04/2017 11:00|06/04/2017 18:00
+stud11|Tony|vqq2fapa7ojk0rvg|U1920792D|M|Singaporean|2|toni001@e.ntu.edu.sg|11/11/1111 11:11|22/10/2223 22:22

@@ -6,8 +6,6 @@ public class IOforDB {
 	public static ArrayList<String> read(String filename) throws FileNotFoundException{
 		ArrayList mydata = new ArrayList();
 		//the file to be opened for reading  
-		System.out.println(filename);
-		
 		
 		Scanner scanner = new Scanner(new FileInputStream(filename));  //file to be scanned 
 		try {

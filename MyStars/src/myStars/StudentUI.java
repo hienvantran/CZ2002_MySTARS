@@ -21,11 +21,20 @@ import Entities.Student;
  */
 	public class StudentUI extends UserInterface{
 	/**
-	 * A new object for StudentCtrl, CourseCtrl, PrintInfoCtrl
+	 * A new object for Scanner
 	 */
 	Scanner sc = new Scanner(System.in);
+	/**
+	 * A new object for StudentCtrl
+	 */
 	StudentCtrl mystudent = new StudentCtrl();
+	/**
+	 * A new object for CourseCtrl
+	 */
 	CourseCtrl courseCtrl = new CourseCtrl();
+	/**
+	 * A new object for PrintInfoCtrl
+	 */
 	PrintInfoCtrl printInfo = new PrintInfoCtrl();
 	/**
 	 * default constructor
@@ -96,7 +105,6 @@ import Entities.Student;
 	{
 		//retrieve indexList/CourseList
 		ArrayList<Index> indexList = IndexDB.retrieveIndex();
-		ArrayList<Course> courseList = CourseDB.retrieveCourse();
 		
 		int inputIndex = 0;
 		String inputCrsCode = null;
@@ -150,7 +158,8 @@ import Entities.Student;
 		}
 		
 		//Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
-		System.out.println("Confirm to register this index? Please enter (Y|N) ");
+		printInfo.printIndexInfo(inputIndex, inputCrsCode);
+		System.out.println("\nConfirm to register this index? Please enter (Y|N) ");
 		String sel= sc.nextLine();
 		sel = sel.toUpperCase();
 		
@@ -167,7 +176,6 @@ import Entities.Student;
 	 */
 	 public void dropCourseUI(String studentID) throws ParseException, IOException
 	 {
-		ArrayList<Course> courseList = CourseDB.retrieveCourse();
 		//Display the list of registeredCourses
 		printInfo.printRegCourse(studentID);
 		
@@ -178,7 +186,7 @@ import Entities.Student;
 		
 		//Ask user to input the CourseCode
 		while(!validInput){
-			inputCrsCode = getStringInput("Enter Course Code: ");
+			inputCrsCode = getStringInput("Enter Course Code you want to DROP: ");
 			inputCrsCode = inputCrsCode.toUpperCase();
 			if(inputCrsCode.equals("-1")) return;
 
@@ -205,7 +213,8 @@ import Entities.Student;
 		
 		
 		//Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
-		System.out.println("Confirm to register this index? Please enter (Y|N) ");
+		printInfo.printIndexInfo(inputIndex, inputCrsCode);
+		System.out.println("\nConfirm to DROP this index? Please enter (Y|N) ");
 		String sel= sc.nextLine();
 		sel = sel.toUpperCase();
 		
@@ -258,7 +267,6 @@ import Entities.Student;
 			 System.out.println("The Index you have entered does not exist");
 			 return;
 		 }
-		 //Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
 		 mystudent.checkVacancy(courseCode);
 	 }
 	 /**
@@ -269,8 +277,6 @@ import Entities.Student;
 	  */
 	 public void changeIndexUI(String studentID) throws IOException, ParseException
 	 {
-		 ArrayList<Course> courseList = CourseDB.retrieveCourse();
-		 StudentCtrl mystudent = new StudentCtrl();
 		 int currIndex = 0;
 		 int newIndex = 0;
 		 String inputCrsCode = null;
@@ -318,8 +324,6 @@ import Entities.Student;
 				System.out.println("Invalid Input! Please enter only valid number ");
 			}
 		 }
-		 //Display New Index Info
-		 //Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
 		 mystudent.changeIndex(studentID, inputCrsCode,currIndex, newIndex);
 	 }
 	 /**
@@ -330,8 +334,6 @@ import Entities.Student;
 	  */
 	 public void swapIndexUI(String studentID) throws IOException, ParseException
 	 {
-		 ArrayList<Course> courseList = CourseDB.retrieveCourse();
-		 StudentCtrl mystudent = new StudentCtrl();
 		 String peerID = null;
 		 int peerIndex = 0;
 		 int ownIndex = 0;

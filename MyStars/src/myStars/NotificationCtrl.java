@@ -10,9 +10,24 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class NotificationCtrl {
+	/**
+	 * This function serves as a purpose to send email to students after successful operation
+	 * @param receiver
+	 * @param courseCode
+	 * @param IndexNo
+	 * @param type
+	 * @param peerID
+	 * @param peerIndex
+	 */
     public static void sendMail(String receiver, String courseCode, int IndexNo, int type, String peerID, int peerIndex)
     {
-        String TextMsg = null;
+        /**
+         * The message text that is sent to the receiver
+         */
+    	String TextMsg = null;
+    	/**
+    	 * The subject/title of the message
+    	 */
         String subject = null;
         System.out.println("Preparing to send email...");
         Properties props = new Properties();
@@ -22,7 +37,13 @@ public class NotificationCtrl {
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
 
+        /**
+         * Sender's email
+         */
         String myAccountEmail = "mapleseaok@gmail.com";
+        /**
+         * Sender's password
+         */
         String password = "mapleseaok";
 
         Session session = Session.getInstance(props,new javax.mail.Authenticator() {

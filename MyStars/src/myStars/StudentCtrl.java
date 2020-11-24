@@ -6,6 +6,7 @@ import Entities.Student;
 import Entities.Course;
 import Entities.Index;
 import Entities.Lesson;
+import Entities.ModeType;
 import Entities.CourseRegister;
 import DB.StudentDB;
 import DB.CourseDB;
@@ -51,7 +52,8 @@ public class StudentCtrl {
 			if(idx.getIndex()==indexNo && idx.getCourseCode().equals(courseCode)) {
 				currentIndex = idx;
 				// get vacancy from the CourseCtrl method
-				int vacancy = idx.getTotalSlot();
+				//int vacancy = idx.getTotalSlot();
+				int totalslot = idx.getTotalSlot();
 				int waitingList = idx.getWaitList();
 				String registerStatus = "On Waiting List";
 				String crsCode = idx.getCourseCode();
@@ -63,9 +65,8 @@ public class StudentCtrl {
 				    }
 				else if (idx.getTotalSlot() > 0){
 					// we do not need to deduct
-					vacancy--;
+					//vacancy--;
 					registerStatus = "Registered";
-					
 				}
 				// Adding course
 				boolean crsStt = false;
@@ -122,7 +123,7 @@ public class StudentCtrl {
 					int vacancy = i.getTotalSlot();
 					int totalSlot = i.getTotalSlot();
 					int waitingList = i.getWaitList();
-
+	
 					if (course.getStatus()==true){vacancy++;}
 					else{waitingList--;}
 					if (i.getIndex() == indexNo  && i.getCourseCode().equals(courseCode)){

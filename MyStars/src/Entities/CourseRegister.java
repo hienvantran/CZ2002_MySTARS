@@ -5,10 +5,22 @@ package Entities;
  */
 public class CourseRegister {
 	
+	/**
+	 * the status of the registered course (Waiting List/Registered)
+	 */
 	private Boolean status;
+	/**
+	 * the name of the course
+	 */
 	private String course;
+	/**
+	 * the index number of the course
+	 */
 	private int index;
-	private String student;
+	/**
+	 * the 
+	 */
+	private String stdUserName;
 	
 	/**
 	 * Constructor for CourseRegister
@@ -58,7 +70,7 @@ public class CourseRegister {
 	 * Get the student
 	 * @return student
 	 */
-	public String getStudent() { return student;}
+	public String getStudent() { return stdUserName;}
 	/**
 	 * Change stdUserName
 	 * @param stdUserName
