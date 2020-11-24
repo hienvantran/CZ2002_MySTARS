@@ -6,13 +6,24 @@ import java.util.Scanner;
 
 import Entities.ModeType;
 
+/**
+ * Login user interface
+ * @author Hoo Jia Kai
+ */
 public class LoginUI extends UserInterface {
 
-	
+	/**
+	 * constructor for LoginUI
+	 */
 	public LoginUI() {
 		
 	}
 	
+	/**
+	 * display the user interface for logging in
+	 * @throws FileNotFoundException
+	 * @throws ParseException
+	 */
 	public void showUI() throws FileNotFoundException, ParseException {
 		printHeader("Welcome to MyStars App!");
 		CalendarCtrl.GetCurrentDatetime();		
