@@ -128,9 +128,9 @@ public class PrintInfoCtrl {
 				stCrsReg.add(course);
 			}
 		}
-		for (CourseRegister regCrs : stCrsReg) {
-			System.out.println(regCrs.getCourse()+ regCrs.getIndex() +regCrs.getStudent());
-		}
+//		for (CourseRegister regCrs : stCrsReg) {
+//			System.out.println(regCrs.getCourse()+ regCrs.getIndex() +regCrs.getStudent());
+//		}
 		System.out.println("The registered courses for this student " + studentID + " are as follows: \n");
 		int AUcount =0;
 		System.out.println("CourseCode\tIndex\tCourse Type\tAU\tLesson Type\tLesson Venue\tLesson Day\tLesson Time");

@@ -1,10 +1,10 @@
 package Entities;
 
 public class AcademicStaff extends User{
-    private double salary;
+    private double salary=1000;
 
-    public AcademicStaff(){
-
+    public AcademicStaff(String username, String password, ModeType modeType){
+    	super(username,password,modeType);
     }
 
     public double getSalary() {
