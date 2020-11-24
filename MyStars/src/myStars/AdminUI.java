@@ -32,7 +32,7 @@ public class AdminUI extends UserInterface {
 		int choice=1;
 		Scanner sc = new Scanner(System.in);
 
-		while(choice!=0){
+		while(choice!=-1){
 			printHeader("Welcome to the Admin UI",
 					"1. Edit student access period",
 					"2. Add a student",
@@ -61,8 +61,11 @@ public class AdminUI extends UserInterface {
 					break;
 				case 7: printStudentByCourseUI();
 					break;
-				case 0: break;
-				default: System.out.println("Invalid entry. Please select a number from 1 to 7: ");
+				case -1: 
+					System.out.println("Exiting... Thank you for using MYSTARS! ");
+					break;
+				default: 
+					System.out.println("Invalid entry. Please select a number from 1 to 7: ");
 					choice = sc.nextInt();
 					break;
 			}
@@ -431,10 +434,6 @@ public class AdminUI extends UserInterface {
 						System.out.println("Index doesn't exists!");
 					}
 				}
-				break;
-			case -1:
-				validInput = true;
-				System.out.println("Exiting... Thank you for using MYSTARS! ");
 				break;
 		}
 	}
