@@ -42,7 +42,7 @@ public class NotificationCtrl {
          */
         String myAccountEmail = "mapleseaok@gmail.com";
         /**
-         * Sender's password
+         * Sender's email password
          */
         String password = "mapleseaok";
 

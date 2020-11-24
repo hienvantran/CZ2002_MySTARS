@@ -20,19 +20,19 @@ public class CourseRegister {
 	/**
 	 * the 
 	 */
-	private String stdUserName;
+	private String matricNo;
 	
 	/**
 	 * Constructor for CourseRegister
-	 * @param stdUserName
+	 * @param matricNo
 	 * @param course
 	 * @param index
 	 * @param status
 	 */
-	public CourseRegister(String stdUserName, String course, int index,  Boolean status)
+	public CourseRegister(String matricNo, String course, int index,  Boolean status)
 	{
 		this.status = status;
-		this.student = stdUserName;
+		this.matricNo = matricNo;
 		this.course = course;
 		this.index = index;
 	}
@@ -70,10 +70,10 @@ public class CourseRegister {
 	 * Get the student
 	 * @return student
 	 */
-	public String getStudent() { return stdUserName;}
+	public String getStudent() { return matricNo;}
 	/**
-	 * Change stdUserName
-	 * @param stdUserName
+	 * Change matricNo
+	 * @param matricNo
 	 */
-	public void setStudent(String stdUserName) { this.student = stdUserName;}
+	public void setStudent(String matricNo) { this.matricNo = matricNo;}
 }

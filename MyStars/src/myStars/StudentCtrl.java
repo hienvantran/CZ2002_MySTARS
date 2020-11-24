@@ -16,7 +16,8 @@ import DB.CourseRegDB;
 
 public class StudentCtrl {
 	private static final int numAUlimit = 21;
-	public void registerCourse(String studentID, String courseCode,int indexNo) throws FileNotFoundException, ParseException, IOException{
+	private CourseCtrl crsCtrl = new CourseCtrl();
+	public void registerCourse(String studentID, String courseCode,int indexNo,boolean swap) throws FileNotFoundException, ParseException, IOException{
 		System.out.println("Going to Registration");
 		Student currentStudent = null;
 		String studentEmail = null;
@@ -42,7 +43,8 @@ public class StudentCtrl {
 		if (this.checkCourseRegistrationExists(studentID, courseCode,indexNo) == true) {
 			System.out.println("This student already registers this course.");
             return;
-        }	
+        }
+		System.out.println("CAT");
 		if (this.checkCourseClash(studentID, courseCode, indexNo)) {
 			System.out.println("This course is clashed, cannot add");
             return;
@@ -52,49 +54,50 @@ public class StudentCtrl {
 			if(idx.getIndex()==indexNo && idx.getCourseCode().equals(courseCode)) {
 				currentIndex = idx;
 				// get vacancy from the CourseCtrl method
-				//int vacancy = idx.getTotalSlot();
-				int totalslot = idx.getTotalSlot();
+				int vacancy = crsCtrl.noOfIndexVacancy(courseCode, indexNo);
+				int totalSlot = idx.getTotalSlot();
 				int waitingList = idx.getWaitList();
 				String registerStatus = "On Waiting List";
-				String crsCode = idx.getCourseCode();
-				if (idx.getTotalSlot() <= 0) {
+				if (vacancy <= 0) {
 					System.out.println("Sorry, the course has no vacancies any more.");
 					waitingList++;
 				    System.out.println("Student " + currentStudent.getUsername() + " wants to register " + currentIndex.getCourseCode());
-				    break;
 				    }
-				else if (idx.getTotalSlot() > 0){
-					// we do not need to deduct
-					//vacancy--;
+				else{
 					registerStatus = "Registered";
 				}
 				// Adding course
-				boolean crsStt = false;
+				boolean crsStt;
 				if (registerStatus == "Registered") {crsStt = true;}
-				else if (registerStatus == "On Waiting List") {crsStt = false;}
+				else {crsStt = false;}
 				CourseRegister newStudentCourse = new CourseRegister(studentID, courseCode, indexNo, crsStt);
 				ArrayList<CourseRegister> crsReg = CourseRegDB.retrieveCourseRegister();
 				crsReg.add(newStudentCourse);
 				CourseRegDB.saveCourse(crsReg);
-			    
 				// Update new vacancy & waiting list
-			    Index newIndex = new Index(idx.getCourseCode(), indexNo, idx.getGroup(), vacancy, waitingList);
+			    Index newIndex = new Index(idx.getCourseCode(), indexNo, idx.getGroup(), totalSlot, waitingList);
 			    idxList.add(newIndex);
 				idxList.remove(idxList.get(indexList.indexOf(idx))); 
 				IndexDB.saveIndex(idxList);
 				if (registerStatus.equals("On Waiting List")){
 					System.out.println("Due to lack of vacancy, your Index " + indexNo + " (" + courseCode + ") will be put into waiting list.");
-					NotificationCtrl.sendMail(studentEmail, courseCode, indexNo, 2, null, 0);
+					if (swap == false)
+					{
+						NotificationCtrl.sendMail(studentEmail, courseCode, indexNo, 2, null, 0);
+					}
 				}
 				else if (registerStatus.equals("Registered")){
-					System.out.println("Index " + indexNo + " (" + courseCode + ") has been successfully added!");
-					NotificationCtrl.sendMail(studentEmail,courseCode,indexNo,1,null,0);
+					System.out.println("Index " + indexNo + " (" + courseCode + ") has been successfully added!\n");
+					if (swap == false)
+					{
+						NotificationCtrl.sendMail(studentEmail,courseCode,indexNo,1,null,0);
+					}
 				}
 			break;
 			}
 		}
 	}
-	public void dropCourse(String studentID, String courseCode,int indexNo) throws FileNotFoundException, ParseException, IOException{
+	public void dropCourse(String studentID, String courseCode,int indexNo, boolean swapIdx) throws FileNotFoundException, ParseException, IOException{
 		System.out.println("Going to Drop Registration");
 		String studentEmail = null;
 		ArrayList<Student> studList = StudentDB.retrieveStudent();
@@ -108,26 +111,19 @@ public class StudentCtrl {
             return;
         }	
 		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
+		ArrayList<CourseRegister> courseReg = CourseRegDB.retrieveCourseRegister();
 		ArrayList<Index> indexList = IndexDB.retrieveIndex();
+
 		for(CourseRegister course : courseRegistrations){
 			if (course.getIndex() == indexNo && course.getStudent().equals(studentID)){
-				ArrayList<CourseRegister> courseReg = CourseRegDB.retrieveCourseRegister();
-				courseReg.remove(courseReg.get(courseRegistrations.indexOf(course)));
-				CourseRegDB.saveCourse(courseReg);
-				System.out.println("Index " + indexNo + " (" + courseCode +  " for student "+course.getStudent() + ") has been removed!");
-				NotificationCtrl.sendMail(studentEmail,courseCode,indexNo,3,null,0);
-
 				// need to edit
 				for (Index i : indexList){
 					// get from CourseCtrl vacancy
-					int vacancy = i.getTotalSlot();
-					int totalSlot = i.getTotalSlot();
-					int waitingList = i.getWaitList();
-	
-					if (course.getStatus()==true){vacancy++;}
-					else{waitingList--;}
 					if (i.getIndex() == indexNo  && i.getCourseCode().equals(courseCode)){
 						// Update new vacancy & waiting list
+						int totalSlot = i.getTotalSlot();
+						int waitingList = i.getWaitList();
+						if (course.getStatus()==true){waitingList--;}
 						ArrayList<Index> idxList = IndexDB.retrieveIndex();
 						Index removedIdx = idxList.get(indexList.indexOf(i));
 						Index newIndex = new Index(i.getCourseCode(), indexNo, i.getGroup(), totalSlot, waitingList);
@@ -136,50 +132,26 @@ public class StudentCtrl {
 					    IndexDB.saveIndex(idxList);
 					}
 				}
+				
+				courseReg.remove(courseReg.get(courseRegistrations.indexOf(course)));
+				CourseRegDB.saveCourse(courseReg);
+				
+				if(swapIdx==false) {
+					crsCtrl.updateRegisteredList(courseCode, indexNo, ModeType.USER);
+					NotificationCtrl.sendMail(studentEmail,courseCode,indexNo,3,null,0);
+					}
+				
+				System.out.println("Index " + indexNo + " (" + courseCode +  " for student "+course.getStudent() + ") has been removed!\n");
+				
+
 				break;
 			}
 
 		}
 	}
-	/*
-	public void printRegCourse(String studentID) throws FileNotFoundException, ParseException, IOException{
-		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
-		ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
-		ArrayList<Course> courseList = CourseDB.retrieveCourse();
-		ArrayList<CourseRegister> stCrsReg = new ArrayList<CourseRegister>();
-		for(CourseRegister course : courseRegistrations){
-			if (course.getStudent().equals(studentID) && course.getStatus()==true){
-				stCrsReg.add(course);
-			}
-		}
-		for (CourseRegister regCrs : stCrsReg) {
-			System.out.println(regCrs.getCourse()+ regCrs.getIndex() +regCrs.getStudent());
-		}
-		System.out.println("The registered courses for this student " + studentID + " are as follows ");
-		int AUcount =0;
-		for (CourseRegister regCrs : stCrsReg) {
-			System.out.println(regCrs.getCourse());
-			for (Course crs : courseList) {
-				if(regCrs.getCourse().equals(crs.getCourseCode())) {
-					System.out.println("Course Code " + crs.getCourseCode() + " (" + regCrs.getIndex() + ") " + " AU: " + crs.getCourseAU());
-					AUcount = AUcount + crs.getCourseAU();
-					System.out.println("Scheduled lessons for this index:");
-					for (Lesson lesson : lessonList) {
-						if(regCrs.getIndex()==lesson.getindexNo()) {
-							System.out.print("\t");
-							System.out.println(lesson.getLessonType() + " at " + lesson.getLessonVenue() + " on " + lesson.getLessonDay()+ " " + lesson.getLessonTime() + " (" + lesson.getindexNo() + ") ");
-						}
-					}
-				}
-			}
-		}
-		System.out.println("total Au = " + AUcount);
-		return;
-	}*/
 	
 	public  int totalAU(String studentID) throws FileNotFoundException, ParseException, IOException{
 		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
-		ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
 		ArrayList<Course> courseList = CourseDB.retrieveCourse();
 		ArrayList<CourseRegister> stCrsReg = new ArrayList<CourseRegister>();
 		for(CourseRegister course : courseRegistrations){
@@ -187,7 +159,7 @@ public class StudentCtrl {
 				stCrsReg.add(course);
 			}
 		}
-		int AUcount =0;
+		int AUcount = 0;
 		for (CourseRegister regCrs : stCrsReg) {
 			for (Course crs : courseList) {
 				if(regCrs.getCourse().equals(crs.getCourseCode())) {	
@@ -195,26 +167,26 @@ public class StudentCtrl {
 				}
 			}
 		}
-		
-		
 		return AUcount;
 	}
 	
 	public void checkVacancy(String courseID) throws FileNotFoundException, ParseException, IOException{
 		ArrayList<Index> indexList = IndexDB.retrieveIndex();
-		ArrayList<Index> crsindexList = new ArrayList<Index>();
-		HashMap<Integer, Integer> idxVacancy = new HashMap<Integer, Integer>();
-		HashMap<Integer, Integer> idxWaitlist = new HashMap<Integer, Integer>();
+		int vacancy;
+		System.out.println("The vacancy for this courses " + courseID + " is \n");
 		for(Index idx:indexList) {
 			if (idx.getCourseCode().equals(courseID)) {
-				idxVacancy.put(idx.getIndex(), idx.getTotalSlot());
-				idxWaitlist.put(idx.getIndex(), idx.getWaitList());
+				if (crsCtrl.noOfIndexVacancy(courseID, idx.getIndex())<0) {
+			          vacancy = 0;  
+			        }
+			        else {
+			          vacancy = crsCtrl.noOfIndexVacancy(courseID, idx.getIndex());
+			        }
+			        System.out.println("Index " + idx.getIndex() + " has " 
+			            + vacancy + "/" + crsCtrl.noOfIndexTotalSlot(courseID, idx.getIndex())+ " (vacancy/total size)");
 			}
 		}
-		System.out.println("The vacancy for this courses " + courseID + " is \n");
-		for (int i : idxVacancy.keySet()) {
-			System.out.println("Index " + i + " has " + idxVacancy.get(i) + " vacancies ");
-		}
+
 	}
 	public void changeIndex(String studentID, String courseCode,int curidxNo, int newidxNo) throws FileNotFoundException, ParseException, IOException{
 		System.out.println("Going to change index");
@@ -223,9 +195,9 @@ public class StudentCtrl {
 		if (this.checkCourseRegistrationExists(studentID, courseCode, curidxNo) == false) {
 			System.out.println("Sorry. This student has not yet registers this course.");
             return;
-        }	else {
-		
-		String studentEmail = null;
+        }	
+		else {
+			String studentEmail = null;
 			for (Student stud : studList) 
 			{
 				if(stud.getMatricNum().equals(studentID)) 
@@ -243,13 +215,13 @@ public class StudentCtrl {
                   {
                 	  if (idx.getCourseCode().equals(courseCode) && idx.getIndex()==newidxNo)
                 	  {
-                		  vacancy =  idx.getTotalSlot();
+                		  vacancy =  crsCtrl.noOfIndexVacancy(courseCode, idx.getIndex());
                 		  if (vacancy>0) 
                 		  {
                 			  if (this.checkCourseClash(studentID, courseCode, newidxNo) == false) 
                 			  {
-                				  this.dropCourse(studentID, courseCode, curidxNo);
-                				  this.registerCourse(studentID, courseCode, newidxNo);
+                				  this.dropCourse(studentID, courseCode, curidxNo, false);
+                				  this.registerCourse(studentID, courseCode, newidxNo,false);
                 				  NotificationCtrl.sendMail(studentEmail,courseCode,newidxNo,4,null,0);
                 			  }
                 		  }
@@ -271,9 +243,13 @@ public class StudentCtrl {
 	}
 	public void swapIdx(String ownStudId, String peerStudId, String courseCode, int yourIdx, int peerIdx) throws FileNotFoundException, 
 	 ParseException, IOException {
+		if (yourIdx == peerIdx) {
+			System.out.println("Same index cannot swap....");
+			return;
+		}
 		ArrayList<Student> studList = StudentDB.retrieveStudent();
 		System.out.println("Go to swap index");
-		System.out.println("Swap index with student " + peerStudId + "(his index " + peerIdx + ")");
+		System.out.println("Swap index with student " + peerStudId + "(his index " + peerIdx + ")\n");
 		String studentEmail = null;
 		String peerEmail = null;
 		for (Student stud : studList) 
@@ -288,12 +264,10 @@ public class StudentCtrl {
 			}
 		}
 
-		this.dropCourse(ownStudId, courseCode, yourIdx);
-		this.dropCourse(peerStudId, courseCode, peerIdx);
-		this.registerCourse(ownStudId, courseCode, peerIdx);
-		this.printRegCourse(ownStudId);
-		this.registerCourse(peerStudId, courseCode, yourIdx);
-		this.printRegCourse(peerStudId);
+		this.dropCourse(ownStudId, courseCode, yourIdx,true);
+		this.dropCourse(peerStudId, courseCode, peerIdx,true);
+		this.registerCourse(ownStudId, courseCode, peerIdx,true);
+		this.registerCourse(peerStudId, courseCode, yourIdx,true);
 		System.out.println("Swap index successfully");
 		NotificationCtrl.sendMail(studentEmail,courseCode,yourIdx,5,peerStudId,peerIdx);
 		NotificationCtrl.sendMail(peerEmail,courseCode,peerIdx,5,ownStudId,yourIdx);
@@ -301,7 +275,6 @@ public class StudentCtrl {
 	
 	public boolean checkCourseRegistrationExists(String studentID, String courseID, int indexNo) throws FileNotFoundException, ParseException{
         ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
-        
         for(CourseRegister course:courseRegistrations) {
         	if(course.getCourse().equals(courseID)&& course.getStudent().equals(studentID) &&course.getIndex()==indexNo) {
         		return true;
@@ -311,112 +284,125 @@ public class StudentCtrl {
 
     }
 	public boolean checkCourseClash(String studentID, String courseCode, int indexNo) throws FileNotFoundException, ParseException, IOException{
-		ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
-        ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
-        boolean clash = false;
-        for (CourseRegister regCrs: courseRegistrations) 
-        {
-        	if (regCrs.getCourse().equals(courseCode)) return false;
-        }
-        if (this.checkCourseRegistrationExists(studentID, courseCode,indexNo) == false) {
-        	// get the lesson time for desired reg course
-        	String lecDay = new String();
-        	String tutDay = new String();
-        	String labDay = new String();
-            ArrayList<Double> lechourMin = new ArrayList<Double>();
-            ArrayList<Double> tuthourMin = new ArrayList<Double>();
-            ArrayList<Double> labhourMin = new ArrayList<Double>();
-        	for(Lesson lesson:lessonList) {
-            	if(lesson.getCrsCode().equals(courseCode)&&lesson.getindexNo()==indexNo) {
-            		if(lesson.getLessonType().equals("LEC")) {
-            			lecDay = lesson.getLessonDay();
-            			double sHour = Double.parseDouble(lesson.getLessonTime().substring(0,2)) + 0.5;
-            			double eHour = Double.parseDouble(lesson.getLessonTime().substring(5,7)) + 0.5;
-            			lechourMin.add(sHour);
-            			lechourMin.add(eHour);
+		System.out.println("Going to check clash..");
+			ArrayList<CourseRegister> courseRegistrations = CourseRegDB.retrieveCourseRegister();
+	        ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
+	        boolean clash = false;
+	        for (CourseRegister regCrs: courseRegistrations) 
+	        {
+	          if (regCrs.getCourse().equals(courseCode) && regCrs.getStudent().equals(studentID) && regCrs.getStatus()==true) {
+	        	  return false;
+	        	  }
+	        }
+	        if (this.checkCourseRegistrationExists(studentID, courseCode,indexNo) == false) {
+	          // get the lesson time for desired reg course
+	          String lecDay = new String();
+	          String tutDay = new String();
+	          String labDay = new String();
+	            ArrayList<Double> lechourMin = new ArrayList<Double>();
+	            ArrayList<Double> tuthourMin = new ArrayList<Double>();
+	            ArrayList<Double> labhourMin = new ArrayList<Double>();
+	          for(Lesson lesson:lessonList) {
+	              if(lesson.getCrsCode().equals(courseCode)&&lesson.getindexNo()==indexNo) {
+	                if(lesson.getLessonType().equals("LEC")) {
+	                  lecDay = lesson.getLessonDay();
+	                  double sHour = Double.parseDouble(lesson.getLessonTime().substring(0,2)) + 0.5;
+	                  double eHour = Double.parseDouble(lesson.getLessonTime().substring(5,7)) + 0.5;
+	                  lechourMin.add(sHour);
+	                  lechourMin.add(eHour);
 
-            					}
-            		if(lesson.getLessonType().equals("TUT")) {
-            			tutDay = lesson.getLessonDay();
-            			double sHour = Double.parseDouble(lesson.getLessonTime().substring(0,2)) + 0.5;
-            			double eHour = Double.parseDouble(lesson.getLessonTime().substring(5,7)) + 0.5;
-            			tuthourMin.add(sHour);
-            			tuthourMin.add(eHour);
- 
-            					}
-            		if(lesson.getLessonType().equals("LAB")) {
-            			labDay = lesson.getLessonDay();
-            			double sHour = Double.parseDouble(lesson.getLessonTime().substring(0,2)) + 0.5;
-            			double eHour = Double.parseDouble(lesson.getLessonTime().substring(5,7)) + 0.5;
-            			labhourMin.add(sHour);
-            			labhourMin.add(eHour);
+	                      }
+	                if(lesson.getLessonType().equals("TUT")) {
+	                  tutDay = lesson.getLessonDay();
+	                  double sHour = Double.parseDouble(lesson.getLessonTime().substring(0,2)) + 0.5;
+	                  double eHour = Double.parseDouble(lesson.getLessonTime().substring(5,7)) + 0.5;
+	                  tuthourMin.add(sHour);
+	                  tuthourMin.add(eHour);
+	 
+	                      }
+	                if(lesson.getLessonType().equals("LAB")) {
+	                  labDay = lesson.getLessonDay();
+	                  double sHour = Double.parseDouble(lesson.getLessonTime().substring(0,2)) + 0.5;
+	                  double eHour = Double.parseDouble(lesson.getLessonTime().substring(5,7)) + 0.5;
+	                  labhourMin.add(sHour);
+	                  labhourMin.add(eHour);
+	}
+	          }
+	            }
+	          
+	          // iterate through registered crs to check if the desired one clash or not
+	        ArrayList<CourseRegister> crsReg = new ArrayList<CourseRegister>();
+	        for(CourseRegister course : courseRegistrations){
+	          if (course.getStudent().equals(studentID)){
+	            crsReg.add(course);
+	          }
+	        }
+	          for (CourseRegister crs: crsReg) {
+	            int idxNo = crs.getIndex();
+	            String crsCode = crs.getCourse();
+	            for(Lesson lesson:lessonList) {
+	                  if(lesson.getCrsCode().equals(crsCode)&&lesson.getindexNo()==idxNo) {
+	                    // get reg crs lesson time
+	                    String crsDay = lesson.getLessonDay();
+	                    String crsTime = lesson.getLessonTime();
+	                    double sHour = Double.parseDouble(crsTime.substring(0,2)) + 0.5;
+	                  double eHour = Double.parseDouble(crsTime.substring(5,7)) + 0.5;
+	                    if(crsDay.equals(lecDay)) {                        
+	                          if (lechourMin.get(0)<= sHour && sHour <= lechourMin.get(1) ) {
+	                            System.out.println("CLASH Lec!!! "+ lechourMin.get(0) + ":" + lechourMin.get(1) 
+	                                      +" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
+	                            clash =  true;
+	                          } else if (lechourMin.get(0)<= eHour && eHour <= lechourMin.get(1) ) {
+	                            System.out.println("CLASH Lec!!! "+ lechourMin.get(1) + ":" + lechourMin.get(1) 
+	                  +" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
+	                            clash = true;
+	                          } else if (sHour <=lechourMin.get(0) &&  lechourMin.get(1) <=eHour ) {
+	                            System.out.println("CLASH Lec!!! "+ lechourMin.get(1) + ":" + lechourMin.get(1) 
+	                  +" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
+	                            clash = true;
+	                          } 
+	                      }
+	                    
+	                  
+	                    else if(crsDay.equals(tutDay)) {                      
+	                          if (tuthourMin.get(0)<= sHour && sHour <= tuthourMin.get(1)) {
+	                            System.out.println("CLASH tut!!! "+ tuthourMin.get(0) + ":" + tuthourMin.get(1) 
+	                                      +" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
+	                            clash =  true;
+	                          } else if (tuthourMin.get(0)<= eHour && eHour <= tuthourMin.get(1) ) {
+	                            System.out.println("CLASH tut!!! "+ tuthourMin.get(1) + ":" + tuthourMin.get(1) 
+	                  +" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
+	                            clash = true;
+	                          } else if (sHour <= tuthourMin.get(0) && tuthourMin.get(1)<=eHour  ) {
+	                            System.out.println("CLASH tut!!! "+ tuthourMin.get(1) + ":" + tuthourMin.get(1) 
+	                  +" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
+	                            clash = true;
+	                          }
+	                      }
+	                    else if(crsDay.equals(labDay)) {              
+	                          if (labhourMin.get(0)<= sHour && sHour <= labhourMin.get(1)) {
+	                            System.out.println("CLASH Lab!!! "+ labhourMin.get(0) + ":" + labhourMin.get(1) 
+	                                      +" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
+	                            clash =  true;
+	                          } else if (labhourMin.get(0)<= eHour && eHour <= labhourMin.get(1) ) {
+	                            System.out.println("CLASH lab!!! "+ labhourMin.get(1) + ":" + labhourMin.get(1) 
+	                  +" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
+	clash = true;
+	                          } else if (sHour <= labhourMin.get(0) &&  labhourMin.get(1) <= eHour ) {
+	                            System.out.println("CLASH lab!!! "+ labhourMin.get(1) + ":" + labhourMin.get(1) 
+	                  +" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
+	                            clash = true;
+	                          }
+	                    }
+	              }
+	                }
+	            
+	          }
+	          
+	        }
+	        
+	        return clash;
 
-            					}
-    			}
-            }
-        	
-        	// iterate through registered crs to check if the desired one clash or not
-    		ArrayList<CourseRegister> crsReg = new ArrayList<CourseRegister>();
-    		for(CourseRegister course : courseRegistrations){
-    			if (course.getStudent().equals(studentID)){
-    				crsReg.add(course);
-    			}
-    		}
-        	for (CourseRegister crs: crsReg) {
-        		int idxNo = crs.getIndex();
-        		String crsCode = crs.getCourse();
-        		for(Lesson lesson:lessonList) {
-                	if(lesson.getCrsCode().equals(crsCode)&&lesson.getindexNo()==idxNo) {
-                		// get reg crs lesson time
-                		String crsDay = lesson.getLessonDay();
-                		String crsTime = lesson.getLessonTime();
-                		double sHour = Double.parseDouble(crsTime.substring(0,2)) + 0.5;
-            			double eHour = Double.parseDouble(crsTime.substring(5,7)) + 0.5;
-                		if(crsDay.equals(lecDay)) {                				
-                    			if (lechourMin.get(0)<= sHour && sHour <= lechourMin.get(1) ) {
-                    				System.out.println("CLASH Lec!!! "+ lechourMin.get(0) + ":" + lechourMin.get(1) 
-                    									+" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
-                    				clash =  true;
-                    			} else if (lechourMin.get(0)<= eHour && eHour <= lechourMin.get(1) ) {
-                    				System.out.println("CLASH Lec!!! "+ lechourMin.get(1) + ":" + lechourMin.get(1) 
-									+" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
-                    				clash = true;
-                    			}
-                			}
-                		
-                	
-                		else if(crsDay.equals(tutDay)) {                			
-                    			if (tuthourMin.get(0)<= sHour && sHour <= tuthourMin.get(1)) {
-                    				System.out.println("CLASH tut!!! "+ tuthourMin.get(0) + ":" + tuthourMin.get(1) 
-                    									+" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
-                    				clash =  true;
-                    			} else if (tuthourMin.get(0)<= eHour && eHour <= tuthourMin.get(1) ) {
-                    				System.out.println("CLASH Lec!!! "+ tuthourMin.get(1) + ":" + tuthourMin.get(1) 
-									+" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
-                    				clash = true;
-                    			}
-                			}
-                		else if(crsDay.equals(labDay)) {              
-                    			if (labhourMin.get(0)<= sHour && sHour <= labhourMin.get(1)) {
-                    				System.out.println("CLASH Lab!!! "+ labhourMin.get(0) + ":" + labhourMin.get(1) 
-                    									+" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
-                    				clash =  true;
-                    			} else if (labhourMin.get(0)<= eHour && eHour <= labhourMin.get(1) ) {
-                    				System.out.println("CLASH Lec!!! "+ labhourMin.get(1) + ":" + labhourMin.get(1) 
-									+" is clashed " +sHour + " of course "+ crsCode + " with index "+idxNo);
-                    				clash = true;
-                    			
-                			}
-                		}
-        			}
-                }
-        		
-        	}
-        	
-        }
-        
-        return clash;
-
-    }
+	    }
 	
 }

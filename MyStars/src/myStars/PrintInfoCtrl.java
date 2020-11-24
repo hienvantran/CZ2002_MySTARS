@@ -1,6 +1,6 @@
 package myStars;
 
-import java.io.FileNotFoundException;
+	import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
