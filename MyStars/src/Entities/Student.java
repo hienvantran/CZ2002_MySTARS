@@ -34,20 +34,29 @@ public class Student extends User{
 	 * the access end date time of student
 	 */
     private Calendar accessEnd;
-
     /**
-     * Creates a new student with given parameters
+     * the name of the student
+     */
+    private String firstName;
+    /**
+     * the gender of the student
+     */
+    private String gender;
+    /**
+     * Create a new student with this parameters
      * @param username
      * @param password
+     * @param firstName
      * @param modeType
      * @param matricNum
      * @param nationality
+     * @param gender
      * @param yearOfStudy
      * @param email
      * @param accessStart
      * @param accessEnd
      */
-    public Student(String username, String password, ModeType modeType, String matricNum,String nationality,int yearOfStudy,String email, Calendar accessStart, Calendar accessEnd){
+    public Student(String username, String password, String firstName, ModeType modeType, String matricNum,String nationality,String gender,int yearOfStudy,String email, Calendar accessStart, Calendar accessEnd){
         super(username, password, modeType);
         this.matricNum = matricNum;
         this.nationality = nationality;
@@ -55,7 +64,8 @@ public class Student extends User{
         this.email = email;
         this.accessStart = accessStart;
         this.accessEnd = accessEnd;
-
+        this.firstName = firstName;
+        this.gender = gender;
     }
 
     /**
@@ -153,4 +163,38 @@ public class Student extends User{
     public void setEmail(String email) {
         this.email = email;
     }
+    /**
+     * Gets the name of the student
+     * @return firstName
+     */
+    public String getFirstName()
+    {
+    	return firstName;
+    }
+    /**
+     * changes the name of the student
+     * @param firstName
+     */
+    public void setFirstName(String firstName)
+    {
+    	this.firstName = firstName;
+    }
+    /**
+     * Gets the gender of the student
+     * @return gender
+     */
+    public String getGender()
+    {
+    	return gender;
+    }
+    /**
+     * Change the gender of the student
+     * @param gender
+     */
+    public void setGender(String gender)
+    {
+    	this.gender = gender;
+    }
+    
+    
 }
