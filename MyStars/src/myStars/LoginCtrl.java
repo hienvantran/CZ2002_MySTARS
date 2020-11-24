@@ -140,8 +140,8 @@ public class LoginCtrl {
 			return false;
 		} 
 		else {
-			ArrayList<User> admindb = AdminDB.retrieveAdmin();
-			for (User user : admindb) {
+			ArrayList<AcademicStaff> admindb = AdminDB.retrieveAdmin();
+			for (AcademicStaff user : admindb) {
 				if(this.match(user)) {
 					System.out.println("Successfully logged in!"); 	
 					this.makeValid();
@@ -162,7 +162,7 @@ public class LoginCtrl {
 	 * @param user admin account 
 	 * @return true or false depending on validity of login attempt
 	 */
-	public boolean match(User user) {
+	public boolean match(AcademicStaff user) {
     	if((this.getUsername().toLowerCase()).equals((user.getUsername().toLowerCase())) && this.getPassword().equals(user.getPassword())) {
     		return true;
     	}

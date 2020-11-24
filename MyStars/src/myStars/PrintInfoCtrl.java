@@ -134,18 +134,19 @@ public class PrintInfoCtrl {
 				stCrsReg.add(course);
 			}
 		}
-		for (CourseRegister regCrs : stCrsReg) {
-			System.out.println(regCrs.getCourse()+ regCrs.getIndex() +regCrs.getStudent());
-		}
+//		for (CourseRegister regCrs : stCrsReg) {
+//			System.out.println(regCrs.getCourse()+ regCrs.getIndex() +regCrs.getStudent());
+//		}
 		System.out.println("The registered courses for this student " + studentID + " are as follows: \n");
 		int AUcount =0;
-		System.out.println("CourseCode\tIndex\tAU\tLesson Type\tLesson Venue\tLesson Day\tLesson Time");
-		System.out.println("------------------------------------------------------------------------------------------------");
+		System.out.println("CourseCode\tIndex\tCourse Type\tAU\tLesson Type\tLesson Venue\tLesson Day\tLesson Time");
+		System.out.println("----------------------------------------------------------------------------------------------------------");
 		for (CourseRegister regCrs : stCrsReg) {
 			for (Course crs : courseList) {
 				if(regCrs.getCourse().equals(crs.getCourseCode())) {
 					System.out.print(crs.getCourseCode() + "\t\t");
 					System.out.print(regCrs.getIndex() + "\t");
+					System.out.print(crs.getCourseType()+"\t\t");
 					System.out.print(crs.getCourseAU() + "\t");
 					AUcount = AUcount + crs.getCourseAU();
 					//System.out.println("Scheduled lessons for this index:");
@@ -157,7 +158,7 @@ public class PrintInfoCtrl {
 							System.out.print(lesson.getLessonDay()+ "\t\t");
 							System.out.print(lesson.getLessonTime());
 							System.out.println();
-							System.out.print("\t\t\t\t");
+							System.out.print("\t\t\t\t\t\t");
 							//System.out.println(lesson.getLessonType() + " at " + lesson.getLessonVenue() + " on " + lesson.getLessonDay()+ " " + lesson.getLessonTime() + " (" + lesson.getindexNo() + ") ");
 						}
 					}

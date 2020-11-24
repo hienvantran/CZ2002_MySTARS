@@ -78,7 +78,7 @@ public class AdminStudCtrl {
     public static boolean isStudentUserExists(String username){
         try{
             ArrayList<Student> studentList = StudentDB.retrieveStudent();
-            ArrayList<User> adminList = AdminDB.retrieveAdmin();
+            ArrayList<AcademicStaff> adminList = AdminDB.retrieveAdmin();
             for(Student student: studentList){
                 if(student.getUsername().equals(username)) return true;
             }
@@ -102,7 +102,7 @@ public class AdminStudCtrl {
     public static boolean isStudentEmailExists(String email){
         try{
             ArrayList<Student> studentList = StudentDB.retrieveStudent();
-            ArrayList<User> adminList = AdminDB.retrieveAdmin();
+            ArrayList<AcademicStaff> adminList = AdminDB.retrieveAdmin();
             for(Student student: studentList){
                 if(student.getUsername().equals(email)) return true;
             }
