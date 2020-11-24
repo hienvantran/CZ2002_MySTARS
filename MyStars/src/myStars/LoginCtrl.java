@@ -126,9 +126,9 @@ public class LoginCtrl {
 //				System.out.println(student.getUsername());
 //				System.out.println(student.getPassword());
 				if(this.match(student)) {
-					System.out.println("Successfully logged in!");
 					System.out.println("Checking access time...");
 					if(CalendarCtrl.CheckAccessTime(student.getAccessStart(), student.getAccessEnd())==true) {
+						System.out.println("Successfully logged in!");
 						this.makeValid();
 						StudentUI studentui = new StudentUI();
 						student.getMatricNum();
