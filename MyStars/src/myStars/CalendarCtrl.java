@@ -36,6 +36,7 @@ public class CalendarCtrl {
 	      } else {
 	         System.out.println("Invalid access time!");
 	         System.out.println("Your access period is from "+ CalendarCtrl.calendarToString(start)+" to "+ CalendarCtrl.calendarToString(end));
+	         System.out.println("You have been logged out.");
 	         return false;
 	      }
 	   }

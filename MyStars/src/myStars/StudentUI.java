@@ -47,7 +47,8 @@ import Entities.Student;
 	 */
 	public void printUI(String studentID)
 	{
-		while(true)
+		boolean off = false;
+		while(!off)
 		{
 			printHeader("Hello " + studentID + " how can I help you today?\n",
 					"Please select an option below",
@@ -83,6 +84,10 @@ import Entities.Student;
 						break;
 					case 6:
 						swapIndexUI(studentID);
+						break;
+					case -1:
+						off=true;
+						System.out.println("Exiting... Thank you for using MYSTARS! ");
 						break;
 					default:
 						System.out.println("Invalid Input! Please select a number from 1 to 6: ");
@@ -165,7 +170,7 @@ import Entities.Student;
 		
 		if(sel.equals("Y"))
 		{
-			mystudent.registerCourse(studentID,inputCrsCode,inputIndex);
+			mystudent.registerCourse(studentID,inputCrsCode,inputIndex,false);
 		}
 	 }
 	/**
@@ -220,7 +225,7 @@ import Entities.Student;
 		
 		if(sel.equals("Y"))
 		{
-			mystudent.dropCourse(studentID,inputCrsCode,inputIndex);
+			mystudent.dropCourse(studentID,inputCrsCode,inputIndex,false);
 		}
 		System.out.println();
 	 }

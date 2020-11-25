@@ -3,12 +3,21 @@ package myStars;
 import java.io.*;
 import java.text.*;
 import java.util.*;
+<<<<<<< HEAD
 
 import DB.LessonDB;
 import Entities.*;
+=======
+import Entities.Course;
+import Entities.CourseRegister;
+import Entities.Index;
+import Entities.ModeType;
+import Entities.Student;
+>>>>>>> 751df938f4b707772b0ec16eedab8819446e5382
 import DB.CourseDB;
 import DB.CourseRegDB;
 import DB.IndexDB;
+import DB.StudentDB;
 
 public class CourseCtrl {
 
@@ -24,14 +33,23 @@ public class CourseCtrl {
     public void updateRegisteredList(String courseCode, int indexNo, ModeType mode){
         try {
             ArrayList<CourseRegister> courseRegisters = CourseRegDB.retrieveCourseRegister();
-
-            System.out.println("no of index vacancy: " + noOfIndexVacancy(courseCode, indexNo));
+            ArrayList<Student> studList = StudentDB.retrieveStudent();
+            String studentEmail = null;
+            //System.out.println("no of index vacancy: " + noOfIndexVacancy(courseCode, indexNo));
             
             for(int i=0; i<noOfIndexVacancy(courseCode, indexNo); i++){
             	
                 for(CourseRegister courseRegister: courseRegisters){
                     if(courseRegister.getStatus()==false && courseRegister.getCourse().equals(courseCode) && courseRegister.getIndex()==indexNo){
                         courseRegister.setStatus(true);
+                        
+                        for (Student stud : studList) {
+                			if(stud.getMatricNum().equals(courseRegister.getStudent())) {
+                				studentEmail = stud.getEmail();
+                			}
+                		}
+                        //System.out.println(courseRegister.getStudent() + " has been allocated to " + courseCode + ", " + indexNo);
+                        NotificationCtrl.sendMail(studentEmail,courseCode,indexNo,1,null,0);
                         if(mode.equals(ModeType.ADMIN))
                         	System.out.println(courseRegister.getStudent() + " has been allocated to " + courseCode + ", " + indexNo);
                         break;
@@ -218,8 +236,13 @@ public class CourseCtrl {
      */
 	public Course getCrsbyCode(String CourseCode)throws IOException, ParseException {
 		ArrayList<Course> courseList = CourseDB.retrieveCourse();
+<<<<<<< HEAD
 		Course myCourse = new Course("Unknown", "Unknown", 0, "Unknown","Unknown", 1);
 		System.out.println(myCourse.getCourseCode());
+=======
+		Course myCourse = new Course("Unknown", "Unknown", 0, "Unknown","Unknown");
+		//System.out.println(myCourse.getCourseCode());
+>>>>>>> 751df938f4b707772b0ec16eedab8819446e5382
 		for(Course c : courseList){
 			if (c.getCourseCode().equals(CourseCode)){
 				System.out.println("The course: "+ c.getCourseCode()+ "," + c.getCourseName());

@@ -29,7 +29,7 @@ public class NotificationCtrl {
     	 * The subject/title of the message
     	 */
         String subject = null;
-        System.out.println("Preparing to send email...");
+        //System.out.println("Preparing to send email...");
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
@@ -42,7 +42,7 @@ public class NotificationCtrl {
          */
         String myAccountEmail = "mapleseaok@gmail.com";
         /**
-         * Sender's password
+         * Sender's email password
          */
         String password = "mapleseaok";
 
@@ -84,7 +84,7 @@ public class NotificationCtrl {
             message.setSubject(subject);
             message.setText(TextMsg);
             Transport.send(message);
-            System.out.println("Message send successfully :D");
+            //System.out.println("Message send successfully :D");
 
         }
         catch (MessagingException e)

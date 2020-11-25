@@ -32,7 +32,7 @@ public class AdminUI extends UserInterface {
 		int choice=1;
 		Scanner sc = new Scanner(System.in);
 
-		while(choice!=0){
+		while(choice!=-1){
 			printHeader("Welcome to the Admin UI",
 					"1. Edit student access period",
 					"2. Add a student",
@@ -61,8 +61,11 @@ public class AdminUI extends UserInterface {
 					break;
 				case 7: printStudentByCourseUI();
 					break;
-				case 0: break;
-				default: System.out.println("Invalid entry. Please select a number from 1 to 7: ");
+				case -1: 
+					System.out.println("Exiting... Thank you for using MYSTARS! ");
+					break;
+				default: 
+					System.out.println("Invalid entry. Please select a number from 1 to 7: ");
 					choice = sc.nextInt();
 					break;
 			}
@@ -200,7 +203,11 @@ public class AdminUI extends UserInterface {
 		
 		pass = HashCtrl.hashPassword(pass);
 
+<<<<<<< HEAD
 		Student student = new Student(username, pass, firstName, ModeType.USER, matric, nationality, gender, yearOfStudy, email, accessStart, accessEnd);
+=======
+		Student student = new Student(username, name, pass, ModeType.USER, matric, nationality, yearOfStudy, email, accessStart, accessEnd);
+>>>>>>> 751df938f4b707772b0ec16eedab8819446e5382
 		AdminStudCtrl.addStudent(student);
 
 		System.out.println("You've successfully added a student! The new list of students: ");
