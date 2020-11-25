@@ -203,11 +203,8 @@ public class AdminUI extends UserInterface {
 		
 		pass = HashCtrl.hashPassword(pass);
 
-<<<<<<< HEAD
 		Student student = new Student(username, pass, firstName, ModeType.USER, matric, nationality, gender, yearOfStudy, email, accessStart, accessEnd);
-=======
-		Student student = new Student(username, name, pass, ModeType.USER, matric, nationality, yearOfStudy, email, accessStart, accessEnd);
->>>>>>> 751df938f4b707772b0ec16eedab8819446e5382
+
 		AdminStudCtrl.addStudent(student);
 
 		System.out.println("You've successfully added a student! The new list of students: ");

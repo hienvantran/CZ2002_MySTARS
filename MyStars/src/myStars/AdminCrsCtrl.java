@@ -34,15 +34,10 @@ public class AdminCrsCtrl extends CourseCtrl {
      */
     public void addCourse(Course course){
         try {
-<<<<<<< HEAD
             ArrayList<Course> courseList = getCourseList();
             courseList.add(course);
             setCourseList(courseList);
-=======
-            ArrayList<Course> courseList = courseCtrl.getCourseList();
-            courseList.add(course);.
-            courseCtrl.setCourseList(courseList);
->>>>>>> 751df938f4b707772b0ec16eedab8819446e5382
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {

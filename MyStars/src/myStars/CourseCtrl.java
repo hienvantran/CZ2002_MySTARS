@@ -3,17 +3,9 @@ package myStars;
 import java.io.*;
 import java.text.*;
 import java.util.*;
-<<<<<<< HEAD
 
 import DB.LessonDB;
 import Entities.*;
-=======
-import Entities.Course;
-import Entities.CourseRegister;
-import Entities.Index;
-import Entities.ModeType;
-import Entities.Student;
->>>>>>> 751df938f4b707772b0ec16eedab8819446e5382
 import DB.CourseDB;
 import DB.CourseRegDB;
 import DB.IndexDB;
@@ -236,13 +228,8 @@ public class CourseCtrl {
      */
 	public Course getCrsbyCode(String CourseCode)throws IOException, ParseException {
 		ArrayList<Course> courseList = CourseDB.retrieveCourse();
-<<<<<<< HEAD
 		Course myCourse = new Course("Unknown", "Unknown", 0, "Unknown","Unknown", 1);
 		System.out.println(myCourse.getCourseCode());
-=======
-		Course myCourse = new Course("Unknown", "Unknown", 0, "Unknown","Unknown");
-		//System.out.println(myCourse.getCourseCode());
->>>>>>> 751df938f4b707772b0ec16eedab8819446e5382
 		for(Course c : courseList){
 			if (c.getCourseCode().equals(CourseCode)){
 				System.out.println("The course: "+ c.getCourseCode()+ "," + c.getCourseName());
