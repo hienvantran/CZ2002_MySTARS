@@ -3,6 +3,7 @@ package myStars;
 import DB.CourseDB;
 import Entities.Course;
 import Entities.Index;
+import Entities.Lesson;
 import Entities.ModeType;
 
 import java.io.FileNotFoundException;
@@ -15,10 +16,6 @@ import java.util.ArrayList;
  * The Admin course controller extends course controller and
  * The Admin course controller is a controller helps to interface
  * UI with the course.
- * <p>
- * <b>Note:</b> Giving proper comments in your program makes it more
- * user friendly and it is assumed as a high quality code.
- * </p>
  * @author Ong Eng Hao
  * @version 1.0
  * @since 2020-11-21
@@ -27,7 +24,7 @@ public class AdminCrsCtrl extends CourseCtrl {
     /**
      * A new object of CourseCtrl
      */
-    CourseCtrl courseCtrl = new CourseCtrl();
+    //CourseCtrl courseCtrl = new CourseCtrl();
 
     /**
      * Adds a course to the database
@@ -37,9 +34,9 @@ public class AdminCrsCtrl extends CourseCtrl {
      */
     public void addCourse(Course course){
         try {
-            ArrayList<Course> courseList = courseCtrl.getCourseList();
+            ArrayList<Course> courseList = getCourseList();
             courseList.add(course);
-            courseCtrl.setCourseList(courseList);
+            setCourseList(courseList);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -53,14 +50,14 @@ public class AdminCrsCtrl extends CourseCtrl {
      */
     public void removeCourse(String courseCode){
         try {
-            ArrayList<Course> courseList = courseCtrl.getCourseList();
+            ArrayList<Course> courseList = getCourseList();
             for(Course course: courseList) {
                 if (course.getCourseCode().equals(courseCode)){
                     courseList.remove(course);
                     break;
                 }
             }
-            courseCtrl.setCourseList(courseList);
+            setCourseList(courseList);
             System.out.println("You've successfully remove the course: " + courseCode);
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,14 +74,14 @@ public class AdminCrsCtrl extends CourseCtrl {
     public void removeIndex(String courseCode, int indexNum){
 
         try{
-            ArrayList<Index> indices = courseCtrl.getIndexList();
+            ArrayList<Index> indices = getIndexList();
             for(Index index: indices){
                 if(index.getIndex()==indexNum&&index.getCourseCode().equals(courseCode)){
                     indices.remove(index);
                     break;
                 }
             }
-            courseCtrl.setIndexList(indices);
+            setIndexList(indices);
             System.out.println("You've successfully remove the index: " + indexNum);
 
         }catch(IOException e){
@@ -102,18 +99,18 @@ public class AdminCrsCtrl extends CourseCtrl {
      */
     public void updateCourseCode(String courseCode, String newCourseCode){
         try {
-            ArrayList<Course> courses = courseCtrl.getCourseList();
+            ArrayList<Course> courses = getCourseList();
             for(Course course:courses){
                 if (course.getCourseCode().equals(courseCode))
                     course.setCourseCode(newCourseCode);
             }
-            ArrayList<Index> indices = courseCtrl.getIndexList();
+            ArrayList<Index> indices = getIndexList();
             for(Index index: indices){
                 if(index.getCourseCode().equals(courseCode))
                     index.setCourseCode(newCourseCode);
             }
-            courseCtrl.setCourseList(courses);
-            courseCtrl.setIndexList(indices);
+            setCourseList(courses);
+            setIndexList(indices);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -128,12 +125,12 @@ public class AdminCrsCtrl extends CourseCtrl {
      */
     public void updateCourseName(String courseCode, String newCourseName){
         try {
-            ArrayList<Course> courses = courseCtrl.getCourseList();
+            ArrayList<Course> courses = getCourseList();
             for(Course course:courses){
                 if (course.getCourseCode().equals(courseCode))
                     course.setCourseName(newCourseName);
             }
-            courseCtrl.setCourseList(courses);
+            setCourseList(courses);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -148,12 +145,12 @@ public class AdminCrsCtrl extends CourseCtrl {
      */
     public void updateCourseSchool(String courseCode, String newCourseSchool){
         try {
-            ArrayList<Course> courses = courseCtrl.getCourseList();
+            ArrayList<Course> courses = getCourseList();
             for(Course course:courses){
                 if (course.getCourseCode().equals(courseCode))
                     course.setSchool(newCourseSchool);
             }
-            courseCtrl.setCourseList(courses);
+            setCourseList(courses);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -168,12 +165,12 @@ public class AdminCrsCtrl extends CourseCtrl {
      */
     public void updateCourseAU(String courseCode, int newAU){
         try {
-            ArrayList<Course> courses = courseCtrl.getCourseList();
+            ArrayList<Course> courses = getCourseList();
             for(Course course:courses){
                 if (course.getCourseCode().equals(courseCode))
                     course.setCourseAU(newAU);
             }
-            courseCtrl.setCourseList(courses);
+            setCourseList(courses);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -188,12 +185,12 @@ public class AdminCrsCtrl extends CourseCtrl {
      */
     public void updateCourseType(String courseCode, String newType){
         try {
-            ArrayList<Course> courses = courseCtrl.getCourseList();
+            ArrayList<Course> courses = getCourseList();
             for(Course course:courses){
                 if (course.getCourseCode().equals(courseCode))
                     course.setCourseType(newType);
             }
-            courseCtrl.setCourseList(courses);
+            setCourseList(courses);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -209,13 +206,13 @@ public class AdminCrsCtrl extends CourseCtrl {
      */
     public void updateCourseIndex(String courseCode, int indexNum, int newIndexNum){
         try {
-            ArrayList<Index> indices = courseCtrl.getIndexList();
+            ArrayList<Index> indices = getIndexList();
 
             for(Index index: indices){
                 if(index.getCourseCode().equals(courseCode) && index.getIndex()==indexNum)
                     index.setIndexNumber(newIndexNum);
             }
-            courseCtrl.setIndexList(indices);
+            setIndexList(indices);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -232,8 +229,10 @@ public class AdminCrsCtrl extends CourseCtrl {
      */
     public void createIndex(String courseCode, int indexNum, String group, int totalSlot){
         try{
-            ArrayList<Index> indices = courseCtrl.getIndexList();
+            ArrayList<Index> indices = getIndexList();
             Index newIndex = new Index(courseCode, indexNum, group, totalSlot, 0);
+            indices.add(newIndex);
+            setIndexList(indices);
         }catch(IOException e){
             e.printStackTrace();
         }catch (ParseException e) {
@@ -254,19 +253,109 @@ public class AdminCrsCtrl extends CourseCtrl {
      */
     public void updateIndexTotalSlot(String courseCode, int indexNum, int totalSlot){
         try{
-            ArrayList<Index> indices = courseCtrl.getIndexList();
+            ArrayList<Index> indices = getIndexList();
             for(Index index: indices){
                 if ((index.getCourseCode().equals(courseCode)) && index.getIndex()==indexNum){
                     index.setTotalSlot(totalSlot);
                 }
             }
-            courseCtrl.setIndexList(indices);
+            setIndexList(indices);
             updateRegisteredList(courseCode, indexNum, ModeType.ADMIN);
         }catch(IOException e){
             e.printStackTrace();
         }catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * Create already existing lectures to index
+     * @param courseCode desired
+     */
+    public void createLessonLecture(String courseCode, int index){
+        try {
+            ArrayList<Lesson> lessons = getLessonList();
+
+            Lesson newLesson = new Lesson("Unknown", 1,"Unknown", "Unknown", "Unknown", "Unknown");
+            // add the existing lectures
+            for (Lesson lesson: lessons){
+                if (lesson.getCrsCode().equals(courseCode)&&lesson.getLessonType().equals("LEC")){
+                    newLesson.setindexNo(index);
+                    newLesson.setCrsCode(lesson.getCrsCode());
+                    newLesson.setLessonDay(lesson.getLessonDay());
+                    newLesson.setLessonTime(lesson.getLessonTime());
+                    newLesson.setLessonType("LEC");
+                    newLesson.setLessonVenue(lesson.getLessonVenue());
+                }
+            }
+            lessons.add(newLesson);
+
+            setLessonList(lessons);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+    /**
+     * Checks the existence lesson of a course code
+     * @return true if lessson exists, else false
+     */
+    public boolean isExistingLesson(String courseCode){
+        try{
+            ArrayList<Lesson> lessons = getLessonList();
+            for(Lesson lesson: lessons){
+                if(lesson.getCrsCode().equals(courseCode))
+                    return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    /**
+     * Get the lesson type of the course
+     * @param courseCode desired course code to view the lesson
+     */
+    public int getLessonType(String courseCode){
+        try {
+            ArrayList<Course> courses = getCourseList();
+            for(Course course: courses){
+                if (course.getCourseCode().equals(courseCode))
+                    return course.getLessonType();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * Creates lesson
+     * @param courseCode the course code for the lesson
+     * @param index the index for the lesson
+     * @param preferredDay the preferred day for the lesson
+     * @param preferredHours the preferred time for the lesson
+     * @param lessonType the preferred lesson type for the lesson (e.g. LAB, LEC, TUT)
+     * @param lessonLocation the preferred lesson location for the lesson
+     */
+    public void createLesson(String courseCode, int index, String preferredDay, String preferredHours, String lessonType, String lessonLocation){
+        //get the existing and create automatically
+        try {
+            ArrayList<Lesson> lessons = getLessonList();
+            Lesson lesson = new Lesson(courseCode, index, lessonType, preferredDay, preferredHours, lessonLocation);
+            lessons.add(lesson);
+            setLessonList(lessons);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

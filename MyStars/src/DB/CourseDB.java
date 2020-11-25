@@ -25,9 +25,10 @@ public class CourseDB {
 			int AU = Integer. parseInt((tokenizer.nextToken().trim())); 
 			String school = tokenizer.nextToken().trim(); 
 			String type = tokenizer.nextToken().trim(); 
+			int lessonType = Integer.parseInt((tokenizer.nextToken().trim()));
 			
 			// create Course object and add to course list 
-			Course crs = new Course( crsCode, crsName, AU, school, type);
+			Course crs = new Course( crsCode, crsName, AU, school, type, lessonType);
 			// add to Course list
 			courseList.add(crs);
 		}
@@ -49,6 +50,8 @@ public class CourseDB {
 				st.append(crs.getSchool().trim());
 				st.append(SEPARATOR);
 				st.append(crs.getCourseType().trim());
+				st.append(SEPARATOR);
+				st.append(Integer.toString(crs.getLessonType()).trim());
 				newcourseList.add(st.toString());
 			}
 			IOforDB.write(CourseFileName, newcourseList);

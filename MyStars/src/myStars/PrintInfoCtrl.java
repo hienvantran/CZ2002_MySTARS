@@ -17,8 +17,12 @@ public class PrintInfoCtrl {
 	public void printIndexByCourse(String course){
 		try{
 			ArrayList<Index> indices = IndexDB.retrieveIndex();
+			System.out.println("Course: " + course);
+			System.out.println("Course Index");
+			System.out.println("------------");
 			for(Index index: indices){
-				System.out.println(index.getIndex());
+				if(index.getCourseCode().equals(course))
+					System.out.println(index.getIndex());
 			}
 		}catch(FileNotFoundException | ParseException e){
 			e.printStackTrace();
@@ -31,8 +35,11 @@ public class PrintInfoCtrl {
 	public void printCourse(){
 		try {
 			ArrayList<Course> courseList = CourseDB.retrieveCourse();
+
+			System.out.println("Course\t\tCourse Name");
+			System.out.println("---------------------------");
 			for(Course course: courseList){
-				System.out.println("Course code: " + course.getCourseCode() + ", course name: " + course.getCourseName());
+				System.out.println(course.getCourseCode() + "\t\t" + course.getCourseName());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -47,8 +54,10 @@ public class PrintInfoCtrl {
 	public void printStudents(){
 		try {
 			ArrayList<Student> students = StudentDB.retrieveStudent();
+			System.out.println("Name\tMatriculation\tGender\tNationality");
+			System.out.println("--------------------------------------------------------");
 			for(Student student: students){
-				System.out.println("Student matric: " + student.getMatricNum());
+				System.out.println(student.getFirstName()+"\t"+ student.getMatricNum()+"\t"+student.getGender()+"\t"+student.getNationality());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -74,9 +83,12 @@ public class PrintInfoCtrl {
 				if(courseRegister.getIndex()==indexNum && courseRegister.getCourse().equals(course) && courseRegister.getStatus()==true)
 					matric.add(courseRegister.getStudent());
 			}
+
+			System.out.println("Name\tMatriculation\tGender\tNationality");
+			System.out.println("--------------------------------------------------------");
 			for(Student student: students){
 				if(matric.contains(student.getMatricNum())){
-					System.out.println(student.getMatricNum());
+					System.out.println(student.getFirstName()+"\t"+ student.getMatricNum()+"\t"+student.getGender()+"\t"+student.getNationality());
 					count++;
 				}
 			}
@@ -102,10 +114,12 @@ public class PrintInfoCtrl {
 				if(courseRegister.getCourse().equals(course) && courseRegister.getStatus()==true)
 					matric.add(courseRegister.getStudent());
 			}
+
+			System.out.println("Name\tMatriculation\tGender\tNationality");
+			System.out.println("--------------------------------------------------------");
 			for(Student student: students){
 				if(matric.contains(student.getMatricNum())){
-					System.out.println("Student name: " + student.getFirstName()+ " " + student.getFirstName()
-							+ " Gender: " + student.getGender() + " Nationality: " + student.getNationality());
+					System.out.println(student.getFirstName()+"\t"+ student.getMatricNum()+"\t"+student.getGender()+"\t"+student.getNationality());
 					count++;
 				}
 			}

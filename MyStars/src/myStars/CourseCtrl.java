@@ -3,10 +3,9 @@ package myStars;
 import java.io.*;
 import java.text.*;
 import java.util.*;
-import Entities.Course;
-import Entities.CourseRegister;
-import Entities.Index;
-import Entities.ModeType;
+
+import DB.LessonDB;
+import Entities.*;
 import DB.CourseDB;
 import DB.CourseRegDB;
 import DB.IndexDB;
@@ -150,6 +149,7 @@ public class CourseCtrl {
         CourseCtrl courseCtrl = new CourseCtrl();
         Index index;
         try {
+            ArrayList<Index> indices = IndexDB.retrieveIndex();
             index = courseCtrl.getIndexbyCode(courseCode, indexNo);
 
             if (index.getCourseCode()=="Unknown") return false;
@@ -175,6 +175,31 @@ public class CourseCtrl {
 	}
 
     /**
+     * Returns an array list of lesson
+     * @return an array list of lesson
+     */
+	public ArrayList<Lesson> getLessonList(){
+        try {
+            ArrayList<Lesson> lessons = LessonDB.retrieveLesson();
+            return lessons;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    /**
+     * Set an array list of course to the database
+     * @param lessonList an array list of course
+     * @throws IOException if IO exception occurs
+     * @throws ParseException if parse exception occurs
+     */
+    public void setLessonList(ArrayList<Lesson> lessonList)throws IOException, ParseException {
+        LessonDB.saveCourse(lessonList);
+    }
+
+    /**
      * Set an array list of course to the database
      * @param courseList an array list of course
      * @throws IOException if IO exception occurs
@@ -193,7 +218,7 @@ public class CourseCtrl {
      */
 	public Course getCrsbyCode(String CourseCode)throws IOException, ParseException {
 		ArrayList<Course> courseList = CourseDB.retrieveCourse();
-		Course myCourse = new Course("Unknown", "Unknown", 0, "Unknown","Unknown");
+		Course myCourse = new Course("Unknown", "Unknown", 0, "Unknown","Unknown", 1);
 		System.out.println(myCourse.getCourseCode());
 		for(Course c : courseList){
 			if (c.getCourseCode().equals(CourseCode)){
@@ -204,6 +229,7 @@ public class CourseCtrl {
 
 		return myCourse;
 	}
+
 
     /**
      * Get the array list of indices
@@ -243,4 +269,5 @@ public class CourseCtrl {
 		}
 		return myIndex;
 	}
+
 }

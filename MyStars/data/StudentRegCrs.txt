@@ -12,4 +12,4 @@ stud2|CZ3001|10006|Registered
 stud3|CZ3001|10005|Registered
 stud4|CZ4005|14555|Registered
 stud1|CZ4005|14555|Registered
-U1837281B|CZ2002|11287|Registered
+U1837281B|CZ2002|11287|On Waiting List

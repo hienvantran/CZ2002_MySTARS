@@ -11,7 +11,7 @@ import java.util.Scanner;
  * @version 1.0
  * @since 2020-11-21
  */
-public class User{
+public abstract class User{
     private String username;
     private String password;
     private ModeType mode;

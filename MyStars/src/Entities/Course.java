@@ -27,6 +27,11 @@ public class Course{
 	 * type of the course
 	 */
 	private String courseType;
+
+	/**
+	 * lesson type
+	 */
+	private int lessonType;
 	/**
 	 * the ArrayList for the index
 	 */
@@ -44,14 +49,31 @@ public class Course{
 	 * @param courseAU
 	 * @param school
 	 * @param courseType
+	 * @param lessonType
 	 */
-	public Course(String courseCode, String courseName, int courseAU, String school,  String courseType)
+	public Course(String courseCode, String courseName, int courseAU, String school, String courseType, int lessonType)
 	{
 		this.courseCode = courseCode;
 		this.courseName = courseName;
 		this.school = school;
 		this.courseAU = courseAU;
 		this.courseType = courseType;
+		this.lessonType = lessonType;
+	}
+
+	/**
+	 * Get the lesson type of the course
+	 * @return
+	 */
+	public int getLessonType(){
+		return lessonType;
+	}
+
+	/**
+	 * Set the lesson type of the course
+	 */
+	public void setLessonType(int lessonType){
+		this.lessonType = lessonType;
 	}
 	/**
 	 * Get the courseCode

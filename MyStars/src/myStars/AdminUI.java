@@ -120,7 +120,7 @@ public class AdminUI extends UserInterface {
 	 */
 	public void addStudentUI(){
 		boolean validInput;
-		String matric = null, nationality, email = null, username = null, pass;
+		String matric = null, nationality, email = null, username = null, pass, gender = null, firstName;
 		int yearOfStudy;
 		Calendar accessStart = null, accessEnd = null;
 
@@ -183,16 +183,30 @@ public class AdminUI extends UserInterface {
 			else System.out.println("Access start date cannot be later than access end date!");
 		}
 
+		validInput = false;
+		while(!validInput){
+			gender = getStringInput("Enter the gender (Male or Female) of the student: ");
+			if(gender.equals("-1")) return;
+
+			if(gender.equalsIgnoreCase("male") || gender.equalsIgnoreCase("female")){
+				validInput = true;
+			} else {
+				validInput = false;
+				System.out.println("Please enter 'Male' or 'Female'!");
+			}
+		}
+
+		firstName = getStringInput("Enter the name of the student: ");
+		
 		pass = HashCtrl.hashPassword(pass);
 
-		Student student = new Student(username, pass, ModeType.USER, matric, nationality, yearOfStudy, email, accessStart, accessEnd);
+		Student student = new Student(username, pass, firstName, ModeType.USER, matric, nationality, gender, yearOfStudy, email, accessStart, accessEnd);
 		AdminStudCtrl.addStudent(student);
 
 		System.out.println("You've successfully added a student! The new list of students: ");
 		printInfoCtrl.printStudents();
 
 		System.out.println("Bringing you back to the main admin UI...");
-
 	}
 
 	/**
@@ -200,7 +214,7 @@ public class AdminUI extends UserInterface {
 	 */
 	public void addCourseUI(){
 		String courseCode = null, courseName, school, courseType;
-		int courseAU;
+		int courseAU, lessonType;
 		boolean validInput;
 
 		printHeader("Add a course UI");
@@ -230,11 +244,91 @@ public class AdminUI extends UserInterface {
 		courseType = getStringInput("Enter Course Type: ");
 		if (courseType.equals("-1")) return;
 
-		Course course = new Course(courseCode, courseName, courseAU, school, courseType);
+		lessonType = getIntInput("Enter the lesson type: " +
+				"\n1. Lectures only" +
+				"\n2. Lectures and tutorials only" +
+				"\n3. Lectures, tutorial and labs", 1, 3);
+
+		Course course = new Course(courseCode, courseName, courseAU, school, courseType, lessonType);
 		adminCrsCtrl.addCourse(course);
 
 		System.out.println("You've successfully added a course! The new list of courses: ");
 		printInfoCtrl.printCourse();
+		validInput = false;
+		while(!validInput){
+			System.out.println("Here is a list of index already exist for the course code: " + courseCode);
+			printInfoCtrl.printIndexByCourse(courseCode);
+			int index = getIntInput("Enter an index you'd like to create: ", 0, 99999);
+			if (index==-1) return;
+
+			if(adminCrsCtrl.isExistingIndex(courseCode, index)){
+				// reject the person
+				System.out.println("The index already exists!");
+				continue;
+			}
+
+			String group = getStringInput("Enter the group of the index: ");
+			if (group.equals("-1")) return;
+
+			int totalSlot = getIntInput("Enter the total slot of the index: ", 0, 10000);
+
+			if (adminCrsCtrl.isExistingGroup(courseCode, index, group)){
+				System.out.println("The group already exists!");
+				continue;
+			}else{
+
+				adminCrsCtrl.createIndex(courseCode, index, group, totalSlot);
+				System.out.println("You've successfully created an index!");
+
+				switch(lessonType){
+					case 1: System.out.println("Lectures only");
+						break;
+					case 2: System.out.println("Lectures and tutorials only");
+						break;
+					case 3: System.out.println("Lectures, tutorial and labs");
+						break;
+				}
+
+				if(adminCrsCtrl.isExistingLesson(courseCode)){
+					// create lectures
+					adminCrsCtrl.createLessonLecture(courseCode, index);
+					System.out.println("Lecture is created based on the same course! "+courseCode);
+
+				}else{
+					System.out.println("Lecture is not found, please select lecture time: ");
+					String preferredHours = getHours("lecture");
+					String preferredDay = getDay("lecture");
+					String lessonLocation = getStringInput("Enter your desired classroom");
+					// get their input of the preferred hours
+					adminCrsCtrl.createLesson(courseCode, index, preferredDay, preferredHours, "LEC", lessonLocation);
+					System.out.println("Lecture is created for index " + index);
+					validInput = true;
+				}
+
+				if (lessonType>1){
+					// create tutorial
+					String preferredHours = getHours("tutorial");
+					String preferredDay = getDay("tutorial");
+					String lessonLocation = getStringInput("Enter your desired classroom");
+					// get their input of the preferred hours
+					adminCrsCtrl.createLesson(courseCode, index, preferredDay, preferredHours, "TUT", lessonLocation);
+					System.out.println("Tutorial is created for index " + index);
+					validInput = true;
+				}
+				if (lessonType==3){
+					// create lab
+					String preferredHours = getHours("lab");
+					String preferredDay = getDay("lab");
+					String lessonLocation = getStringInput("Enter your desired classroom");
+					// get their input of the preferred hours
+					adminCrsCtrl.createLesson(courseCode, index, preferredDay, preferredHours, "LAB", lessonLocation);
+					System.out.println("Lab is created for index "+ index);
+					validInput = true;
+				}
+
+				validInput = true;
+			}
+		}
 
 		System.out.println("Bringing you back to the main admin UI...");
 	}
@@ -273,6 +367,7 @@ public class AdminUI extends UserInterface {
 				"8. Remove the course",
 				"9. Create a new index",
 				"10. Remove a course's index",
+				"11. Create a new index lesson",
 				"-1. Exit update course UI");
 
 		System.out.println("What part of the course do you want to update?");
@@ -397,21 +492,73 @@ public class AdminUI extends UserInterface {
 					int index = getIntInput("Enter an index you'd like to create: ", 0, 99999);
 					if (index==-1) return;
 
+					if(adminCrsCtrl.isExistingIndex(courseCode, index)){
+						// reject the person
+						System.out.println("The index already exists!");
+						continue;
+					}
+
 					String group = getStringInput("Enter the group of the index: ");
 					if (group.equals("-1")) return;
 
 					int totalSlot = getIntInput("Enter the total slot of the index: ", 0, 10000);
 
-					if(adminCrsCtrl.isExistingIndex(courseCode, index)){
-						// reject the person
-						System.out.println("The index already exists!");
-					}
 					if (adminCrsCtrl.isExistingGroup(courseCode, index, group)){
 						System.out.println("The group already exists!");
+						continue;
 					}else{
-						// create the index
+
 						adminCrsCtrl.createIndex(courseCode, index, group, totalSlot);
 						System.out.println("You've successfully created an index!");
+
+							int lessonType = adminCrsCtrl.getLessonType(courseCode);
+							switch(lessonType){
+								case 1: System.out.println("Lectures only");
+									break;
+								case 2: System.out.println("Lectures and tutorials only");
+									break;
+								case 3: System.out.println("Lectures, tutorial and labs");
+									break;
+							}
+
+							if(adminCrsCtrl.isExistingLesson(courseCode)){
+								// create lectures
+								adminCrsCtrl.createLessonLecture(courseCode, index);
+								System.out.println("Lecture is created based on the same course! "+courseCode);
+
+							}else{
+								System.out.println("Lecture is not found, please select lecture time: ");
+								String preferredHours = getHours("lecture");
+								String preferredDay = getDay("lecture");
+								String lessonLocation = getStringInput("Enter your desired classroom");
+								// get their input of the preferred hours
+								adminCrsCtrl.createLesson(courseCode, index, preferredDay, preferredHours, "LEC", lessonLocation);
+								System.out.println("Lecture is created for index " + index);
+								validInput = true;
+							}
+
+							if (lessonType>1){
+								// create tutorial
+								String preferredHours = getHours("tutorial");
+								String preferredDay = getDay("tutorial");
+								String lessonLocation = getStringInput("Enter your desired classroom");
+								// get their input of the preferred hours
+								adminCrsCtrl.createLesson(courseCode, index, preferredDay, preferredHours, "TUT", lessonLocation);
+								System.out.println("Tutorial is created for index " + index);
+								validInput = true;
+							}
+							if (lessonType==3){
+								// create lab
+								String preferredHours = getHours("lab");
+								String preferredDay = getDay("lab");
+								String lessonLocation = getStringInput("Enter your desired classroom");
+								// get their input of the preferred hours
+								adminCrsCtrl.createLesson(courseCode, index, preferredDay, preferredHours, "LAB", lessonLocation);
+								System.out.println("Lab is created for index "+ index);
+								validInput = true;
+							}
+
+						validInput = true;
 					}
 				}
 				break;
@@ -432,9 +579,171 @@ public class AdminUI extends UserInterface {
 					}
 				}
 				break;
+			case 11:
+				// Create new index lessons
+				validInput = false;
+				while(!validInput){
+					System.out.println("Here is a list of index to edit for the course code: " + courseCode);
+					printInfoCtrl.printIndexByCourse(courseCode);
+					int index = getIntInput("Enter an index you'd like to create: ", 0, 99999);
+					if (index==-1) return;
+
+					if(adminCrsCtrl.isExistingIndex(courseCode, index)==false){
+						int lessonType = adminCrsCtrl.getLessonType(courseCode);
+						switch(lessonType){
+							case 1: System.out.println("This course is lectures only");
+							break;
+							case 2: System.out.println("This course is lectures and tutorials only");
+							break;
+							case 3: System.out.println("This course is lectures, tutorial and labs");
+							break;
+						}
+
+						if(adminCrsCtrl.isExistingLesson(courseCode)){
+							// create lectures
+							adminCrsCtrl.createLessonLecture(courseCode, index);
+							System.out.println("Lecture is created based on the same course! "+courseCode);
+
+						}else{
+							System.out.println("Lecture is not found, please select lecture time: ");
+							String preferredHours = getHours("lecture");
+							String preferredDay = getDay("lecture");
+							String lessonLocation = getStringInput("Enter your desired classroom");
+							// get their input of the preferred hours
+							adminCrsCtrl.createLesson(courseCode, index, preferredDay, preferredHours, "LEC", lessonLocation);
+							System.out.println("Lecture is created!");
+							validInput = true;
+						}
+
+						if (lessonType>1){
+							// create tutorial
+							String preferredHours = getHours("tutorial");
+							String preferredDay = getDay("tutorial");
+							String lessonLocation = getStringInput("Enter your desired classroom");
+							// get their input of the preferred hours
+							adminCrsCtrl.createLesson(courseCode, index, preferredDay, preferredHours, "TUT", lessonLocation);
+							System.out.println("Tutorial is created!");
+							validInput = true;
+						}
+						if (lessonType==3){
+							// create lab
+							String preferredHours = getHours("lab");
+							String preferredDay = getDay("lab");
+							String lessonLocation = getStringInput("Enter your desired classroom");
+							// get their input of the preferred hours
+							adminCrsCtrl.createLesson(courseCode, index, preferredDay, preferredHours, "LAB", lessonLocation);
+							System.out.println("Lab is created!");
+							validInput = true;
+						}
+
+
+						validInput = true;
+					}else{
+						System.out.println("Index doesn't exists!");
+					}
+				}
+				break;
 		}
 	}
+	private String getDay(String lessonType){
+		int day = getIntInput("Please select " + lessonType + " day: " +
+				"\n 1. Monday"+
+				"\n 2. Tuesday"+
+				"\n 3. Wednesday"+
+				"\n 4. Thursday"+
+				"\n 5. Friday", 1, 5);
+		switch (day){
+			case 1: return "Monday";
+			case 2: return "Tuesday";
+			case 3: return "Wednesday";
+			case 4: return "Thursday";
+			case 5: return "Friday";
+		}
+		return null;
+	}
+	private String getHours(String lessonType){
 
+		int hours = getIntInput("Please select " + lessonType + " time: " +
+				"\n 1. 1 hour" +
+				"\n 2. 2 hours", 1,2);
+		if (hours==-1) return "-1";
+		String preferredHoursStr = null;
+		if (hours==1) {
+			printHourlyTimeList();
+			int preferredHours = getIntInput("Please select the preferred time slot: ", 1, 10);
+			switch(preferredHours){
+				case 1: preferredHoursStr = "0830-0930";
+					break;
+				case 2: preferredHoursStr = "0930-1030";
+					break;
+				case 3: preferredHoursStr = "1030-1130";
+					break;
+				case 4: preferredHoursStr = "1130-1230";
+					break;
+				case 5: preferredHoursStr = "1230-1330";
+					break;
+				case 6: preferredHoursStr = "1330-1430";
+					break;
+				case 7: preferredHoursStr = "1430-1530";
+					break;
+				case 8: preferredHoursStr = "1530-1630";
+					break;
+				case 9: preferredHoursStr = "1630-1730";
+					break;
+				case 10: preferredHoursStr = "1730-1830";
+					break;
+			}
+
+		}
+		else{
+			printTwoHourTimeList();
+			int preferredHours = getIntInput("Please select the preferred time slot: ", 1, 9);
+			switch(preferredHours){
+				case 1: preferredHoursStr = "0830-1030";
+					break;
+				case 2: preferredHoursStr = "0930-1130";
+					break;
+				case 3: preferredHoursStr = "1030-1230";
+					break;
+				case 4: preferredHoursStr = "1130-1330";
+					break;
+				case 5: preferredHoursStr = "1230-1430";
+					break;
+				case 6: preferredHoursStr = "1330-1530";
+					break;
+				case 7: preferredHoursStr = "1430-1630";
+					break;
+				case 8: preferredHoursStr = "1530-1730";
+					break;
+				case 9: preferredHoursStr = "1630-1830";
+					break;
+			}
+		}
+		return preferredHoursStr;
+	}
+	private void printHourlyTimeList(){
+		System.out.println("1. 0830-0930");
+		System.out.println("2. 0930-1030");
+		System.out.println("3. 1030-1130");
+		System.out.println("4. 1130-1230");
+		System.out.println("5. 1230-1330");
+		System.out.println("6. 1330-1430");
+		System.out.println("7. 1430-1530");
+		System.out.println("8. 1530-1630");
+		System.out.println("9. 1630-1730");
+		System.out.println("10. 1730-1830");
+	}
+	private void printTwoHourTimeList(){
+		System.out.println("1. 0830-1030");
+		System.out.println("2. 0930-1130");
+		System.out.println("3. 1030-1230");
+		System.out.println("4. 1130-1330");
+		System.out.println("5. 1230-1430");
+		System.out.println("6. 1330-1530");
+		System.out.println("7. 1430-1630");
+		System.out.println("8. 1530-1730");
+		System.out.println("9. 1630-1830");
+	}
 	/**
 	 * Provide the UI for checking vacancy of a course
 	 */
