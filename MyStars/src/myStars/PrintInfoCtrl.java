@@ -130,7 +130,7 @@ public class PrintInfoCtrl {
 		ArrayList<Course> courseList = CourseDB.retrieveCourse();
 		ArrayList<CourseRegister> stCrsReg = new ArrayList<CourseRegister>();
 		for(CourseRegister course : courseRegistrations){
-			if (course.getStudent().equals(studentID) && course.getStatus()==true){
+			if (course.getStudent().equals(studentID)){
 				stCrsReg.add(course);
 			}
 		}
@@ -139,8 +139,8 @@ public class PrintInfoCtrl {
 //		}
 		System.out.println("The registered courses for this student " + studentID + " are as follows: \n");
 		int AUcount =0;
-		System.out.println("CourseCode\tIndex\tCourse Type\tAU\tLesson Type\tLesson Venue\tLesson Day\tLesson Time");
-		System.out.println("----------------------------------------------------------------------------------------------------------");
+		System.out.println("CourseCode\tIndex\tCourse Type\tAU\tStatus\t\tLesson Type\tLesson Venue\tLesson Day\tLesson Time");
+		System.out.println("----------------------------------------------------------------------------------------------------------------------------");
 		for (CourseRegister regCrs : stCrsReg) {
 			for (Course crs : courseList) {
 				if(regCrs.getCourse().equals(crs.getCourseCode())) {
@@ -148,18 +148,23 @@ public class PrintInfoCtrl {
 					System.out.print(regCrs.getIndex() + "\t");
 					System.out.print(crs.getCourseType()+"\t\t");
 					System.out.print(crs.getCourseAU() + "\t");
+					if (regCrs.getStatus() == true)
+					{
+						System.out.print("REGISTERED" + "\t");
+					}
+					else
+					{
+						System.out.print("ON WAITLIST" + "\t");
+					}
 					AUcount = AUcount + crs.getCourseAU();
-					//System.out.println("Scheduled lessons for this index:");
 					for (Lesson lesson : lessonList) {
 						if(regCrs.getIndex()==lesson.getindexNo()) {
-							//System.out.print("\t");
 							System.out.print(lesson.getLessonType() + "\t\t");
 							System.out.print(lesson.getLessonVenue()+ "\t\t");
 							System.out.print(lesson.getLessonDay()+ "\t\t");
 							System.out.print(lesson.getLessonTime());
 							System.out.println();
-							System.out.print("\t\t\t\t\t\t");
-							//System.out.println(lesson.getLessonType() + " at " + lesson.getLessonVenue() + " on " + lesson.getLessonDay()+ " " + lesson.getLessonTime() + " (" + lesson.getindexNo() + ") ");
+							System.out.print("\t\t\t\t\t\t\t\t");
 						}
 					}
 				}
@@ -181,15 +186,13 @@ public class PrintInfoCtrl {
 		ArrayList<Lesson> lessonList = LessonDB.retrieveLesson();
 		ArrayList<Index> indexList = IndexDB.retrieveIndex();
 		ArrayList<Course> courseList = CourseDB.retrieveCourse();
-		
 		for (Course crs : courseList) {
 			for (Index idx : indexList) {
 				if(idx.getIndex()==IndexNo && idx.getCourseCode().equals(courseCode)) {
-					System.out.println("CourseCode\tIndex\tAU\tLesson Type\tLesson Venue\tLesson Day\tLesson Time");
+					System.out.println("CourseCode\tIndex\tLesson Type\tLesson Venue\tLesson Day\tLesson Time");
 					System.out.println("------------------------------------------------------------------------------------------------");
 					System.out.print(courseCode + "\t\t");
 					System.out.print(IndexNo + "\t");
-					System.out.print(crs.getCourseAU() + "\t");
 					for(Lesson lesson : lessonList) {
 						if (idx.getIndex() == lesson.getindexNo() && courseCode.equals(lesson.getCrsCode())) {
 							System.out.print(lesson.getLessonType() + "\t\t");
@@ -197,7 +200,7 @@ public class PrintInfoCtrl {
 							System.out.print(lesson.getLessonDay()+ "\t\t");
 							System.out.print(lesson.getLessonTime());
 							System.out.println();
-							System.out.print("\t\t\t\t");
+							System.out.print("\t\t\t");
 						}
 					}
 				}

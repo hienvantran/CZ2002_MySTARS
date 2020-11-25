@@ -188,7 +188,7 @@ public class AdminUI extends UserInterface {
 
 		pass = HashCtrl.hashPassword(pass);
 
-		Student student = new Student(username, pass, ModeType.USER, matric, nationality, yearOfStudy, email, accessStart, accessEnd);
+		Student student = new Student(username, name, pass, ModeType.USER, matric, nationality, yearOfStudy, email, accessStart, accessEnd);
 		AdminStudCtrl.addStudent(student);
 
 		System.out.println("You've successfully added a student! The new list of students: ");

@@ -38,7 +38,7 @@ public class AdminCrsCtrl extends CourseCtrl {
     public void addCourse(Course course){
         try {
             ArrayList<Course> courseList = courseCtrl.getCourseList();
-            courseList.add(course);
+            courseList.add(course);.
             courseCtrl.setCourseList(courseList);
         } catch (IOException e) {
             e.printStackTrace();

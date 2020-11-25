@@ -163,7 +163,7 @@ import Entities.Student;
 		}
 		
 		//Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
-		//printInfo.printIndexInfo(inputIndex, inputCrsCode);
+		printInfo.printIndexInfo(inputIndex, inputCrsCode);
 		System.out.println("\nConfirm to register this index? Please enter (Y|N) ");
 		String sel= sc.nextLine();
 		sel = sel.toUpperCase();
@@ -218,7 +218,7 @@ import Entities.Student;
 		
 		
 		//Print Index Info Index -> CourseCode -> Lesson Type -> Group -> Day -> Time -> Venue
-		//printInfo.printIndexInfo(inputIndex, inputCrsCode);
+		printInfo.printIndexInfo(inputIndex, inputCrsCode);
 		System.out.println("\nConfirm to DROP this index? Please enter (Y|N) ");
 		String sel= sc.nextLine();
 		sel = sel.toUpperCase();

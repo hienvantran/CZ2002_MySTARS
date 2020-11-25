@@ -17,7 +17,7 @@ public class UserInterface {
             temp = sc.nextInt();
             if(temp==-1) return -1;
             if (temp > rangeEnd || temp < rangeStart)
-                System.out.println("Invalid range. Please enter from " + rangeStart + " to " + rangeEnd);
+                System.out.println("Invalid range. Please enter from.... " + rangeStart + " to " + rangeEnd + ": ");
             else valid = true;
         }
 

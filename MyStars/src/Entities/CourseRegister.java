@@ -3,8 +3,7 @@ package Entities;
  * Represents the courses registered by the student
  * A student can enrolled in many different courses
  */
-public class CourseRegister {
-	
+public class CourseRegister {	
 	/**
 	 * the status of the registered course (Waiting List/Registered)
 	 */
