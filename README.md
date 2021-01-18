@@ -9,7 +9,10 @@ This project is a console-based application and written in Java. We applied the 
 SS11 Group 3
 
 Ong Eng Hao - https://github.com/enghao016
+
 Kelvin Wong Wai Leong - https://github.com/roxyal
+
 Tran Hien Van - https://github.com/hienvantran
+
 Hoo Jia Kai - https://github.com/jkrolling98
 
